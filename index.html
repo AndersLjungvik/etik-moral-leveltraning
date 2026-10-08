@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Etik & moral – Levelträning</title>
+<style>
+:root{--g:#2f5d50;--bg:#f4f6f8;--c:#fff;--t:#1f2937;--m:#6b7280;--l:#d8dee6;--ok:#e8f6ee;--no:#faeeee}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--t)}
+header{background:var(--g);color:#fff;padding:20px}header>div,main,footer{max-width:980px;margin:auto}h1{margin:0 0 6px;font-size:clamp(1.5rem,4vw,2.2rem)}p{line-height:1.45}
+main{padding:22px 16px 60px}.card{background:var(--c);border:1px solid var(--l);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 3px 14px #0000000d}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.track{cursor:pointer}.track:hover{border-color:#8aa99e}
+.badge,.pill{display:inline-block;border-radius:999px;padding:5px 10px;font-size:.84rem;font-weight:700;background:#e6efec;color:var(--g)}
+.progress{height:9px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:12px}.progress div{height:100%;background:var(--g)}
+button{border:0;border-radius:12px;padding:11px 15px;font-weight:700;cursor:pointer}.pri{background:var(--g);color:#fff}.sec{background:#e8ecef}.ghost{background:#fff;border:1px solid var(--l)}.danger{background:#fce8e8;color:#8a1f1f}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.levels{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.pill.current{background:#dfe9ff;color:#254f9f}.pill.done{background:#dff3e8;color:#17633d}
+.small{font-size:.9rem;color:var(--m)}.kick{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--g)}
+.q{font-size:1.25rem;font-weight:700;margin:8px 0 14px}.opts{display:grid;gap:9px}.opt{width:100%;text-align:left;background:#fff;border:1px solid var(--l);padding:13px;border-radius:12px}
+.opt.ok{background:var(--ok);border-color:#72b58e}.opt.no{background:var(--no);border-color:#d29191}.bank{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.word{background:#edf3f1;border:1px solid #c9d8d2;border-radius:999px;padding:6px 10px;font-weight:700}
+input,textarea{width:100%;border:1px solid var(--l);border-radius:12px;padding:12px;font:inherit}textarea{min-height:120px}.fb{margin:12px 0;padding:12px;border-radius:12px}.good{background:var(--ok)}.bad{background:var(--no)}.info{background:#eef3fa}
+.model{border-left:4px solid var(--g);background:#f7faf9;padding:12px;margin-top:10px;border-radius:8px}.checks{display:grid;gap:8px;margin:10px 0}
+.hidden{display:none!important}footer{padding:0 16px 40px;color:var(--m);font-size:.9rem}
+@media(max-width:600px){.card{padding:16px}button{width:100%}.top button{width:auto}}
+</style>
+</head>
+<body>
+<header><div><h1>Etik & moral – Levelträning</h1><p>Träna en sak i taget. Stödet minskar när du levlar.</p></div></header>
+<main>
+<section id="home"><div class="card"><div class="top"><div><div class="kick">Start</div><h2>Välj en bana</h2><p class="small">Din progression sparas på den här enheten.</p></div><div><button class="ghost" onclick="info()">Lärarinfo</button> <button class="danger" onclick="resetAll()">Börja om</button></div></div><div id="grid" class="grid"></div></div></section>
+<section id="quiz" class="hidden"><div class="card"><div class="top"><button class="ghost" onclick="home()">← Till banorna</button><span id="meta" class="small"></span></div><div id="lvls" class="levels"></div><div id="area"></div></div></section>
+<section id="inf" class="hidden"><div class="card"><div class="top"><div><div class="kick">Lärarinfo</div><h2>Vad tränar materialet?</h2></div><button class="ghost" onclick="home()">Stäng</button></div><p>Progressionen går från igenkänning och återkallning till tillämpning och självständiga resonemang. Eleverna tränar begrepp, dilemmaförståelse, ställningstagande, motivering, flera perspektiv, handlingsalternativ och konsekvenser.</p><p><b>Provets konkreta frågor och situationer finns inte här.</b> Träningen använder nya exempel för att öva samma kunskaper och förmågor.</p></div></section>
+</main><footer>Ingen timer. Ingen inloggning. Inga elevsvar skickas någonstans.</footer>
+<script>
+const K="etikMoralLevels_v2";
+const mc=(p,o,a,e)=>({k:"mc",p,o,a,e}), tx=(p,a,alts,e)=>({k:"tx",p,a,alts,e}), sf=(p,c,m)=>({k:"sf",p,c,m});
+const tracks=[
+{id:"a",title:"Bana 1 – Etik, moral & värderingar",desc:"Känn igen, minns och förklara.",levels:[
+{t:"Level 1 – Känn igen",pass:4,qs:[
+mc("Att fundera över om man alltid bör hålla ett löfte handlar främst om …",["etik","moral","värdering"],"etik","Etik handlar om tankar om rätt och fel."),
+mc("Att faktiskt säga sanningen när det känns svårt handlar främst om …",["värdering","moral","etik"],"moral","Moral handlar om hur vi faktiskt handlar."),
+mc("En uppfattning om vad som är viktigt, bra eller dåligt kallas …",["etik","värdering","moral"],"värdering","En värdering visar vad man tycker är viktigt eller bra/dåligt."),
+mc("Mira tycker att man bör bjuda in den som står ensam.",["moral","etik","värdering"],"etik","Det är en tanke om vad man bör göra."),
+mc("Mira går fram och bjuder in den som står ensam.",["etik","värdering","moral"],"moral","Det är en faktisk handling.")
+]},
+{t:"Level 2 – Minns själv",pass:4,qs:[
+tx("_____ handlar om hur vi tänker kring rätt och fel.","etik",["etik"],"Etik = tankar om rätt och fel."),
+tx("_____ handlar om hur vi faktiskt handlar i frågor om rätt och fel.","moral",["moral"],"Moral = hur vi agerar."),
+tx("En _____ är en uppfattning om att något är bra, dåligt eller viktigt.","värdering",["värdering","vardering"],"Det är en värdering."),
+tx("Att tänka 'alla ska få vara med' är främst ett exempel på …","etik",["etik"],"Det är en tanke om vad som är rätt."),
+tx("Att faktiskt lämna plats åt någon som står utanför är främst …","moral",["moral"],"Det är en handling.")
+]},
+{t:"Level 3 – Använd",pass:4,qs:[
+mc("En elev tänker att det är fel att tränga sig i kön.",["etik","moral","värdering"],"etik","En tanke om rätt och fel."),
+mc("En elev hittar en mössa och lämnar den till expeditionen.",["etik","moral","värdering"],"moral","En konkret handling."),
+mc("Noor tycker att det är viktigt att alla blir lyssnade på.",["moral","värdering","etik"],"värdering","Det uttrycker vad Noor tycker är viktigt."),
+mc("Leo anser att man bör säga ifrån när någon avbryter.",["etik","moral","värdering"],"etik","Det är ett ställningstagande."),
+mc("Leo säger lugnt ifrån när någon avbryter.",["moral","etik","värdering"],"moral","Det beskriver agerandet.")
+]},
+{t:"Level 4 – Förklara själv",self:true,qs:[
+sf("Förklara skillnaden mellan etik och moral med ett eget exempel.",["Jag förklarar etik som tankar om rätt och fel.","Jag förklarar moral som hur man faktiskt handlar.","Jag ger ett eget exempel."],"Etik handlar om hur vi tänker kring rätt och fel. Moral handlar om hur vi faktiskt handlar. Jag kan till exempel tycka att man ska hjälpa någon som står ensam, och sedan visa moral genom att faktiskt gå fram och hjälpa."),
+sf("Förklara vad en värdering är och ge ett eget exempel.",["Jag förklarar vad en värdering är.","Jag ger ett eget exempel."],"En värdering är en uppfattning om vad som är viktigt, bra eller dåligt. Ett exempel är att jag tycker att respekt är viktigt.")
+]}]},
+{id:"b",title:"Bana 2 – Begrepp",desc:"Från ordlåda till egna förklaringar.",levels:[
+{t:"Level 1 – Ordlåda",pass:10,bank:["egoism","solidaritet","lojalitet","tillit","jämlikhet","jämställdhet","frihet","ansvar","rättvisa","empati","respekt","kränkning"],qs:[
+tx("Att våga lita på någon är …","tillit",["tillit"],"Tillit."),
+tx("Att försöka förstå hur någon annan känner är …","empati",["empati"],"Empati."),
+tx("Att tänka mest på sin egen fördel är …","egoism",["egoism"],"Egoism."),
+tx("Att hjälpa och stå upp för andra är …","solidaritet",["solidaritet"],"Solidaritet."),
+tx("Att alla människor är lika mycket värda är …","jämlikhet",["jämlikhet","jamlikhet"],"Jämlikhet."),
+tx("Samma rättigheter och möjligheter oavsett kön är …","jämställdhet",["jämställdhet","jamstalldhet"],"Jämställdhet."),
+tx("Att stå kvar på någons sida och inte svika är …","lojalitet",["lojalitet"],"Lojalitet."),
+tx("Att göra det man ska och ta följderna av sina val är …","ansvar",["ansvar"],"Ansvar."),
+tx("Att få bestämma mycket över sitt eget liv är …","frihet",["frihet"],"Frihet."),
+tx("Att visa hänsyn även när man tycker olika är …","respekt",["respekt"],"Respekt."),
+tx("Att behandla människor rimligt, även om alla inte alltid får exakt samma sak, är …","rättvisa",["rättvisa","rattvisa"],"Rättvisa."),
+tx("Att säga eller göra något som sårar eller förnedrar någon kan vara en …","kränkning",["kränkning","krankning"],"Kränkning.")
+]},
+{t:"Level 2 – Utan ordlåda",pass:10,qs:[
+tx("När du känner att en person går att lita på känner du …","tillit",["tillit"],"Tillit."),
+tx("När någon sätter sig in i hur en annan person upplever en situation visar den …","empati",["empati"],"Empati."),
+tx("När en person främst tänker på sin egen vinst visar personen …","egoism",["egoism"],"Egoism."),
+tx("När människor ställer upp för varandra utan egen vinst visar de …","solidaritet",["solidaritet"],"Solidaritet."),
+tx("Alla människors lika värde handlar om …","jämlikhet",["jämlikhet","jamlikhet"],"Jämlikhet."),
+tx("Samma möjligheter oavsett kön handlar om …","jämställdhet",["jämställdhet","jamstalldhet"],"Jämställdhet."),
+tx("Att inte svika en vän handlar om …","lojalitet",["lojalitet"],"Lojalitet."),
+tx("Att stå för det man gjort är att ta …","ansvar",["ansvar"],"Ansvar."),
+tx("Att få göra egna val i sitt liv handlar om …","frihet",["frihet"],"Frihet."),
+tx("Att lyssna färdigt även när man inte håller med visar …","respekt",["respekt"],"Respekt."),
+tx("Att någon får extra stöd för att ha en rimlig chans kan handla om …","rättvisa",["rättvisa","rattvisa"],"Rättvisa."),
+tx("Om någon förlöjligas inför andra kan det vara en …","kränkning",["kränkning","krankning"],"Kränkning.")
+]},
+{t:"Level 3 – Vilket begrepp passar?",pass:6,qs:[
+mc("Sasha berättar något personligt för Kim eftersom hon litar på att Kim inte sprider det.",["lojalitet","tillit","frihet","rättvisa"],"tillit","Sasha vågar lita på Kim."),
+mc("En elev säger ifrån när en klasskamrat blir förlöjligad.",["solidaritet","egoism","frihet","tillit"],"solidaritet","Eleven står upp för någon annan."),
+mc("Två elever får olika mycket stöd eftersom de har olika behov.",["rättvisa","jämlikhet","lojalitet","egoism"],"rättvisa","Rättvisa behöver inte betyda exakt samma stöd."),
+mc("Nora råkar förstöra en gemensam sak och berättar direkt.",["ansvar","frihet","solidaritet","jämställdhet"],"ansvar","Hon står för sin handling."),
+mc("En elev tar den bästa delen av ett grupparbete och lämnar resten åt andra.",["empati","egoism","respekt","tillit"],"egoism","Egen fördel sätts främst."),
+mc("En förening ser till att alla får samma möjlighet oavsett kön.",["jämlikhet","jämställdhet","frihet","lojalitet"],"jämställdhet","Det gäller lika rättigheter oavsett kön."),
+mc("En elev säger att alla människor ska behandlas som lika mycket värda.",["jämlikhet","jämställdhet","respekt","frihet"],"jämlikhet","Alla människors lika värde."),
+mc("Amina märker att hennes vän är tyst och försöker förstå hur vännen mår.",["respekt","empati","solidaritet","ansvar"],"empati","Hon försöker förstå den andras känslor.")
+]},
+{t:"Level 4 – Förklara och jämför",self:true,qs:[
+sf("Förklara skillnaden mellan jämlikhet och jämställdhet.",["Jag förklarar jämlikhet.","Jag förklarar jämställdhet.","Skillnaden blir tydlig."],"Jämlikhet handlar om alla människors lika värde och möjligheter. Jämställdhet handlar särskilt om samma rättigheter och möjligheter oavsett kön."),
+sf("Kan lojalitet ibland krocka med ansvar? Förklara med ett eget exempel.",["Jag visar vad lojalitet betyder.","Jag visar vad ansvar betyder.","Jag förklarar krocken."],"Ja. Om en vän gjort något dumt kan jag vilja skydda vännen, men ansvar kan betyda att jag behöver berätta sanningen eller hjälpa till att rätta till det."),
+sf("Kan rättvisa innebära att människor får olika mycket hjälp? Förklara.",["Jag tar ställning.","Jag förklarar varför olika stöd ändå kan vara rättvist."],"Ja. Rättvisa behöver inte betyda exakt samma sak till alla. Olika behov kan göra olika stöd rättvist."),
+sf("Välj två av empati, respekt, tillit och solidaritet. Förklara betydelsen och ge vardagsexempel.",["Jag förklarar två begrepp.","Jag ger exempel till båda."],"Exempel: Empati är att försöka förstå hur någon annan känner. Respekt är att visa hänsyn, till exempel genom att låta någon tala till punkt.")
+]}]},
+{id:"c",title:"Bana 3 – Etiska dilemman",desc:"Vad är ett dilemma och varför?",levels:[
+{t:"Level 1 – Dilemma eller inte?",pass:4,qs:[
+mc("Du kan inte välja mellan två glassmaker.",["Etiskt dilemma","Inte etiskt dilemma"],"Inte etiskt dilemma","Ett vanligt val."),
+mc("En vän berättar en hemlighet, men du förstår att någon kan bli illa behandlad om du är tyst.",["Inte etiskt dilemma","Etiskt dilemma"],"Etiskt dilemma","Lojalitet krockar med ansvar och säkerhet."),
+mc("Du funderar på vilken bok du ska läsa först.",["Etiskt dilemma","Inte etiskt dilemma"],"Inte etiskt dilemma","Ett vanligt val."),
+mc("Din vän ber dig säga något som inte är sant för att skydda vännen.",["Etiskt dilemma","Inte etiskt dilemma"],"Etiskt dilemma","Lojalitet kan krocka med ansvar och ärlighet."),
+mc("Två fritidsaktiviteter ligger samma kväll.",["Etiskt dilemma","Inte etiskt dilemma"],"Inte etiskt dilemma","Det behöver inte handla om rätt och fel.")
+]},
+{t:"Level 2 – Minns själv",pass:4,qs:[
+tx("Ett etiskt dilemma är ett svårt _____ där det inte finns någon helt bra lösning.","val",["val","problem","situation"],"Ett svårt val eller en svår situation."),
+tx("I ett dilemma kan flera alternativ få negativa _____.","följder",["följder","foljder","konsekvenser"],"Flera val kan få negativa konsekvenser."),
+tx("Ett etiskt dilemma handlar om vad som kan vara rätt eller _____.","fel",["fel"],"Rätt eller fel."),
+tx("I ett dilemma finns ofta minst två möjliga _____.","handlingsalternativ",["handlingsalternativ","val","alternativ"],"Flera möjliga sätt att agera."),
+tx("Ett dilemma är mer än ett vanligt svårt val eftersom flera lösningar kan ha _____.","problem",["problem","nackdelar","negativa följder","negativa konsekvenser"],"Det finns inget helt problemfritt alternativ.")
+]},
+{t:"Level 3 – Varför är det ett dilemma?",pass:3,qs:[
+mc("Du har lovat hålla en hemlighet men förstår att någon kan skadas om du är tyst. Varför är det ett dilemma?",["För att två viktiga värden krockar och båda valen kan få negativa följder","För att det finns flera glassmaker","För att det alltid är fel att hålla hemligheter"],"För att två viktiga värden krockar och båda valen kan få negativa följder","Två värden krockar."),
+mc("En grupp måste välja om den sista gemensamma resursen ska användas nu eller sparas till en annan grupp. Varför kan det vara ett dilemma?",["Båda valen kan gynna någon men missgynna någon annan","Det finns bara ett möjligt val","Det handlar bara om smak"],"Båda valen kan gynna någon men missgynna någon annan","Båda vägarna får följder."),
+mc("Du vet en sanning som kan såra en vän. Varför kan det bli ett dilemma?",["Ärlighet kan krocka med omtanke","Sanningen är alltid lätt","Det finns inga följder"],"Ärlighet kan krocka med omtanke","Två värden står mot varandra."),
+mc("I ett lagarbete har en vän gjort något orättvist. Du vill vara lojal men också stå upp för gruppen.",["Lojalitet och rättvisa kan krocka","Det finns inget val","Det handlar bara om fritid"],"Lojalitet och rättvisa kan krocka","Det är en etisk krock.")
+]},
+{t:"Level 4 – Förklara själv",self:true,qs:[
+sf("Förklara vad ett etiskt dilemma är. Ge sedan ett eget exempel som verkligen är ett dilemma.",["Det finns ett svårt val.","Det finns minst två handlingsalternativ.","Mer än ett alternativ har problem eller nackdelar.","Valet handlar om vad som kan vara rätt eller fel."],"Ett etiskt dilemma är en situation där flera möjliga val finns men ingen helt bra lösning. Till exempel kan man ha lovat en vän att hålla en hemlighet men sedan förstå att någon riskerar att skadas.")
+]}]},
+{id:"d",title:"Bana 4 – Resonera om rätt och fel",desc:"Motivera, se perspektiv och konsekvenser.",levels:[
+{t:"Level 1 – Bästa motivering",pass:3,qs:[
+mc("Du har lovat hjälpa gruppen men blir erbjuden något roligare. Vilken motivering är starkast?",["Jag går för det roliga är roligare.","Jag försöker hålla löftet eftersom gruppen räknar med mig, men jag kan fråga om det går att lösa på annat sätt.","Jag gör vad jag vill eftersom frihet betyder att alltid få bestämma."],"Jag försöker hålla löftet eftersom gruppen räknar med mig, men jag kan fråga om det går att lösa på annat sätt.","Motivering + fler perspektiv."),
+mc("Du hittar en borttappad sak. Vilken motivering är starkast?",["Jag behåller den för ingen såg mig.","Jag lämnar in den eftersom den tillhör någon annan och det visar ansvar och respekt.","Jag slänger den."],"Jag lämnar in den eftersom den tillhör någon annan och det visar ansvar och respekt.","Tydliga etiska skäl."),
+mc("En kompis vill att du ska utesluta någon ur en lek. Vilken motivering är starkast?",["Jag säger nej eftersom alla ska behandlas respektfullt, även om kompisen kan bli sur.","Jag gör som kompisen säger.","Jag går därifrån."],"Jag säger nej eftersom alla ska behandlas respektfullt, även om kompisen kan bli sur.","Ställning + konsekvens."),
+mc("Det finns en sista portion kvar och flera har inte fått. Vilken motivering är starkast?",["Jag tar den snabbt.","Jag väntar och frågar eftersom rättvisa kan kräva att man tänker på andras behov.","Den snabbaste vinner."],"Jag väntar och frågar eftersom rättvisa kan kräva att man tänker på andras behov.","Rättviseprincip.")
+]},
+{t:"Level 2 – Jag tycker … eftersom …",self:true,qs:[
+sf("En klasskamrat tar ofta åt sig äran för sådant flera gjort tillsammans. Vad tycker du att man bör göra?",["Jag tar ställning.","Jag förklarar varför."],"Jag tycker att man bör säga ifrån lugnt eftersom alla bör få erkännande för det de faktiskt gjort."),
+sf("Du märker att någon alltid blir sist vald i en aktivitet. Vad bör gruppen göra?",["Jag tar ställning.","Jag motiverar."],"Jag tycker att gruppen bör ändra sättet man väljer lag eftersom samma person annars riskerar att känna sig utanför."),
+sf("En vän vill låna något dyrt men brukar inte lämna tillbaka saker. Vad gör du?",["Jag tar ställning.","Jag motiverar."],"Jag kan säga nej eller sätta tydliga villkor eftersom tillit bygger på ansvar."),
+sf("En grupp ska fördela arbetsuppgifter men en elev vill bara ta de enklaste delarna.",["Jag tar ställning.","Jag motiverar."],"Gruppen bör fördela arbetet mer rättvist eftersom alla behöver bidra efter förmåga.")
+]},
+{t:"Level 3 – Eftersom, men, så",self:true,qs:[
+sf("En kompis ber dig hålla en hemlighet, men hemligheten gör att en annan person riskerar att fara illa. Resonera.",["Jag tar ställning.","Jag ger ett skäl.","Jag visar ett annat perspektiv med men.","Jag beskriver en konsekvens eller slutsats."],"Jag tycker att man behöver berätta för en vuxen eftersom någon annars kan fara illa. Men kompisen kan känna sig sviken. Så jag skulle förklara varför jag behövde berätta."),
+sf("Två elever gör samma uppgift men den ena får mer tid eftersom läsningen tar längre tid. Resonera.",["Jag tar ställning.","Jag förklarar varför.","Jag tar upp ett annat perspektiv.","Jag drar en slutsats."],"Det kan vara rättvist eftersom olika elever kan behöva olika stöd. Men någon kan tycka att det är orättvist när reglerna inte är exakt lika. Så rättvisa behöver inte alltid betyda samma sak för alla."),
+sf("Din grupp har arbetat tillsammans, men en elev vill skriva bara sitt eget namn på en idé som flera kom på.",["Jag tar ställning.","Jag förklarar varför.","Jag visar ett annat perspektiv.","Jag beskriver följd/slutsats."],"Alla som bidrog bör få erkännande eftersom idén skapades gemensamt. Men eleven kanske tycker att den gjorde mest. Så gruppen behöver prata om bidragen."),
+sf("Du har lovat att hjälpa till hemma men blir bjuden på något du väldigt gärna vill gå på.",["Jag tar ställning.","Jag motiverar.","Jag visar en invändning.","Jag beskriver konsekvens/slutsats."],"Jag bör först försöka hålla det jag lovat eftersom andra räknar med mig. Men jag kan fråga om hjälpen kan göras senare. Så jag skulle prata hemma innan jag bestämmer mig.")
+]},
+{t:"Level 4 – Flera handlingsalternativ",self:true,qs:[
+sf("På en klassutflykt upptäcker Sam att en nära vän medvetet har lämnat en annan elev utanför. Vännen säger att Sam måste välja sida. Beskriv minst två sätt Sam kan agera, möjliga konsekvenser och vad du tycker är bäst.",["Jag beskriver minst två handlingsalternativ.","Jag beskriver konsekvenser.","Jag tar ställning.","Jag motiverar.","Jag använder gärna etikbegrepp."],"Sam kan stötta vännen och vara tyst, men då kan den utestängda eleven bli mer sårad. Sam kan också säga ifrån och bjuda in den andra eleven. Vännen kan bli arg, men Sam visar respekt och solidaritet. Jag tycker att Sam bör säga ifrån."),
+sf("Fyra elever gör ett gemensamt projekt. En elev har varit sjuk och hunnit göra mindre. Ska alla ändå få samma erkännande? Resonera från minst två perspektiv.",["Jag visar minst två perspektiv eller alternativ.","Jag resonerar om konsekvenser.","Jag tar ställning.","Jag motiverar.","Jag använder gärna begrepp."],"Alla kan få samma erkännande eftersom sjukdomen inte var elevens val. Samtidigt kan ansvar tala för att vara tydlig med vem som gjort vad. Jag tycker att gruppen bör erkänna alla men vara ärlig om arbetsfördelningen.")
+]}]},
+{id:"e",title:"Bana 5 – Provläge / transfer",desc:"Blandat, utan stöd.",levels:[
+{t:"Provläge – utan stöd",exam:true,qs:[
+tx("Att försöka förstå någon annans känslor kallas …","empati",["empati"],""),
+tx("Att få bestämma mycket över sitt eget liv kallas …","frihet",["frihet"],""),
+tx("Att stå för sina handlingar och deras följder handlar om …","ansvar",["ansvar"],""),
+sf("Förklara solidaritet med egna ord.",["Jag förklarar innebörden.","Jag ger gärna ett exempel."],"Solidaritet handlar om att ställa upp för andra och känna gemenskap eller ansvar med dem."),
+sf("Förklara rättvisa med egna ord.",["Jag förklarar att rättvisa inte alltid betyder exakt lika.","Jag ger gärna ett exempel."],"Rättvisa handlar om att människor behandlas på ett rimligt sätt. Ibland kan olika stöd vara rättvist."),
+mc("Elin tycker att människor bör lämna plats åt någon som behöver sitta mer.",["etik","moral","värdering"],"etik",""),
+mc("Elin reser sig och lämnar sin plats åt någon som behöver sitta mer.",["etik","värdering","moral"],"moral",""),
+mc("Du måste välja mellan att vara lojal mot en vän och att säga sanningen för att skydda någon annan.",["Ett vanligt val","Ett etiskt dilemma","En värdering"],"Ett etiskt dilemma",""),
+sf("Förklara vad som gör ett val till ett etiskt dilemma.",["Jag förklarar att flera val finns.","Jag visar att mer än ett val har problem eller negativa följder.","Jag kopplar till rätt och fel."],"Ett etiskt dilemma är ett svårt val där flera alternativ finns och inget är helt problemfritt."),
+sf("En digital grupp har en regel om att inga skärmbilder får delas utanför gruppen. Du ser en bild där någon blir illa behandlad. Beskriv minst två möjliga sätt att agera och följder.",["Jag beskriver minst två handlingsalternativ.","Jag beskriver konsekvenser.","Jag använder gärna etikbegrepp."],"Du kan följa regeln och inte dela bilden, vilket skyddar tillit men kan göra att den utsatta inte får hjälp. Du kan också visa den för en ansvarig vuxen, vilket bryter mot regeln men kan stoppa kränkningen."),
+sf("En förening har bara en plats kvar till en aktivitet. Två personer vill ha den av olika skäl. Resonera från minst två perspektiv innan du tar ställning.",["Jag visar två perspektiv.","Jag motiverar.","Jag tar ställning."],"En person kanske har väntat längst. Den andra kanske har ett särskilt behov. Jag skulle vilja veta vilka regler som gäller och välja det mest rättvisa alternativet."),
+sf("En vän vill att du ska hålla med offentligt fast du tycker att vännen behandlat någon orättvist. Hur skulle du agera? Motivera och beskriv konsekvenser.",["Jag tar ställning.","Jag motiverar.","Jag beskriver konsekvenser.","Jag ser gärna ett annat perspektiv."],"Jag skulle inte hålla med bara för att vara lojal. Jag skulle hellre prata med vännen enskilt eftersom respekt och ansvar också är viktiga.")
+]}]}];
+
+let s=JSON.parse(localStorage.getItem(K)||'{"done":{}}'); if(!s.done)s.done={};
+let T,L=0,I=0,res=[],exam=[];
+const $=id=>document.getElementById(id), norm=x=>(x||"").toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9åäö\s]/gi,"").replace(/\s+/g," ");
+function sim(x,y){x=norm(x);y=norm(y);if(x===y||x.includes(y)||y.includes(x))return true;return lev(x,y)<=Math.max(1,Math.floor(y.length*.2))}
+function lev(a,b){let d=Array.from({length:b.length+1},(_,i)=>[i]);for(let j=0;j<=a.length;j++)d[0][j]=j;for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)d[i][j]=b[i-1]===a[j-1]?d[i-1][j-1]:Math.min(d[i-1][j-1]+1,d[i][j-1]+1,d[i-1][j]+1);return d[b.length][a.length]}
+function sh(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function save(){localStorage.setItem(K,JSON.stringify(s))}
+function home(){$("quiz").classList.add("hidden");$("inf").classList.add("hidden");$("home").classList.remove("hidden");drawHome()}
+function info(){$("home").classList.add("hidden");$("inf").classList.remove("hidden")}
+function resetAll(){if(confirm("Börja om och radera sparad progression på den här enheten?")){localStorage.removeItem(K);s={done:{}};drawHome()}}
+function drawHome(){let g=$("grid");g.innerHTML="";tracks.forEach(t=>{let n=(s.done[t.id]||[]).filter(Boolean).length,p=Math.round(n/t.levels.length*100),d=document.createElement("div");d.className="card track";d.onclick=()=>openT(t.id);d.innerHTML='<span class="badge">'+n+'/'+t.levels.length+' levels</span><h3>'+t.title+'</h3><div class="small">'+t.desc+'</div><div class="progress"><div style="width:'+p+'%"></div></div>';g.appendChild(d)})}
+function openT(id){T=tracks.find(x=>x.id===id);let a=s.done[id]||[],n=a.findIndex(x=>!x);L=n<0?0:n;I=0;res=[];exam=[];$("home").classList.add("hidden");$("inf").classList.add("hidden");$("quiz").classList.remove("hidden");drawQ()}
+function pills(){let b=$("lvls");b.innerHTML="";T.levels.forEach((l,i)=>{let x=document.createElement("span");x.className="pill"+((s.done[T.id]||[])[i]?" done":"")+(i===L?" current":"");x.textContent=l.t.replace("Level ","L");b.appendChild(x)})}
+function drawQ(){pills();let l=T.levels[L],a=$("area");$("meta").textContent=T.title+" · "+l.t;if(I>=l.qs.length)return finish();let q=l.qs[I];a.innerHTML='<div class="kick">Fråga '+(I+1)+' av '+l.qs.length+'</div><div class="q">'+q.p+'</div>';if(l.bank&&q.k==="tx")a.innerHTML+='<div class="bank">'+l.bank.map(w=>'<span class="word">'+w+'</span>').join("")+'</div>';q.k==="mc"?drawMC(q,l):q.k==="tx"?drawTX(q,l):drawSF(q,l)}
+function drawMC(q,l){let b=document.createElement("div");b.className="opts";sh([...q.o]).forEach(o=>{let x=document.createElement("button");x.className="opt";x.textContent=o;x.onclick=()=>{[...b.children].forEach(z=>z.disabled=true);let ok=norm(o)===norm(q.a);x.classList.add(ok?"ok":"no");if(!ok)[...b.children].forEach(z=>{if(norm(z.textContent)===norm(q.a))z.classList.add("ok")});record(ok,q,l);feedback(ok,q.e);next()};b.appendChild(x)});$("area").appendChild(b)}
+function drawTX(q,l){let x=document.createElement("input");x.placeholder="Skriv ditt svar här";$("area").appendChild(x);let b=document.createElement("button");b.className="pri";b.style.marginTop="12px";b.textContent="Kontrollera";b.onclick=()=>{if(!x.value.trim())return;let ok=(q.alts||[q.a]).some(y=>sim(x.value,y));x.disabled=b.disabled=true;record(ok,q,l);feedback(ok,q.e||("Ett bra svar är: "+q.a));next()};$("area").appendChild(b)}
+function drawSF(q,l){let x=document.createElement("textarea");x.placeholder="Skriv ditt svar här …";$("area").appendChild(x);let b=document.createElement("button");b.className="pri";b.style.marginTop="12px";b.textContent="Jämför mitt svar";b.onclick=()=>{if(!x.value.trim())return;x.disabled=b.disabled=true;record(null,q,l);let d=document.createElement("div");d.className="fb info";d.innerHTML='<b>Checka ditt eget svar:</b><div class="checks">'+q.c.map(z=>'<label><input type="checkbox"> '+z+'</label>').join("")+'</div><div class="model"><b>Exempel på ett starkt svar:</b><br>'+q.m+'</div><p class="small">Modellen är inte det enda möjliga rätta svaret.</p>';$("area").appendChild(d);next()};$("area").appendChild(b)}
+function feedback(ok,e){let d=document.createElement("div");d.className="fb "+(ok?"good":"bad");d.innerHTML='<b>'+(ok?"Det sitter!":"Inte riktigt än.")+'</b> '+(e||"");$("area").appendChild(d)}
+function next(){let b=document.createElement("button");b.className="sec";b.style.marginTop="12px";b.textContent="Nästa fråga →";b.onclick=()=>{I++;drawQ()};$("area").appendChild(b)}
+function record(ok,q,l){(l.exam?exam:res).push({ok,q})}
+function mark(){if(!s.done[T.id])s.done[T.id]=[];s.done[T.id][L]=true;save()}
+function finish(){let l=T.levels[L],a=$("area");if(l.exam){let o=exam.filter(x=>x.q.k!=="sf"),r=o.filter(x=>x.ok).length;a.innerHTML='<div class="kick">Klart</div><h2>Provläget är färdigt</h2><p><b>'+r+'/'+o.length+'</b> objektiva frågor rätt.</p><p><b>Det här verkar sitta:</b> sådant du kunde utan stöd.</p><p><b>Det här kan du träna igen:</b> missade frågor och resonemang där flera delar saknades.</p><button class="pri" onclick="mark();home()">Klar</button>';return}if(l.self){mark();a.innerHTML='<div class="kick">Level klar!</div><h2>Bra jobbat.</h2><p>Du har jämfört dina egna svar med checklistor och modeller.</p>'+buttons(true);return}let r=res.filter(x=>x.ok).length,p=l.pass||Math.ceil(l.qs.length*.8),ok=r>=p;if(ok)mark();a.innerHTML='<div class="kick">'+(ok?"Level klar!":"Nästan där")+'</div><h2>'+r+' av '+l.qs.length+' rätt</h2><p>'+(ok?"Du kan gå vidare.":"Gör gärna om nivån innan du går vidare.")+'</p>'+buttons(ok)}
+function buttons(ok){let n=L<T.levels.length-1;return '<div style="display:flex;gap:10px;flex-wrap:wrap">'+(n?'<button class="pri" onclick="nextL()">Nästa level →</button>':'<button class="pri" onclick="home()">Till banorna</button>')+'<button class="sec" onclick="retry()">Gör om nivån</button>'+(!ok&&n?'<button class="ghost" onclick="nextL()">Gå vidare ändå</button>':'')+'</div>'}
+function nextL(){if(L<T.levels.length-1){L++;I=0;res=[];exam=[];drawQ()}else home()}function retry(){I=0;res=[];exam=[];drawQ()}
+drawHome();
+</script>
+</body></html>
