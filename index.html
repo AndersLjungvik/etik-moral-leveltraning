@@ -232,7 +232,8 @@ function setOrder(){
   }else{
     order=sh(all).slice(0,l.show||all.length);
   }
-}\nfunction openT(id){T=tracks.find(x=>x.id===id);let a=s.done[id]||[],n=a.findIndex(x=>!x);L=n<0?0:n;I=0;res=[];exam=[];setOrder();$("home").classList.add("hidden");$("inf").classList.add("hidden");$("quiz").classList.remove("hidden");drawQ()}
+}
+function openT(id){T=tracks.find(x=>x.id===id);let a=s.done[id]||[],n=a.findIndex(x=>!x);L=n<0?0:n;I=0;res=[];exam=[];setOrder();$("home").classList.add("hidden");$("inf").classList.add("hidden");$("quiz").classList.remove("hidden");drawQ()}
 function pills(){let b=$("lvls");b.innerHTML="";T.levels.forEach((l,i)=>{let x=document.createElement("span");x.className="pill"+((s.done[T.id]||[])[i]?" done":"")+(i===L?" current":"");x.textContent=l.t.replace("Level ","L");b.appendChild(x)})}
 function drawQ(){pills();let l=T.levels[L],a=$("area");$("meta").textContent=T.title+" · "+l.t;if(I>=order.length)return finish();let q=l.qs[order[I] ?? I];a.innerHTML='<div class="kick">Fråga '+(I+1)+' av '+order.length+'</div><div class="q">'+q.p+'</div>';if(l.bank&&q.k==="tx")a.innerHTML+='<div class="bank">'+l.bank.map(w=>'<span class="word">'+w+'</span>').join("")+'</div>';q.k==="mc"?drawMC(q,l):q.k==="tx"?drawTX(q,l):drawSF(q,l)}
 function drawMC(q,l){let b=document.createElement("div");b.className="opts";sh([...q.o]).forEach(o=>{let x=document.createElement("button");x.className="opt";x.textContent=o;x.onclick=()=>{[...b.children].forEach(z=>z.disabled=true);let ok=norm(o)===norm(q.a);x.classList.add(ok?"ok":"no");if(!ok)[...b.children].forEach(z=>{if(norm(z.textContent)===norm(q.a))z.classList.add("ok")});record(ok,q,l);feedback(ok,q.e);next()};b.appendChild(x)});$("area").appendChild(b)}
