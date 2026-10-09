@@ -211,7 +211,19 @@ gp("reason",sf("En elev säger något sårande men menar att det bara var ett sk
 let s=JSON.parse(localStorage.getItem(K)||'{"done":{}}'); if(!s.done)s.done={};
 let T,L=0,I=0,res=[],exam=[],order=[];
 const $=id=>document.getElementById(id), norm=x=>(x||"").toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9åäö\s]/gi,"").replace(/\s+/g," ");
-function sim(x,y){x=norm(x);y=norm(y);if(x===y||x.includes(y)||y.includes(x))return true;return lev(x,y)<=Math.max(1,Math.floor(y.length*.2))}
+function cleanShortAnswer(x){
+  let s=norm(x);
+  s=s.replace(/^(det ar|svaret ar|jag svarar|jag tror att det ar|jag tror det ar|det handlar om)\s+/,"");
+  return s.trim();
+}
+function sim(x,y){
+  x=cleanShortAnswer(x); y=cleanShortAnswer(y);
+  if(!x||!y)return false;
+  if(x===y)return true;
+  const maxErr=y.length<=5?0:y.length<=10?1:2;
+  if(Math.abs(x.length-y.length)>maxErr)return false;
+  return lev(x,y)<=maxErr;
+}
 function lev(a,b){let d=Array.from({length:b.length+1},(_,i)=>[i]);for(let j=0;j<=a.length;j++)d[0][j]=j;for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)d[i][j]=b[i-1]===a[j-1]?d[i-1][j-1]:Math.min(d[i-1][j-1]+1,d[i][j-1]+1,d[i-1][j]+1);return d[b.length][a.length]}
 function sh(a){for(let i=a.length-1;i;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function save(){localStorage.setItem(K,JSON.stringify(s))}
@@ -237,7 +249,7 @@ function openT(id){T=tracks.find(x=>x.id===id);let a=s.done[id]||[],n=a.findInde
 function pills(){let b=$("lvls");b.innerHTML="";T.levels.forEach((l,i)=>{let x=document.createElement("span");x.className="pill"+((s.done[T.id]||[])[i]?" done":"")+(i===L?" current":"");x.textContent=l.t.replace("Level ","L");b.appendChild(x)})}
 function drawQ(){pills();let l=T.levels[L],a=$("area");$("meta").textContent=T.title+" · "+l.t;if(I>=order.length)return finish();let q=l.qs[order[I] ?? I];a.innerHTML='<div class="kick">Fråga '+(I+1)+' av '+order.length+'</div><div class="q">'+q.p+'</div>';if(l.bank&&q.k==="tx")a.innerHTML+='<div class="bank">'+l.bank.map(w=>'<span class="word">'+w+'</span>').join("")+'</div>';q.k==="mc"?drawMC(q,l):q.k==="tx"?drawTX(q,l):drawSF(q,l)}
 function drawMC(q,l){let b=document.createElement("div");b.className="opts";sh([...q.o]).forEach(o=>{let x=document.createElement("button");x.className="opt";x.textContent=o;x.onclick=()=>{[...b.children].forEach(z=>z.disabled=true);let ok=norm(o)===norm(q.a);x.classList.add(ok?"ok":"no");if(!ok)[...b.children].forEach(z=>{if(norm(z.textContent)===norm(q.a))z.classList.add("ok")});record(ok,q,l);feedback(ok,q.e);next()};b.appendChild(x)});$("area").appendChild(b)}
-function drawTX(q,l){let x=document.createElement("input");x.placeholder="Skriv ditt svar här";$("area").appendChild(x);let b=document.createElement("button");b.className="pri";b.style.marginTop="12px";b.textContent="Kontrollera";b.onclick=()=>{if(!x.value.trim())return;let ok=(q.alts||[q.a]).some(y=>sim(x.value,y));x.disabled=b.disabled=true;record(ok,q,l);feedback(ok,q.e||("Ett bra svar är: "+q.a));next()};$("area").appendChild(b)}
+function drawTX(q,l){let x=document.createElement("input");x.placeholder="Skriv ett begrepp eller kort svar – inte en lista";$("area").appendChild(x);let b=document.createElement("button");b.className="pri";b.style.marginTop="12px";b.textContent="Kontrollera";b.onclick=()=>{if(!x.value.trim())return;let ok=(q.alts||[q.a]).some(y=>sim(x.value,y));x.disabled=b.disabled=true;record(ok,q,l);feedback(ok,q.e||("Ett bra svar är: "+q.a));next()};$("area").appendChild(b)}
 function drawSF(q,l){let x=document.createElement("textarea");x.placeholder="Skriv ditt svar här …";$("area").appendChild(x);let b=document.createElement("button");b.className="pri";b.style.marginTop="12px";b.textContent="Jämför mitt svar";b.onclick=()=>{if(!x.value.trim())return;x.disabled=b.disabled=true;record(null,q,l);let d=document.createElement("div");d.className="fb info";d.innerHTML='<b>Checka ditt eget svar:</b><div class="checks">'+q.c.map(z=>'<label><input type="checkbox"> '+z+'</label>').join("")+'</div><div class="model"><b>Exempel på ett starkt svar:</b><br>'+q.m+'</div><p class="small">Modellen är inte det enda möjliga rätta svaret.</p>';$("area").appendChild(d);next()};$("area").appendChild(b)}
 function feedback(ok,e){let d=document.createElement("div");d.className="fb "+(ok?"good":"bad");d.innerHTML='<b>'+(ok?"Det sitter!":"Inte riktigt än.")+'</b> '+(e||"");$("area").appendChild(d)}
 function next(){let b=document.createElement("button");b.className="sec";b.style.marginTop="12px";b.textContent="Nästa fråga →";b.onclick=()=>{I++;drawQ()};$("area").appendChild(b)}
