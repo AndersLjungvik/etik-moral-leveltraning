@@ -24,7 +24,7 @@ body{min-height:100vh;display:grid;place-items:center;padding:14px}
 .player .arm{position:absolute;left:53px;top:48px;width:37px;height:8px;background:#8b5e3c;transform:rotate(-18deg);transform-origin:left center}
 .player .wand{position:absolute;left:84px;top:34px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
 .player.jump{bottom:52%}.player.duck{height:58px}.player.duck .head{top:18px}.player.duck .body{top:43px;height:33px}.player.duck .arm{top:49px}
-.shield{position:absolute;z-index:8;left:14.8%;bottom:19%;width:70px;height:118px;border:7px solid #7dd3fc;border-radius:50%;background:#0ea5e933;box-shadow:0 0 22px #38bdf8, inset 0 0 22px #38bdf8;opacity:0;transition:opacity .05s;pointer-events:none}.shield.on{opacity:1}
+.shield{position:absolute;z-index:8;left:14.2%;bottom:17%;width:76px;height:56%;border:7px solid #7dd3fc;border-radius:46%;background:#0ea5e922;box-shadow:0 0 24px #38bdf8, inset 0 0 28px #38bdf8;opacity:0;transition:opacity .05s;pointer-events:none}.shield.on{opacity:1}
 .boss{position:absolute;z-index:6;right:7%;bottom:18%;width:112px;height:135px;transition:right .18s,transform .16s,opacity .2s;filter:drop-shadow(0 6px 7px #0009)}
 .boss .head{position:absolute;left:18px;top:0;width:78px;height:48px;border-radius:17px;background:#374151;border:4px solid var(--red)}
 .boss .eye{position:absolute;top:17px;width:13px;height:13px;border-radius:50%;background:#fee2e2;box-shadow:inset 0 0 0 4px var(--red)}.boss .e1{left:19px}.boss .e2{right:19px}
@@ -41,7 +41,7 @@ body{min-height:100vh;display:grid;place-items:center;padding:14px}
 .kicker{color:var(--gold);font-size:14px;font-weight:1000;letter-spacing:.14em}.big{font-size:clamp(38px,8vw,68px);font-weight:1000;margin:8px 0}.red{color:var(--red)}.controls{margin:22px auto;padding:16px 22px;background:#111827;border:1px solid #334155;border-radius:15px;width:min(100%,360px);font-size:13px;line-height:1.75}.controls b{color:#fff}.good{color:var(--green)}.bad{color:#fca5a5}
 button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:900;cursor:pointer;background:var(--gold);color:#111827;margin:6px}.secondary{background:#334155;color:#fff}
 .shake{animation:shake .28s}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-12px)}50%{transform:translateX(10px)}75%{transform:translateX(-7px)}}
-@media(max-width:650px){#game{min-height:390px}.speech{width:55%;right:2%;min-height:115px;padding:12px}.player{left:4%;transform:scale(.82);transform-origin:bottom left}.shield{left:11%}.boss{right:2%;transform:scale(.83);transform-origin:bottom right}}
+@media(max-width:650px){#game{min-height:390px}.speech{width:55%;right:2%;min-height:115px;padding:12px}.player{left:4%;transform:scale(.82);transform-origin:bottom left}.shield{left:9.5%;height:58%}.boss{right:2%;transform:scale(.83);transform-origin:bottom right}}
 </style>
 </head>
 <body>
@@ -58,7 +58,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 
     <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när alla banor i träningen är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
 
-    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS · v0.7.2</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
+    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS · v0.7.3</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
 
     <div class="overlay hidden" id="lose"><div class="panel"><div class="kicker">RONDEN ÄR ÖVER</div><div class="big red">DU ÅKTE PÅ STRYK!</div><p>ETIKBOSSEN vann den här ronden.</p><button id="retry">REVANSCH!</button><a href="index.html"><button class="secondary">Till träningen</button></a></div></div>
 
@@ -126,6 +126,7 @@ function createBolt(word){
  projectile={el:e,x:78,v:-.024,high,correct:word===Q[qi].a,returning:false};
 }
 function pbox(){const r=player.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
+function sbox(){const r=shield.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
 function ebox(el){const r=el.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
 function overlap(a,b){return a.l<b.r&&a.r>b.l&&a.t<b.b&&a.b>b.t}
 function hitPlayer(){
@@ -174,8 +175,10 @@ function loop(now){
    projectile.el.style.left=projectile.x+"%";
    if(projectile.returning){
      if(projectile.x>=72){bossHit()}
+   }else if(keys.space && overlap(sbox(),ebox(projectile.el))){
+     projectile.correct?parry():wrongBlock()
    }else if(hitPlayer()){
-     if(keys.space){projectile.correct?parry():wrongBlock()}else{directHit()}
+     directHit()
    }else if(projectile.x<-27){
      projectile.correct?missedCorrect():safePass()
    }
