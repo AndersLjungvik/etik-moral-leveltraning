@@ -58,7 +58,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 
     <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när alla banor i träningen är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
 
-    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS · v0.7.3</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
+    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS · v0.7.4</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
 
     <div class="overlay hidden" id="lose"><div class="panel"><div class="kicker">RONDEN ÄR ÖVER</div><div class="big red">DU ÅKTE PÅ STRYK!</div><p>ETIKBOSSEN vann den här ronden.</p><button id="retry">REVANSCH!</button><a href="index.html"><button class="secondary">Till träningen</button></a></div></div>
 
@@ -88,7 +88,7 @@ const Q=[
 const WORDS=Q.map(x=>x.a).concat(["EMPATI","KRÄNKNING"]);
 const game=document.getElementById("game"),player=document.getElementById("player"),shield=document.getElementById("shield"),boss=document.getElementById("boss");
 const speech=document.querySelector("#speech .q"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),status=document.getElementById("status");
-let active=false,energy=3,hp=10,qi=0,bossNear=0,keys={up:false,down:false,space:false},projectile=null,last=0,nextShot=0,volley=[],audio=null;
+let active=false,energy=3,hp=10,qi=0,bossNear=0,keys={up:false,down:false,space:false},projectile=null,last=0,nextShot=0,volley=[],audio=null,roundQ=[];
 
 function audioCtx(){if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();return audio}
 function beep(type){
@@ -106,12 +106,13 @@ function hud(){hearts.textContent="❤️".repeat(Math.max(0,energy))+"🖤".rep
 function flash(txt,color="#fff",ms=650){status.textContent=txt;status.style.color=color;status.style.opacity=1;setTimeout(()=>status.style.opacity=0,ms)}
 function sparks(x,y,n=10){for(let i=0;i<n;i++){const s=document.createElement("i");s.className="spark";s.style.left=x+"px";s.style.top=y+"px";s.style.setProperty("--dx",(Math.random()*150-75)+"px");s.style.setProperty("--dy",(Math.random()*120-60)+"px");game.appendChild(s);setTimeout(()=>s.remove(),480)}}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function newQuestionOrder(){roundQ=shuffle(Q)}
 function makeVolley(){
- const correct=Q[qi].a;
+ const correct=roundQ[qi].a;
  let wrong=shuffle(WORDS.filter(w=>w!==correct)).slice(0,4+Math.floor(Math.random()*2));
  volley=shuffle(wrong.concat([correct]));
 }
-function question(){speech.textContent=Q[qi].q;makeVolley();nextShot=performance.now()+1100}
+function question(){speech.textContent=roundQ[qi].q;makeVolley();nextShot=performance.now()+1100}
 function bossAdvance(px){bossNear=Math.min(260,bossNear+px);boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";if(bossNear>=235)loseRound()}
 function bossBack(){bossNear=Math.max(0,bossNear-30);boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")"}
 function playerState(){
@@ -121,9 +122,9 @@ function playerState(){
 function createBolt(word){
  const e=document.createElement("div");e.className="bolt";e.innerHTML="<span>"+word+"</span>";
  const high=Math.random()<.5;
- e.dataset.word=word;e.dataset.correct=String(word===Q[qi].a);e.dataset.returning="0";
+ e.dataset.word=word;e.dataset.correct=String(word===roundQ[qi].a);e.dataset.returning="0";
  e.style.top=high?"48%":"68%";e.style.left="78%";game.appendChild(e);
- projectile={el:e,x:78,v:-.024,high,correct:word===Q[qi].a,returning:false};
+ projectile={el:e,x:78,v:-.024,high,correct:word===roundQ[qi].a,returning:false};
 }
 function pbox(){const r=player.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
 function sbox(){const r=shield.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
@@ -159,7 +160,7 @@ function killBoss(){
  setTimeout(()=>{let s=readSave();s.boss=true;localStorage.setItem(K,JSON.stringify(s));document.getElementById("win").classList.remove("hidden")},1450)
 }
 function reset(){
- energy=3;hp=10;qi=0;bossNear=0;keys={up:false,down:false,space:false};boss.classList.remove("dead");boss.style.opacity=1;boss.style.right="7%";boss.style.transform="scale(1)";document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();playerState();question();active=true;last=performance.now();requestAnimationFrame(loop)
+ energy=3;hp=10;qi=0;bossNear=0;newQuestionOrder();keys={up:false,down:false,space:false};boss.classList.remove("dead");boss.style.opacity=1;boss.style.right="7%";boss.style.transform="scale(1)";document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();playerState();question();active=true;last=performance.now();requestAnimationFrame(loop)
 }
 function loop(now){
  if(!active)return;
