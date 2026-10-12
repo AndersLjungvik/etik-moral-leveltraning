@@ -58,11 +58,13 @@ const pool=[
 ];
 const canvas=document.getElementById('stage'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
 const rand=a=>{let b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+let answerSlots=rand([0,1,2]);
+function nextBalancedChoices(q){if(!answerSlots.length)answerSlots=rand([0,1,2]);const pos=answerSlots.pop();const other=rand(q.a.filter(x=>x!==q.right));other.splice(pos,0,q.right);return other}
 let shuffled=rand(pool),index=0,choices=[],hearts=4,boss=5,hits=0,phase='ready',prevPhase='playing',keys={left:false,right:false},player={x:480,y:GROUND,vy:0,shield:0},projectiles=[],telegraphs=[],spawnTimer=1.8,last=0,beam=0,beamFrom=480,wrongFlash=0,answered=false,frame=0;
 const trainingUnlocked=()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');return !!(s.levels&&s.levels.dna&&s.levels.dna[0]&&s.levels.dna[1]&&s.levels.cell&&s.levels.cell[0]&&s.levels.cell[1])}catch(e){return false}};
 function recordQuestion(q,correct){try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');s.wrong=s.wrong||{};const k='boss:'+q.q;if(correct)delete s.wrong[k];else s.wrong[k]={p:q.q,o:q.a,a:q.right,e:q.e};localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
 function recordWin(){if(!trainingUnlocked())return false;try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');s.bosses=s.bosses||{};s.bosses.b1=true;localStorage.setItem(KEY,JSON.stringify(s));return true}catch(e){return false}}
-function nextQuestion(){if(index>=shuffled.length){shuffled=rand(pool);index=0}const q=shuffled[index];choices=rand(q.a);$('roundLabel').textContent='ATTACK '+(hits+1)+' • DNA-KUNSKAP';$('questionText').textContent=q.q;answered=false;player={x:480,y:GROUND,vy:0,shield:0};projectiles=[];telegraphs=[];spawnTimer=2;beam=0;wrongFlash=0;phase='ready';keys.left=keys.right=false;updateHud();$('feedback').className='feedback';$('feedback').innerHTML='<strong>Uppdrag:</strong> Läs frågan och hitta rätt portal. Hoppa in i den när attacken startar.';showOverlay(q.q,'Titta på de tre svaren. När du är redo: starta, undvik DNA-strängarna och hoppa till rätt portal!','Starta attacken ⚡',()=>{phase='playing';hideOverlay()},'Ingen tidsgräns – du kan pausa när du vill.')}
+function nextQuestion(){if(index>=shuffled.length){shuffled=rand(pool);index=0}const q=shuffled[index];choices=nextBalancedChoices(q);$('roundLabel').textContent='ATTACK '+(hits+1)+' • DNA-KUNSKAP';$('questionText').textContent=q.q;answered=false;player={x:480,y:GROUND,vy:0,shield:0};projectiles=[];telegraphs=[];spawnTimer=2;beam=0;wrongFlash=0;phase='ready';keys.left=keys.right=false;updateHud();$('feedback').className='feedback';$('feedback').innerHTML='<strong>Uppdrag:</strong> Läs frågan och hitta rätt portal. Hoppa in i den när attacken startar.';showOverlay(q.q,'Titta på de tre svaren. När du är redo: starta, undvik DNA-strängarna och hoppa till rätt portal!','Starta attacken ⚡',()=>{phase='playing';hideOverlay()},'Ingen tidsgräns – du kan pausa när du vill.')}
 function updateHud(){$('hearts').textContent='❤️'.repeat(hearts)+'🖤'.repeat(4-hearts);$('bossHealth').textContent='BOSS: '+'⚡'.repeat(boss)+'·'.repeat(5-boss);$('hits').textContent=hits+' träffar'}
 function showOverlay(title,msg,label,fn,note){$('overlayTitle').textContent=title;$('overlayText').textContent=msg;$('overlayAction').textContent=label;$('overlayAction').onclick=fn;$('overlayNote').textContent=note||'';$('overlay').classList.remove('hidden')}
 function hideOverlay(){$('overlay').classList.add('hidden')}
@@ -72,7 +74,7 @@ if(won){const saved=recordWin();setTimeout(()=>showOverlay('🏆 DNA-väktaren b
 else if(lost){setTimeout(()=>showOverlay('💥 DNA-väktaren vann','Du fick '+hits+' träffar innan hjärtana tog slut. Läs förklaringarna och försök igen – frågorna blandas.','Försök igen ↻',reset,'Inget tidspressat prov. Du kan spela så många gånger du vill.'),850)}
 else{setTimeout(()=>showOverlay(ok?'⚡ Fullträff!':'↻ Nästa försök',q.e,'Nästa fråga →',()=>{index++;nextQuestion()},'Bossens energi: '+boss+' av 5 kvar. Dina hjärtan: '+hearts+'.'),850)}
 }
-function reset(){shuffled=rand(pool);index=0;hearts=4;boss=5;hits=0;nextQuestion()}
+function reset(){shuffled=rand(pool);index=0;answerSlots=rand([0,1,2]);hearts=4;boss=5;hits=0;nextQuestion()}
 function jump(){if(phase!=='playing')return;if(player.y>=GROUND-.5){player.vy=-520}}
 function pause(){if(phase==='playing'){prevPhase=phase;phase='paused';showOverlay('⏸ Paus','Läs frågan och planera din väg. DNA-strängarna står stilla.','Fortsätt →',()=>{phase='playing';hideOverlay()},'Tryck P för att fortsätta.')}else if(phase==='paused'){phase='playing';hideOverlay()}}
 $('pauseBtn').onclick=pause;
