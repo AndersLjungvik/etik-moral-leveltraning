@@ -48,10 +48,10 @@ function saveEnd(id){const s=readSave();if(!Array.isArray(s.adventureStoryEnding
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");if(unlocked())lock.classList.add("hidden");else intro.classList.add("hidden");
 
 const E={
-home:["ALLA KOM HEM","Ni fick ihop ledtrådarna, hittade rätt personer och lyckades hjälpa utan att lämna någon ensam. Det blev stressigt, men både ni och syskonen kom hem."],
-missed:["DU MISSADE BUSSEN","Amir och Leila fick hjälp, men du och Noor missade 16.20-bussen. Noor blev först irriterad. Ett val kan hjälpa någon och samtidigt skapa problem för någon annan."],
+home:["ALLA KOM HEM","Till slut står Amir och Leila tillsammans med ryggsäcken mellan sig. Bussföraren väntar några extra sekunder och dörrarna stängs precis när ni kliver ombord. Noor sjunker ner på sätet och skrattar av lättnad. Det blev stressigt och ingen fick riktigt den eftermiddag som var planerad – men alla kom hem."],
+missed:["DU MISSADE BUSSEN","När ni kommer tillbaka till hållplatsen ser ni bara baklyktorna på 16.20-bussen försvinna runt hörnet. Amir och Leila har fått hjälp, men Noor suckar och tar upp mobilen för att ringa hem. På bänken bredvid tidtabellen blir det tydligt att ett val kan hjälpa någon och samtidigt skapa problem för någon annan."],
 wrong:["FEL HÄNDER","Ryggsäcken hamnade hos någon som inte kunde visa att den var deras. När den riktige Amir dök upp var väskan borta. Snabb hjälp blev inte samma sak som säker hjälp."],
-bridge:["VÄSKAN FÖRSVANN","Ni lämnade väskan gömd vid bron. När någon kom tillbaka efter den var den borta. Det som kändes som att inte lägga sig i fick ändå en stor konsekvens."],
+bridge:["VÄSKAN FÖRSVANN","Under bänken finns ingenting kvar. Bara den röda räven ligger på marken, mörk av regnet. Amir böjer sig ner och plockar upp den. Det som först kändes som ett försiktigt sätt att inte lägga sig i fick plötsligt en mycket större konsekvens än någon av er hade tänkt."],
 call:["SAMTALET SOM LÖSTE DET","Du svarade i en telefon som inte var din. Det kändes tveksamt, men samtalet gjorde att familjen hittade varandra. Ett bra resultat gör inte automatiskt varje steg enkelt att bedöma."],
 late:["SENT, MEN TILLSAMMANS","Ni stannade kvar tills alla hittat varandra. Flera blev sena och planer sprack, men ingen behövde lösa situationen ensam."],
 money:["DET LÅNADE KUVERTET","Ni använde pengar som inte var era för att lösa situationen och lovade att ersätta dem. Hjälpen fungerade, men Amir blev arg över att någon annan bestämt över hans pengar."],
@@ -60,67 +60,67 @@ driver:["DEN SISTA BUSSEN","Ni lämnade till slut över ansvaret till bussförar
 const EO=["home","missed","wrong","bridge","call","late","money","driver"];
 
 const N={
-start:{p:"GAMLA BRON",v:"bridge",h:"Ryggsäcken",t:["Du och Noor tar genvägen över den gamla bron för att hinna med bussen 16.20. Noor har lovat att hämta sin lillebror klockan fem.","Under en bänk ligger en svart ryggsäck med en röd räv som nyckelring. Mobilen i sidofacket visar: ”Leila väntar vid kiosken. Glöm inte hennes biljett. 16.20 går bussen.”"],q:"Klockan är 16.03. Vad gör du?",c:[
+start:{p:"GAMLA BRON",v:"bridge",h:"Ryggsäcken",t:["Du och Noor tar genvägen över den gamla bron för att hinna med bussen 16.20. Det är lugnt nere vid ån och ni hör bara era steg mot träplankorna. Noor går lite före och påminner för tredje gången om att hon har lovat att hämta sin lillebror klockan fem.","Halvvägs över bron ser du något mörkt under en bänk. Det är en svart ryggsäck med en liten röd räv som nyckelring. Ingen människa syns till på stigen åt något håll.","När du lyfter väskan vibrerar en mobil i sidofacket. Skärmen tänds utan att du behöver låsa upp den. Där står: ”Leila väntar vid kiosken. Glöm inte hennes biljett. 16.20 går bussen.” Noor tittar på klockan. 16.03."],q:"Klockan är 16.03. Vad gör du?",c:[
 ["Tar hela ryggsäcken och går snabbt mot stationen.","station","Du tog väskan mot stationen."],
 ["Stannar vid bron. Ägaren kanske kommer tillbaka.","wait","Du stannade vid fyndplatsen."],
 ["Tar mobilen för att hitta ägaren men gömmer väskan under bänken.","phone","Du tog mobilen men lämnade väskan."]
 ]},
-station:{p:"STATIONEN",v:"station",h:"Två personer letar",t:["Klockan är 16.09. En stressad tonårskille frågar om ni hittat en svart ryggsäck. En vuxen längre bort säger att han också tappat en svart väska.","Noor viskar: ”Fråga något bara ägaren borde veta.”"],q:"Vad gör du?",c:[
+station:{p:"STATIONEN",v:"station",h:"Två personer letar",t:["När ni når stationen är klockan 16.09. En buss står på tomgång och människor rör sig mellan hållplatserna. Du håller ryggsäcken tätt intill kroppen medan Noor spanar efter någon som verkar leta.","En stressad tonårskille får syn på er och kommer nästan springande. ”Har ni hittat en svart ryggsäck?” frågar han. Innan du hinner svara ropar en vuxen man några meter bort att han också har tappat en svart väska.","Noor lutar sig mot dig och viskar: ”Fråga något bara ägaren borde veta.” Båda väntar på ditt svar."],q:"Vad gör du?",c:[
 ["Ber killen beskriva väskan och vad som finns i den.","verify","Du bad om detaljer först."],
 ["Ger killen väskan direkt. Han verkar verkligen stressad.","trust","Du valde att lita på honom."],
 ["Lämnar väskan till bussföraren och ber hen ta över.","driver","Du lämnade över ansvaret."]
 ]},
-verify:{p:"STATIONEN",v:"station",h:"Röda räven",t:["Killen säger: ”Röd räv på dragkedjan. Mobil, plånbok och ett vitt kuvert med biljettpengar.” Allt stämmer. Han heter Amir.","Han säger att hans lillasyster Leila väntar vid kiosken. Er egen buss rullar in bredvid."],q:"Vad gör du?",c:[
+verify:{p:"STATIONEN",v:"station",h:"Röda räven",t:["Killen svarar direkt: ”Det sitter en röd räv på dragkedjan. Där finns min mobil, min plånbok och ett vitt kuvert med biljettpengar.” Du tittar på Noor. Allt stämmer. Killen heter Amir.","Amir tar emot väskan med båda händerna men ser fortfarande stressad ut. ”Min lillasyster Leila väntar vid kiosken. Jag skulle möta henne där.” Han tittar bort mot stationshuset.","Då hörs bromsarna från er egen buss. Den rullar in på hållplatsen bredvid och dörrarna öppnas. Noor drar efter andan och tittar på klockan."],q:"Vad gör du?",c:[
 ["Hjälper Amir leta efter Leila även om ni riskerar att missa bussen.","missed","Du stannade och hjälpte hela vägen.",1],
 ["Ber bussföraren ropa efter Leila och vänta några sekunder.","home","Du försökte lösa båda behoven.",1],
 ["Ger Amir väskan och springer till din egen buss.","driver","Du lämnade över när du visste att han var ägaren.",1]
 ]},
-trust:{p:"STATIONEN",v:"station",h:"Något skaver",t:["Killen tar väskan och skyndar därifrån. Noor säger: ”Han nämnde aldrig den röda räven.”","En minut senare kommer en annan kille springande: ”Har någon sett en svart ryggsäck med en röd räv? Min systers biljetter ligger i den.”"],q:"Vad gör du nu?",c:[
+trust:{p:"STATIONEN",v:"station",h:"Något skaver",t:["Killen tar väskan ur dina händer nästan innan du hunnit säga klart och försvinner snabbt bort mellan busskurerna. Du känner först mest lättnad över att slippa bära ansvaret längre.","Noor står kvar och tittar efter honom. ”Vänta”, säger hon. ”Han nämnde aldrig den röda räven. Han frågade inte ens efter mobilen.” Det hugger till i magen.","En minut senare kommer en annan kille springande från stationshållet. Han ser panikslagen ut. ”Har någon sett en svart ryggsäck med en röd räv? Min systers biljetter ligger i den.”"],q:"Vad gör du nu?",c:[
 ["Ber en vuxen på stationen hjälpa er att stoppa personen.","home","Du tog hjälp för att rätta till misstaget.",1],
 ["Springer efter personen själv.","wrong","Du försökte lösa misstaget på egen hand.",1],
 ["Berättar sanningen för Amir och lämnar all information ni har.","wrong","Du berättade vad som hänt men väskan hann försvinna.",1]
 ]},
-driver:{p:"BUSSHÅLLPLATSEN",v:"busstop",h:"Förarens val",t:["Föraren säger att hen kan ropa ut en upphittad väska men inte vänta länge.","Vid kiosken ser du en yngre tjej med ett sms öppet: ”Leila, vänta där. / Amir.”"],q:"Vad gör du?",c:[
+driver:{p:"BUSSHÅLLPLATSEN",v:"busstop",h:"Förarens val",t:["Bussföraren tar emot väskan och ställer den innanför dörren. ”Jag kan ropa ut att vi hittat den”, säger hen, ”men jag kan inte hålla bussen hur länge som helst.” Motorn brummar och några passagerare börjar sätta sig.","Du vänder dig om mot kiosken. Där står en yngre tjej ensam med jackan uppdragen över händerna. Hon tittar från skärmen till människorna omkring sig som om hon väntar på någon.","När du går lite närmare ser du ett sms på hennes skärm: ”Leila, vänta där. / Amir.” Samma namn som stod på mobilen i väskan."],q:"Vad gör du?",c:[
 ["Går till tjejen och frågar om hon känner Amir.","home","Du använde detaljen du hade läst.",1],
 ["Låter föraren sköta allt och tar din egen buss.","driver","Du litade på att den vuxne tog över.",1],
 ["Tar tillbaka väskan och går fram till tjejen själv.","late","Du tog tillbaka ansvaret och stannade kvar.",1]
 ]},
-wait:{p:"GAMLA BRON",v:"rain",h:"Regnet kommer",t:["Klockan blir 16.08 och det börjar regna. Noor blir rastlös.","En yngre tjej kommer springande och ropar efter Amir. Hon ser väskan: ”Det där är hans! Röd räv. Våra biljettpengar ligger i ett vitt kuvert.”"],q:"Vad gör du?",c:[
+wait:{p:"GAMLA BRON",v:"rain",h:"Regnet kommer",t:["Ni står kvar vid bron. Först händer ingenting. Klockan går från 16.05 till 16.08 och små regndroppar börjar prickas mot träet. Noor går fram och tillbaka med händerna i fickorna.","”Om vi stannar mycket längre missar vi bussen”, säger hon. Du tittar ner mot stigen och undrar om den som tappade väskan ens vet var den blev kvar.","Då kommer en yngre tjej springande genom regnet och ropar efter Amir. När hon ser väskan stannar hon tvärt. ”Det där är hans! Den har en röd räv. Våra biljettpengar ligger i ett vitt kuvert.”"],q:"Vad gör du?",c:[
 ["Ger henne väskan och går med henne mot stationen.","leila","Du litade på detaljerna hon kunde.",],
 ["Behåller väskan tills en vuxen kan hjälpa till.","adult","Du valde försiktighet.",],
 ["Gömmer väskan under bänken och hjälper henne leta efter Amir.","hide","Du hjälpte personen men lämnade väskan.",]
 ]},
-leila:{p:"STATIONSVÄGEN",v:"rain",h:"Telefonen ringer",t:["På väg mot stationen ringer mobilen. Det står Mamma.","Leila säger att det säkert är deras mamma. Noor säger att telefonen fortfarande är Amirs."],q:"Vad gör du?",c:[
+leila:{p:"STATIONSVÄGEN",v:"rain",h:"Telefonen ringer",t:["Ni börjar gå snabbt mot stationen tillsammans. Leila pratar fort och berättar att Amir brukar hålla reda på biljetterna eftersom hon själv lätt tappar bort saker. Regnet har blivit tätare och vägen glänser.","Plötsligt börjar mobilen i ryggsäcken ringa. På skärmen står bara ett ord: Mamma. Leila tittar på telefonen och sedan på dig.","”Det är säkert vår mamma”, säger hon. Noor skakar på huvudet. ”Fast telefonen är fortfarande Amirs. Vi vet ju inte om vi borde svara.”"],q:"Vad gör du?",c:[
 ["Svarar och berättar var ni är.","call","Du svarade för att lösa situationen.",1],
 ["Låter Leila avgöra om hon vill svara.","home","Du lät henne ta beslutet.",1],
 ["Låter bli att svara och följer Leila hela vägen.","late","Du höll gränsen men stannade kvar.",1]
 ]},
-adult:{p:"GAMLA BRON",v:"rain",h:"En vuxen stannar",t:["En joggare stannar och frågar om allt är okej. Joggaren känner inte familjen men erbjuder sig att följa med till stationen.","Er buss går om några minuter."],q:"Vad gör du?",c:[
+adult:{p:"GAMLA BRON",v:"rain",h:"En vuxen stannar",t:["Du håller kvar väskan medan Leila blir mer och mer otålig. Regnet har gjort hennes hår blött och hon tittar hela tiden bort mot stationen.","En joggare som passerar saktar in och frågar om allt är okej. Ni förklarar kort vad som har hänt. Joggaren känner varken Leila eller Amir men erbjuder sig att följa med till stationen så att ingen behöver gå ensam.","Noor visar dig klockan på sin mobil. Er buss går om bara några minuter. Om ni följer med är det inte säkert att ni hinner."],q:"Vad gör du?",c:[
 ["Går tillsammans allihop till stationen.","late","Du tog emot hjälp men stannade kvar.",1],
 ["Låter joggaren följa Leila medan du stannar med väskan.","missed","Du höll fast vid fyndplatsen.",1],
 ["Ger väskan till Leila nu när fler hört hennes berättelse.","home","Du bedömde att detaljerna och stödet räckte.",1]
 ]},
-hide:{p:"GAMLA BRON",v:"rain",h:"Bänken är tom",t:["Ni hittar Amir och berättar var väskan ligger. När ni springer tillbaka är platsen under bänken tom.","På marken ligger bara den röda räven från dragkedjan."],q:"Vad gör du?",c:[
+hide:{p:"GAMLA BRON",v:"rain",h:"Bänken är tom",t:["Ni hittar Amir en bit bort på stigen. Han blir först lättad när han ser Leila, men ansiktet förändras när du berättar att ryggsäcken ligger gömd under bänken vid bron.","Alla tre börjar springa tillbaka. Noor följer efter och försöker säga att det säkert går bra, men du känner hur det knyter sig i magen redan innan bron kommer i sikte.","När ni når bänken är platsen under den tom. På det blöta träet ligger bara den lilla röda räven som hade suttit på dragkedjan. Amir säger ingenting."],q:"Vad gör du?",c:[
 ["Berättar direkt exakt hur du gömde väskan och tar ansvar.","bridge","Du berättade öppet vad du gjort.",1],
 ["Letar vidare fast alla bussar går.","missed","Du försökte rätta till följden.",1],
 ["Föreslår att ni använder egna pengar för att hjälpa syskonen hem.","money","Du försökte ersätta en del av förlusten.",1]
 ]},
-phone:{p:"STIGEN",v:"road",h:"Bara mobilen",t:["Du gömmer väskan under bänken och tar mobilen mot stationen.","Telefonen ringer. Det står Mamma. Noor säger: ”Vi borde kanske inte svara i någon annans telefon.”"],q:"Vad gör du?",c:[
+phone:{p:"STIGEN",v:"road",h:"Bara mobilen",t:["Du skjuter in ryggsäcken så långt det går under bänken och tar bara mobilen med dig. Tanken är att ni ska kunna hitta ägaren utan att bära runt på allt. Noor ser tveksam ut men följer med.","Ni har hunnit en bit längs stigen när telefonen plötsligt börjar ringa. På skärmen står Mamma. Ringningen känns ovanligt hög i den tysta eftermiddagen.","Noor tittar på dig. ”Vi borde kanske inte svara i någon annans telefon”, säger hon. Samtidigt vet ni att varje minut gör det svårare att hinna med bussen."],q:"Vad gör du?",c:[
 ["Svarar. Det kan vara enda sättet att hitta ägaren snabbt.","answer","Du svarade för att försöka hjälpa."],
 ["Låter bli att svara och tar mobilen till stationen.","staff","Du respekterade att telefonen inte var din."],
 ["Går tillbaka och hämtar hela väskan först.","back","Du ändrade ditt första beslut."]
 ]},
-answer:{p:"STATIONSVÄGEN",v:"road",h:"Rösten i telefonen",t:["En kvinna säger: ”Amir? Leila väntar vid kiosken och du har hennes biljettpengar.” Du förklarar att du hittat telefonen.","Hon säger att Amir letar vid bron. Väskan ligger fortfarande gömd där."],q:"Vad gör du?",c:[
+answer:{p:"STATIONSVÄGEN",v:"road",h:"Rösten i telefonen",t:["Du svarar. En kvinna börjar prata direkt: ”Amir? Var är du? Leila väntar vid kiosken och du har hennes biljettpengar.” Du avbryter försiktigt och berättar att du inte är Amir och att du hittade telefonen vid bron.","Det blir tyst i luren en sekund. Sedan låter kvinnan både lättad och orolig. Hon berättar att Amir har gått tillbaka mot bron för att leta efter ryggsäcken, medan Leila ska vänta kvar vid kiosken.","Du och Noor stannar mitt på stigen. Mobilen är hos er. Amir är på väg mot bron. Leila väntar vid stationen. Och själva väskan ligger fortfarande gömd under bänken."],q:"Vad gör du?",c:[
 ["Springer tillbaka efter väskan och väntar på Amir.","call","Du använde informationen från samtalet.",1],
 ["Ber mamman säga till Amir exakt var väskan är gömd och tar bussen.","call","Du lämnade över informationen.",1],
 ["Går till kiosken för att Leila inte ska stå ensam.","late","Du prioriterade personen som väntade.",1]
 ]},
-staff:{p:"STATIONEN",v:"station",h:"Luckan är stängd",t:["Informationsluckan är stängd. Bussföraren kan ta mobilen, men vet inget om ryggsäcken som ligger kvar vid bron.","Vid kiosken står en yngre tjej och tittar efter någon."],q:"Vad gör du?",c:[
+staff:{p:"STATIONEN",v:"station",h:"Luckan är stängd",t:["Ni kommer fram till stationen med bara mobilen. Informationsluckan är redan stängd och glaset framför disken är mörkt. Bussföraren vid 16.20-bussen säger att hen kan ta hand om telefonen tills någon frågar efter den.","”Men jag kan förstås inte göra något åt en ryggsäck som ligger kvar någon annanstans”, säger föraren. Noor tittar tillbaka mot vägen ni kom ifrån.","Vid kiosken står samtidigt en yngre tjej ensam och spanar efter någon. Du minns namnet från meddelandet på mobilen: Leila."],q:"Vad gör du?",c:[
 ["Frågar om hon heter Leila och känner Amir.","home","Du använde namnen du läst.",1],
 ["Lämnar mobilen till föraren och tar bussen.","bridge","Du lämnade över det du hade.",1],
 ["Går tillbaka till bron efter hela väskan.","missed","Du insåg att mobilen inte räckte.",1]
 ]},
-back:{p:"GAMLA BRON",v:"rain",h:"Någon står vid väskan",t:["När ni kommer tillbaka står en äldre elev vid bänken. Eleven säger att hen tänkte ta väskan till stationen.","Eleven kan inte säga vad som finns i väskan."],q:"Vad gör du?",c:[
+back:{p:"GAMLA BRON",v:"rain",h:"Någon står vid väskan",t:["Ni vänder tillbaka mot bron. Det känns som om ni går åt fel håll när stationen ligger bakom er, men väskan känns plötsligt viktigare än tiden.","När ni kommer fram står en äldre elev vid bänken med handen på ryggsäckens axelrem. ”Jag tänkte ta den till stationen”, säger eleven när hen ser er.","Du frågar vad som finns i väskan. Eleven rycker på axlarna och säger att hen inte vet. Noor tittar snabbt på dig. Bussen går snart."],q:"Vad gör du?",c:[
 ["Tar själv med väskan till stationen.","missed","Du behöll ansvaret.",1],
 ["Låter eleven ta den. Ni måste hinna med bussen.","wrong","Du lämnade över utan att kunna kontrollera personen.",1],
 ["Går tillsammans med eleven till stationen.","late","Du valde en gemensam lösning.",1]
