@@ -269,6 +269,7 @@ function drawHome(){
  }
 
  const u1=trackComplete("b"),u2=trackComplete("c"),u3=trackComplete("d");
+ const allDone=tracks.every(function(t){return trackComplete(t.id)});
  const bf=Array.isArray(s.blixForms)?s.blixForms.length:(s.boss?1:0);
  const qs=Array.isArray(s.quizSeen)?s.quizSeen.length:0,qf=!!s.quizFinalBoss;
  const ae=Array.isArray(s.adventureEndings)?s.adventureEndings.length:0,asecret=!!s.adventureSecret;
@@ -277,9 +278,9 @@ function drawHome(){
  addTrack("b");
  addBoss({
    unlocked:u1,href:"boss.html",
-   badge:bf+"/3 bossformer",
+   badge:bf>0?(bf+"/3 bossformer"):"BOSS 1 UNLOCKED",
    title:"⚡ BOSS 1 – BLIXTFIGHTEN · BEGREPPSBOSSEN",
-   openText:bf<3?"Begreppen sitter? Testa dem i strid. Nya bossformer öppnar fler och mer lättförväxlade begrepp.":"Alla tre bossformer är besegrade.",
+   openText:bf===0?"Begreppen sitter? Testa grundformen i strid.":allDone&&bf<3?"Alla banor är klara – FINALBOSS-formerna MK II och Ω är nu öppna!":"Boss 1 är besegrad. MK II väntar tills alla fem banor är avklarade.",
    lockedText:"Klara Bana 2 – Begrepp för att låsa upp Boss 1.",
    progress:bf/3*100
  });
@@ -306,9 +307,15 @@ function drawHome(){
 
  addTrack("e");
 
+ if(allDone){
+   const fin=document.createElement("div");fin.className="card track";fin.style.gridColumn="1/-1";fin.style.border="3px solid #d9a514";fin.style.background="#fff3bf";fin.onclick=()=>location.href="boss.html";
+   fin.innerHTML='<span class="badge">👑 FINALBOSS UNLOCKED</span><h3>ETIKBOSS MK II → Ω</h3><div class="small">Alla banor är avklarade. Nu öppnas den stora repetitionsfasen: fler begrepp, lättförväxlade begrepp och tillämpning i Bossform 2 och 3.</div><div class="progress"><div style="width:'+(Math.max(0,bf-1)/2*100)+'%"></div></div>';
+   g.appendChild(fin);
+ }
+
  if(u1||u2||u3){
    let master=bf>=3&&qs>=30&&ae>=3,book=document.createElement("div");book.className="card";book.style.gridColumn="1/-1";book.style.border=master?"2px solid #d9a514":"1px solid #cbd5e1";
-   book.innerHTML='<span class="badge">📖 BOSSBOKEN</span><h3>Det du har upptäckt</h3><div class="small" style="line-height:1.9"><b>⚡ Boss 1 – Blixfighten:</b> '+bf+'/3 bossformer<br><b>🗝️ Boss 2 – Värdekrocken:</b> '+ae+'/3 vägar'+(asecret?' · fjärde dörren öppnad':'')+'<br><b>⏱️ Boss 3 – Frågefighten:</b> '+qs+'/30 frågor'+(qf?' · slutformen besegrad':'')+'<br><b>👑 '+(master?'ETIKMÄSTAREN':'???')+':</b> '+(master?'Alla tre bossarna är fullt utforskade.':'Fortsätt utforska bossarna för att låsa upp.')+'</div>';
+   book.innerHTML='<span class="badge">📖 BOSSBOKEN</span><h3>Det du har upptäckt</h3><div class="small" style="line-height:1.9"><b>⚡ Boss 1 – Blixfighten:</b> '+bf+'/3 bossformer'+(!allDone&&bf>=1?' · MK II 🔒 tills alla banor är klara':'')+'<br><b>🗝️ Boss 2 – Värdekrocken:</b> '+ae+'/3 vägar'+(asecret?' · fjärde dörren öppnad':'')+'<br><b>⏱️ Boss 3 – Frågefighten:</b> '+qs+'/30 frågor'+(qf?' · slutformen besegrad':'')+'<br><b>👑 '+(master?'ETIKMÄSTAREN':'???')+':</b> '+(master?'Alla tre bossarna är fullt utforskade.':'Fortsätt utforska bossarna för att låsa upp.')+'</div>';
    g.appendChild(book);
  }
 }
