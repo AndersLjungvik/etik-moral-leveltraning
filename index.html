@@ -243,26 +243,73 @@ function save(){localStorage.setItem(K,JSON.stringify(s))}
 function home(){$("quiz").classList.add("hidden");$("inf").classList.add("hidden");$("home").classList.remove("hidden");drawHome()}
 function info(){$("home").classList.add("hidden");$("inf").classList.remove("hidden")}
 function resetAll(){if(confirm("Börja om och radera sparad progression på den här enheten?")){localStorage.removeItem(K);s={done:{}};drawHome()}}
-function bossUnlocked(){return tracks.every(t=>{let a=s.done[t.id]||[];return t.levels.every((_,i)=>!!a[i])})}
+function trackComplete(id){
+ const t=tracks.find(function(x){return x.id===id});
+ if(!t)return false;
+ const done=s.done[id]||[];
+ return t.levels.every(function(_,i){return !!done[i]});
+}
 function drawHome(){
  let g=$("grid");g.innerHTML="";
- tracks.forEach(t=>{let n=(s.done[t.id]||[]).filter(Boolean).length,p=Math.round(n/t.levels.length*100),d=document.createElement("div");d.className="card track";d.onclick=()=>openT(t.id);d.innerHTML='<span class="badge">'+n+'/'+t.levels.length+' levels</span><h3>'+t.title+'</h3><div class="small">'+t.desc+'</div><div class="progress"><div style="width:'+p+'%"></div></div>';g.appendChild(d)});
- let u=bossUnlocked();
 
- let bf=Array.isArray(s.blixForms)?s.blixForms.length:(s.boss?1:0),b=document.createElement("div");
- b.className="card track";b.style.border=u?"2px solid #d9a514":"2px solid #cbd5e1";b.style.background=u?"#fff8dc":"#f4f5f6";if(u)b.onclick=()=>location.href="boss.html";
- b.innerHTML='<span class="badge">'+(u?(bf+'/3 bossformer'):'🔒 Låst')+'</span><h3>⚡ FINAL BOSS – BLIXTFIGHTEN</h3><div class="small">'+(u?(bf<3?'Nästa omgång öppnar nya bossformer och nya begreppskrockar.':'Alla tre bossformer är besegrade.'):'Klara alla banor först. Då låses slutbossen upp.')+'</div><div class="progress"><div style="width:'+(bf/3*100)+'%"></div></div>';g.appendChild(b);
+ function addTrack(id){
+   const t=tracks.find(function(x){return x.id===id});
+   let n=(s.done[t.id]||[]).filter(Boolean).length,p=Math.round(n/t.levels.length*100),d=document.createElement("div");
+   d.className="card track";d.onclick=()=>openT(t.id);
+   d.innerHTML='<span class="badge">'+n+'/'+t.levels.length+' levels</span><h3>'+t.title+'</h3><div class="small">'+t.desc+'</div><div class="progress"><div style="width:'+p+'%"></div></div>';
+   g.appendChild(d);
+ }
+ function addBoss(opts){
+   const d=document.createElement("div");d.className="card track";d.style.gridColumn="1/-1";
+   d.style.border=opts.unlocked?"2px solid #d9a514":"2px solid #cbd5e1";
+   d.style.background=opts.unlocked?"#fff8dc":"#f4f5f6";
+   if(opts.unlocked)d.onclick=()=>location.href=opts.href;
+   d.innerHTML='<span class="badge">'+(opts.unlocked?opts.badge:"🔒 Låst")+'</span><h3>'+opts.title+'</h3><div class="small">'+(opts.unlocked?opts.openText:opts.lockedText)+'</div><div class="progress"><div style="width:'+opts.progress+'%"></div></div>';
+   g.appendChild(d);
+ }
 
- let qs=Array.isArray(s.quizSeen)?s.quizSeen.length:0,qf=!!s.quizFinalBoss,fq=document.createElement("div");
- fq.className="card track";fq.style.border=u?"2px solid #d9a514":"2px solid #cbd5e1";fq.style.background=u?"#fff8dc":"#f4f5f6";if(u)fq.onclick=()=>location.href="fragfight.html";
- fq.innerHTML='<span class="badge">'+(u?(qs+'/30 frågor'+(qf?' + slutform ✓':'')):'🔒 Låst')+'</span><h3>⏱️ FINAL BOSS – FRÅGEFIGHTEN</h3><div class="small">'+(u?(qs<30?'Nya frågor prioriteras. Missade frågor kan komma tillbaka för revansch.':qf?'Alla frågor och Bossens sista frågor är besegrade.':'30/30 upptäckta – Bossens sista frågor är upplåsta!'):'Klara alla banor först. Då låses slutbossen upp.')+'</div><div class="progress"><div style="width:'+(qs/30*100)+'%"></div></div>';g.appendChild(fq);
+ const u1=trackComplete("b"),u2=trackComplete("c"),u3=trackComplete("d");
+ const bf=Array.isArray(s.blixForms)?s.blixForms.length:(s.boss?1:0);
+ const qs=Array.isArray(s.quizSeen)?s.quizSeen.length:0,qf=!!s.quizFinalBoss;
+ const ae=Array.isArray(s.adventureEndings)?s.adventureEndings.length:0,asecret=!!s.adventureSecret;
 
- let ae=Array.isArray(s.adventureEndings)?s.adventureEndings.length:0,asecret=!!s.adventureSecret,av=document.createElement("div");
- av.className="card track";av.style.border=u?"2px solid #d9a514":"2px solid #cbd5e1";av.style.background=u?"#fff8dc":"#f4f5f6";if(u)av.onclick=()=>location.href="aventyr.html";
- av.innerHTML='<span class="badge">'+(u?(ae+'/3 slut upptäckta'+(asecret?' + fjärde dörren ✓':'')):'🔒 Låst')+'</span><h3>🗝️ DILEMMAÄVENTYRET – VÄRDEKROCKEN</h3><div class="small">'+(u?(ae<3?'Tre moraliska huvudvägar. Olika val ger olika slut.':'Alla tre huvudvägar är upptäckta – den fjärde dörren är öppen.'):'Klara alla banor först. Då låses äventyret upp.')+'</div><div class="progress"><div style="width:'+(ae/3*100)+'%"></div></div>';g.appendChild(av);
+ addTrack("a");
+ addTrack("b");
+ addBoss({
+   unlocked:u1,href:"boss.html",
+   badge:bf+"/3 bossformer",
+   title:"⚡ BOSS 1 – BLIXTFIGHTEN · BEGREPPSBOSSEN",
+   openText:bf<3?"Begreppen sitter? Testa dem i strid. Nya bossformer öppnar fler och mer lättförväxlade begrepp.":"Alla tre bossformer är besegrade.",
+   lockedText:"Klara Bana 2 – Begrepp för att låsa upp Boss 1.",
+   progress:bf/3*100
+ });
 
- if(u){
-   let master=bf>=3&&qs>=30&&ae>=3,book=document.createElement("div");book.className="card";book.style.gridColumn="1/-1";book.style.border=master?"2px solid #d9a514":"1px solid #cbd5e1";book.innerHTML='<span class="badge">📖 BOSSBOKEN</span><h3>Det du har upptäckt</h3><div class="small" style="line-height:1.9"><b>⚡ Blixfighten:</b> '+bf+'/3 bossformer<br><b>⏱️ Frågefighten:</b> '+qs+'/30 frågor'+(qf?' · slutformen besegrad':'')+'<br><b>🗝️ Värdekrocken:</b> '+ae+'/3 vägar'+(asecret?' · fjärde dörren öppnad':'')+'<br><b>👑 '+(master?'ETIKMÄSTAREN':'???')+':</b> '+(master?'Alla tre spelen är utforskade.':'Fortsätt utforska spelen för att låsa upp.')+'</div>';g.appendChild(book)
+ addTrack("c");
+ addBoss({
+   unlocked:u2,href:"aventyr.html",
+   badge:ae+"/3 slut upptäckta"+(asecret?" + fjärde dörren ✓":""),
+   title:"🗝️ BOSS 2 – VÄRDEKROCKEN · DILEMMAÄVENTYRET",
+   openText:ae<3?"Gör moraliska val, följ olika vägar och se olika konsekvenser. Tre huvudvägar ger tre olika slut.":"Alla tre huvudvägar är upptäckta – den fjärde dörren är öppen.",
+   lockedText:"Klara Bana 3 – Etiska dilemman för att låsa upp Boss 2.",
+   progress:ae/3*100
+ });
+
+ addTrack("d");
+ addBoss({
+   unlocked:u3,href:"fragfight.html",
+   badge:qs+"/30 frågor"+(qf?" + slutform ✓":""),
+   title:"⏱️ BOSS 3 – FRÅGEFIGHTEN · RESONEMANGSBOSSEN",
+   openText:qs<30?"Blanda begrepp, dilemman och resonemang under tidspress. Nya frågor prioriteras och missar kan komma tillbaka.":qf?"Alla frågor och Bossens sista frågor är besegrade.":"30/30 upptäckta – Bossens sista frågor är upplåsta!",
+   lockedText:"Klara Bana 4 – Resonera om rätt och fel för att låsa upp Boss 3.",
+   progress:qs/30*100
+ });
+
+ addTrack("e");
+
+ if(u1||u2||u3){
+   let master=bf>=3&&qs>=30&&ae>=3,book=document.createElement("div");book.className="card";book.style.gridColumn="1/-1";book.style.border=master?"2px solid #d9a514":"1px solid #cbd5e1";
+   book.innerHTML='<span class="badge">📖 BOSSBOKEN</span><h3>Det du har upptäckt</h3><div class="small" style="line-height:1.9"><b>⚡ Boss 1 – Blixfighten:</b> '+bf+'/3 bossformer<br><b>🗝️ Boss 2 – Värdekrocken:</b> '+ae+'/3 vägar'+(asecret?' · fjärde dörren öppnad':'')+'<br><b>⏱️ Boss 3 – Frågefighten:</b> '+qs+'/30 frågor'+(qf?' · slutformen besegrad':'')+'<br><b>👑 '+(master?'ETIKMÄSTAREN':'???')+':</b> '+(master?'Alla tre bossarna är fullt utforskade.':'Fortsätt utforska bossarna för att låsa upp.')+'</div>';
+   g.appendChild(book);
  }
 }
 function setOrder(){
