@@ -15,7 +15,7 @@ body{min-height:100vh;padding:14px}.wrap{width:min(100%,1000px);margin:auto}.top
 .scene{background:#f8fafc;color:#111827;border:4px solid var(--gold);border-radius:22px;padding:26px;box-shadow:0 12px 36px #0008}.where{font-size:12px;color:#7f1d1d;font-weight:1000;letter-spacing:.12em;margin-bottom:8px}.scene h2{margin:0 0 14px;font-size:clamp(24px,4vw,35px);line-height:1.05}.scene p{font-size:17px;line-height:1.55;margin:10px 0}.prompt{margin-top:20px;padding-top:18px;border-top:2px solid #e5e7eb;font-weight:900;font-size:18px}
 .choices{display:grid;gap:10px;margin-top:14px}.choice{border:2px solid #475569;border-radius:14px;background:#172033;color:#fff;padding:14px;font:inherit;font-weight:850;text-align:left;cursor:pointer;min-height:54px}.choice:hover{border-color:var(--gold)}.choice:focus{outline:3px solid #93c5fd;outline-offset:2px}.choice:disabled{cursor:default;opacity:.75}.choice.chosen{border-color:var(--gold);background:#3b2f0b}
 .result{margin-top:13px;padding:12px 14px;border-radius:12px;background:#fef3c7;border:1px solid #f59e0b;font-size:14px;line-height:1.5}.next{margin-top:15px;border:0;border-radius:13px;padding:12px 18px;font:inherit;font-weight:1000;background:var(--gold);color:#111827;cursor:pointer}
-.card{background:#111827dd;border:1px solid #334155;border-radius:17px;padding:15px;margin-bottom:12px}.card h3{margin:0 0 10px;font-size:14px;color:#fde68a}.trail{display:grid;gap:8px;font-size:12px;line-height:1.35;color:#cbd5e1}.trailitem{padding:8px 9px;border-radius:10px;background:#0b1020;border:1px solid #263244}.values{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;font-weight:900;padding:6px 8px;border-radius:999px;background:#263244;color:#cbd5e1}.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.cell{height:34px;border-radius:9px;border:2px solid #475569;background:#0b1020;display:grid;place-items:center;color:#64748b;font-weight:1000}.cell.on{background:#854d0e;border-color:var(--gold);color:#fff7d6;box-shadow:0 0 12px #fbbf2455}
+.card{background:#111827dd;border:1px solid #334155;border-radius:17px;padding:15px;margin-bottom:12px}.card h3{margin:0 0 10px;font-size:14px;color:#fde68a}.trail{display:grid;gap:8px;font-size:12px;line-height:1.35;color:#cbd5e1}.trailitem{padding:8px 9px;border-radius:10px;background:#0b1020;border:1px solid #263244}.values{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;font-weight:900;padding:6px 8px;border-radius:999px;background:#263244;color:#cbd5e1}.roadmap{display:grid;gap:7px}.road{padding:8px 9px;border-radius:10px;background:#0b1020;border:1px solid #263244;font-size:11px;font-weight:850;color:#64748b}.road.seen{color:#dcfce7;border-color:#166534;background:#052e16}.road.current{color:#fff7d6;border-color:#f59e0b;background:#3b2f0b}.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.cell{height:34px;border-radius:9px;border:2px solid #475569;background:#0b1020;display:grid;place-items:center;color:#64748b;font-weight:1000}.cell.on{background:#854d0e;border-color:var(--gold);color:#fff7d6;box-shadow:0 0 12px #fbbf2455}
 .boss{position:relative;height:180px}.bot{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:120px;height:142px;filter:drop-shadow(0 6px 8px #000a)}.head{position:absolute;left:20px;top:0;width:80px;height:51px;border-radius:17px;background:#374151;border:4px solid var(--red)}.eye{position:absolute;top:17px;width:13px;height:13px;border-radius:50%;background:#fee2e2;box-shadow:inset 0 0 0 4px var(--red)}.e1{left:19px}.e2{right:19px}.body{position:absolute;left:7px;top:47px;width:106px;height:83px;border-radius:20px;background:#1f2937;border:3px solid #64748b}.mark{position:absolute;left:37px;top:76px;color:var(--red);font-size:30px;font-weight:1000}.bot.dead{animation:die 1.35s forwards}@keyframes die{0%{transform:translateX(-50%) rotate(0) scale(1)}60%{transform:translateX(-50%) rotate(560deg) scale(.45);opacity:1}100%{transform:translateX(-50%) rotate(930deg) scale(.05);opacity:0}}
 .shields{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.shield{height:28px;border-radius:7px;border:2px solid #64748b;background:#263244;display:grid;place-items:center;font-size:9px;font-weight:1000;color:#cbd5e1}.shield.cracked{background:#14532d;border-color:var(--green);color:#dcfce7;text-decoration:line-through}
 .finalbox{margin-top:14px;padding:15px;border-radius:14px;background:#0b1020;border:2px solid #334155}.build{display:grid;gap:12px}.build label{font-size:12px;font-weight:1000;color:#fde68a}.build select{width:100%;margin-top:5px;border:2px solid #475569;border-radius:11px;padding:11px;background:#111827;color:#fff;font:inherit;font-size:14px}.attack{width:100%;margin-top:14px;border:0;border-radius:13px;padding:13px 18px;background:var(--red);color:#fff;font:inherit;font-weight:1000;cursor:pointer}.attack:disabled{opacity:.35;cursor:not-allowed}
@@ -35,17 +35,20 @@ body{min-height:100vh;padding:14px}.wrap{width:min(100%,1000px);margin:auto}.top
 <aside class="side">
 <div class="card"><h3>⚡ ETISK ENERGI</h3><div class="meter"><div class="cell" id="e0">⚡</div><div class="cell" id="e1">⚡</div><div class="cell" id="e2">⚡</div><div class="cell" id="e3">⚡</div></div><p style="font-size:11px;color:#94a3b8;margin-bottom:0">Varje moraliskt val laddar en cell. Inget val ger mer poäng än något annat.</p></div>
 <div class="card"><h3>🧭 DIN VÄG</h3><div class="trail" id="trail"><div class="trailitem">Dina val kommer synas här.</div></div></div>
-<div class="card"><h3>💠 VÄRDEN DU RÖRT VID</h3><div class="values" id="values"><span class="chip">–</span></div></div>
+<div class="card"><h3>🗺️ VÄGKARTA</h3><div class="roadmap"><div class="road" id="roadTake">???</div><div class="road" id="roadTalk">???</div><div class="road" id="roadAlt">???</div></div></div><div class="card"><h3>💠 VÄRDEN DU RÖRT VID</h3><div class="values" id="values"><span class="chip">–</span></div></div>
 <div class="card"><h3>👾 ETIKBOSSEN</h3><div class="boss"><div class="bot" id="bot"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="mark">⚖</div></div></div><div class="shields"><div class="shield" id="s0">TYCK</div><div class="shield" id="s1">EFTERSOM</div><div class="shield" id="s2">MEN</div><div class="shield" id="s3">SÅ</div></div></div>
 </aside>
 </div>
 
 <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 MORALÄVENTYR</div><div class="big">LÅST</div><p>VÄRDEKROCKEN låses upp när alla träningsbanor är klara.</p><a href="index.html"><button class="start">Till träningen</button></a></div></div>
-<div class="overlay" id="intro"><div class="panel"><div class="kicker">🗝️ MORALÄVENTYR · v2.0</div><div class="big">VÄRDEKROCKEN</div><p>Den här gången finns ingen enda väg genom berättelsen.</p><div class="controls">Du gör <b>fyra moraliska val</b>.<br>Varje val öppnar en ny väg och laddar <b>etisk energi</b>.<br>Det finns inga hemliga rätta val och ingen poängjakt.<br><br>I sista rutan använder du energin till att förgöra <b>ETIKBOSSEN</b> med ett resonemang: <b>TYCK → EFTERSOM → MEN → SÅ</b>.</div><button class="start" id="start">BÖRJA ÄVENTYRET</button></div></div>
-<div class="overlay hidden" id="win"><div class="panel"><div class="kicker">ETIKBOSSEN ÄR BESEGRAD</div><div class="big" id="endtitle">DIN VÄG HAR ETT SLUT</div><div class="ending" id="ending"></div><p>Spela igen och välj en annan moralisk väg om du vill se ett annat slut.</p><button class="start" id="again">SPELA EN ANNAN VÄG</button><a href="index.html"><button class="start" style="background:#334155;color:#fff">Till banorna</button></a></div></div>
+<div class="overlay" id="intro"><div class="panel"><div class="kicker">🗝️ MORALÄVENTYR · v2.1</div><div class="big">VÄRDEKROCKEN</div><p>Den här gången finns ingen enda väg genom berättelsen.</p><div class="controls">Du gör <b>fyra moraliska val</b>.<br>Varje val öppnar en ny väg och laddar <b>etisk energi</b>.<br>Det finns inga hemliga rätta val och ingen poängjakt.<br><b>Tre huvudvägar ger tre olika slut, och upptäckta slut sparas.</b><br><br>I sista rutan använder du energin till att förgöra <b>ETIKBOSSEN</b> med ett resonemang: <b>TYCK → EFTERSOM → MEN → SÅ</b>.</div><button class="start" id="start">BÖRJA ÄVENTYRET</button></div></div>
+<div class="overlay hidden" id="win"><div class="panel"><div class="kicker">ETIKBOSSEN ÄR BESEGRAD</div><div class="big" id="endtitle">DIN VÄG HAR ETT SLUT</div><div class="ending" id="ending"></div><p id="endingProgress"></p><button class="start hidden" id="secretBtn">🚪 ÖPPNA DEN FJÄRDE DÖRREN</button><button class="start" id="again">SPELA EN ANNAN VÄG</button><a href="index.html"><button class="start" style="background:#334155;color:#fff">Till banorna</button></a></div></div><div class="overlay hidden" id="secret"><div class="panel"><div class="kicker">🚪 HEMLIG EPILOG</div><div class="big">DEN FJÄRDE DÖRREN</div><p>Du har sett alla tre vägarna. Bakom dörren väntar inte ett nytt facit. ETIKBOSSEN ställer en sista fråga:</p><div class="ending"><b>Vilken väg var egentligen den rätta?</b></div><div id="secretChoices"></div><div class="ending hidden" id="secretEnding"></div><button class="start hidden" id="secretBack">TILLBAKA TILL VÄGKARTAN</button></div></div>
 </div></div>
 <script>
 const K="etikMoralLevels_v2",NEED={a:4,b:4,c:4,d:4,e:1};
+const ENDINGS={take:{route:"Den hemliga vägen",title:"PRISET FÖR HJÄLPEN"},talk:{route:"Samtalets väg",title:"SAMTALETS OMVÄG"},alt:{route:"Den tredje vägen",title:"DEN TREDJE VÄGEN"}};
+function endingIdForRoute(r){return r==="Den hemliga vägen"?"take":r==="Samtalets väg"?"talk":"alt"}
+function discovered(){const s=readSave();return Array.isArray(s.adventureEndings)?s.adventureEndings:[]}
 function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
 function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(function(kv){const id=kv[0],n=kv[1];return Array.from({length:n},function(_,i){return !!(d[id]||[])[i]}).every(Boolean)})}
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");if(unlocked())lock.classList.add("hidden");else intro.classList.add("hidden");
@@ -107,6 +110,7 @@ alt3:{where:"KVÄLLEN",title:"En annan sorts slut",text:["Klassen hittar till si
 
 let state={node:"start",energy:0,route:"Ej vald",trail:[],values:[],stance:""};
 const scene=document.getElementById("scene"),trail=document.getElementById("trail"),values=document.getElementById("values"),energy=document.getElementById("energy"),route=document.getElementById("route"),chapter=document.getElementById("chapter"),bot=document.getElementById("bot");
+const roadEls={take:document.getElementById("roadTake"),talk:document.getElementById("roadTalk"),alt:document.getElementById("roadAlt")};
 
 function updateSide(){
  energy.textContent="ETISK ENERGI "+state.energy+"/4";
@@ -115,6 +119,8 @@ function updateSide(){
  for(let n=0;n<4;n++)document.getElementById("e"+n).classList.toggle("on",n<state.energy);
  trail.innerHTML=state.trail.length?state.trail.map(function(x){return '<div class="trailitem">'+x+'</div>'}).join(""):'<div class="trailitem">Dina val kommer synas här.</div>';
  values.innerHTML=state.values.length?Array.from(new Set(state.values)).map(function(x){return '<span class="chip">'+x+'</span>'}).join(""):'<span class="chip">–</span>';
+ const seen=discovered();const current=state.route!=="Ej vald"?endingIdForRoute(state.route):"";
+ Object.keys(ENDINGS).forEach(function(id){const el=roadEls[id],isSeen=seen.includes(id),isCurrent=current===id;el.classList.toggle("seen",isSeen);el.classList.toggle("current",isCurrent&&!isSeen);el.textContent=isSeen?"✓ "+ENDINGS[id].title:isCurrent?"→ "+ENDINGS[id].route:"???";});
 }
 function choose(choice){
  if(choice.route)state.route=choice.route;
@@ -171,8 +177,11 @@ function showEnding(){
  }
  document.getElementById("endtitle").textContent=title;
  document.getElementById("ending").innerHTML='<b>Din väg:</b> '+state.route+'<br><br>'+body;
- let save=readSave();save.adventureBoss=true;localStorage.setItem(K,JSON.stringify(save));
- document.getElementById("win").classList.remove("hidden");
+ let save=readSave();save.adventureBoss=true;if(!Array.isArray(save.adventureEndings))save.adventureEndings=[];const eid=endingIdForRoute(state.route);if(!save.adventureEndings.includes(eid))save.adventureEndings.push(eid);localStorage.setItem(K,JSON.stringify(save));
+ const count=save.adventureEndings.length,progress=document.getElementById("endingProgress"),secretBtn=document.getElementById("secretBtn");
+ progress.innerHTML='<b>SLUT UPPTÄCKTA: '+count+'/3</b><br>'+(count<3?'Det finns fortfarande en annan moralisk väg genom berättelsen.':'Alla tre huvudvägar är upptäckta. Något har öppnats…');
+ secretBtn.classList.toggle("hidden",count<3);
+ updateSide();document.getElementById("win").classList.remove("hidden");
 }
 function restart(){
  state={node:"start",energy:0,route:"Ej vald",trail:[],values:[],stance:""};
@@ -180,6 +189,18 @@ function restart(){
  document.getElementById("win").classList.add("hidden");
  render();
 }
+function openSecret(){
+ document.getElementById("win").classList.add("hidden");const ov=document.getElementById("secret"),box=document.getElementById("secretChoices"),end=document.getElementById("secretEnding"),back=document.getElementById("secretBack");ov.classList.remove("hidden");end.classList.add("hidden");back.classList.add("hidden");box.innerHTML="";
+ const opts=[
+  ["Den hemliga vägen – ibland måste man handla direkt.","Du låter konsekvenser och akut behov väga tungt. Det är en möjlig etisk hållning – men den behöver också kunna möta frågan om ansvar och andras rättigheter."],
+  ["Samtalets väg – man bör försöka förstå och förhandla först.","Du låter respekt och delaktighet väga tungt. Det kan minska skadan – men ett långsamt samtal löser inte alltid akuta behov."],
+  ["Den tredje vägen – försök hitta ett alternativ som undviker den första krocken.","Du söker fler handlingsalternativ. Det kan vara klokt – men även nya vägar skapar ofta nya konsekvenser och värdekrockar."],
+  ["Ingen väg är alltid rätt. Det beror på vad som väger tyngst i situationen.","Du har upptäckt spelets hemlighet: etik handlar inte bara om att välja en knapp. Ett starkt resonemang visar varför något väger tungt, vad som talar emot och vilka konsekvenser valet kan få."]
+ ];
+ opts.forEach(function(x){const b=document.createElement("button");b.type="button";b.className="choice";b.textContent=x[0];b.addEventListener("click",function(){Array.from(box.children).forEach(function(z){z.disabled=true});b.classList.add("chosen");end.innerHTML='<b>FJÄRDE SLUTET: INGET ENKELT FACIT</b><br><br>'+x[1];end.classList.remove("hidden");back.classList.remove("hidden");let s=readSave();s.adventureSecret=true;localStorage.setItem(K,JSON.stringify(s))});box.appendChild(b)});
+}
+document.getElementById("secretBtn").addEventListener("click",openSecret);
+document.getElementById("secretBack").addEventListener("click",function(){document.getElementById("secret").classList.add("hidden");document.getElementById("win").classList.remove("hidden")});
 document.getElementById("start").addEventListener("click",function(){intro.classList.add("hidden");render()});
 document.getElementById("again").addEventListener("click",restart);
 updateSide();
