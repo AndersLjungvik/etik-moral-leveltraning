@@ -292,7 +292,7 @@ function drawHome(){
  const allDone=tracks.every(function(t){return trackComplete(t.id)});
  const bf=Array.isArray(s.blixForms)?s.blixForms.length:(s.boss?1:0);
  const qs=Array.isArray(s.quizSeen)?s.quizSeen.length:0,qf=!!s.quizFinalBoss;
- const ae=Array.isArray(s.adventureEndings)?s.adventureEndings.length:0,asecret=!!s.adventureSecret;
+ const ae=Array.isArray(s.adventureStoryEndings)?s.adventureStoryEndings.length:0;
 
  addTrack("a");
  addTrack("b");
@@ -308,11 +308,11 @@ function drawHome(){
  addTrack("c");
  addBoss({
    unlocked:u2,href:"aventyr.html",
-   badge:ae+"/3 slut upptäckta"+(asecret?" + fjärde dörren ✓":""),
-   title:"🗝️ BOSS 2 – VÄRDEKROCKEN · DILEMMAÄVENTYRET",
-   openText:ae<3?"Gör moraliska val, följ olika vägar och se olika konsekvenser. Tre huvudvägar ger tre olika slut.":"Alla tre huvudvägar är upptäckta – den fjärde dörren är öppen.",
+   badge:ae+"/8 slut upptäckta",
+   title:"🗝️ BOSS 2 – DEN SISTA BUSSEN · BERÄTTELSEÄVENTYRET",
+   openText:ae<8?"Läs berättelsen, gör moraliska val och upptäck hur olika beslut leder till helt olika slut.":"Alla åtta slut är upptäckta.",
    lockedText:"Klara Bana 3 – Etiska dilemman för att låsa upp Boss 2.",
-   progress:ae/3*100
+   progress:ae/8*100
  });
 
  addTrack("d");
@@ -334,8 +334,8 @@ function drawHome(){
  }
 
  if(u1||u2||u3){
-   let master=bf>=3&&qs>=30&&ae>=3,book=document.createElement("div");book.className="card";book.style.gridColumn="1/-1";book.style.border=master?"2px solid #d9a514":"1px solid #cbd5e1";
-   book.innerHTML='<span class="badge">📖 BOSSBOKEN</span><h3>Det du har upptäckt</h3><div class="small" style="line-height:1.9"><b>⚡ Boss 1 – Blixfighten:</b> '+bf+'/3 bossformer'+(!allDone&&bf>=1?' · MK II 🔒 tills alla banor är klara':'')+'<br><b>🗝️ Boss 2 – Värdekrocken:</b> '+ae+'/3 vägar'+(asecret?' · fjärde dörren öppnad':'')+'<br><b>⏱️ Boss 3 – Frågefighten:</b> '+qs+'/30 frågor'+(qf?' · slutformen besegrad':'')+'<br><b>👑 '+(master?'ETIKMÄSTAREN':'???')+':</b> '+(master?'Alla tre bossarna är fullt utforskade.':'Fortsätt utforska bossarna för att låsa upp.')+'</div>';
+   let master=bf>=3&&qs>=30&&ae>=8,book=document.createElement("div");book.className="card";book.style.gridColumn="1/-1";book.style.border=master?"2px solid #d9a514":"1px solid #cbd5e1";
+   book.innerHTML='<span class="badge">📖 BOSSBOKEN</span><h3>Det du har upptäckt</h3><div class="small" style="line-height:1.9"><b>⚡ Boss 1 – Blixfighten:</b> '+bf+'/3 bossformer'+(!allDone&&bf>=1?' · MK II 🔒 tills alla banor är klara':'')+'<br><b>🗝️ Boss 2 – Den sista bussen:</b> '+ae+'/8 slut'+'<br><b>⏱️ Boss 3 – Frågefighten:</b> '+qs+'/30 frågor'+(qf?' · slutformen besegrad':'')+'<br><b>👑 '+(master?'ETIKMÄSTAREN':'???')+':</b> '+(master?'Alla tre bossarna är fullt utforskade.':'Fortsätt utforska bossarna för att låsa upp.')+'</div>';
    g.appendChild(book);
  }
 }
