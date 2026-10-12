@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FRÅGEFIGHTEN – Final Boss</title>
+<style>
+:root{--bg:#050811;--panel:#111827;--line:#334155;--gold:#fbbf24;--red:#ef4444;--green:#86efac;--ink:#f8fafc}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+body{min-height:100vh;display:grid;place-items:center;padding:14px}.wrap{width:min(100%,980px)}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.top a{color:#cbd5e1;text-decoration:none;font-weight:800}.title{font-weight:1000;color:var(--gold);letter-spacing:.08em}
+#game{position:relative;width:100%;min-height:590px;background:radial-gradient(circle at 80% 28%,#26334d,#111827 34%,#080d18 78%);border:3px solid #334155;border-radius:22px;overflow:hidden;box-shadow:0 18px 60px #0009}
+.floor{position:absolute;left:0;right:0;bottom:0;height:18%;background:#090e1a;border-top:3px solid #475569}
+.hud{position:absolute;z-index:20;left:18px;right:18px;top:13px;display:flex;justify-content:space-between;font-size:14px;font-weight:1000}.hearts{letter-spacing:3px}.bosslife{color:#fde68a}.round{color:#cbd5e1}
+.boss{position:absolute;z-index:5;right:6%;top:112px;width:122px;height:148px;filter:drop-shadow(0 7px 8px #0009)}.boss .head{position:absolute;left:20px;top:0;width:82px;height:52px;border-radius:18px;background:#374151;border:4px solid var(--red)}.boss .eye{position:absolute;top:18px;width:13px;height:13px;border-radius:50%;background:#fee2e2;box-shadow:inset 0 0 0 4px var(--red)}.boss .e1{left:20px}.boss .e2{right:20px}.boss .body{position:absolute;left:7px;top:48px;width:108px;height:84px;border-radius:20px;background:#1f2937;border:3px solid #64748b}.boss .zig{position:absolute;left:37px;top:83px;font-size:30px;color:var(--red);font-weight:1000}.boss.hit{animation:bossHit .34s}.boss.dead{animation:die 1.45s forwards}
+@keyframes bossHit{0%,100%{transform:translateX(0)}45%{transform:translateX(40px) rotate(8deg)}}@keyframes die{0%{transform:scale(1) rotate(0);opacity:1}30%{transform:scale(.9) rotate(210deg)}70%{transform:scale(.4) rotate(720deg);opacity:1}100%{transform:scale(.03) rotate(1100deg);opacity:0}}
+.bossbubble{position:absolute;z-index:7;right:3.5%;top:285px;width:190px;padding:10px 12px;background:#f8fafc;color:#7f1d1d;border:3px solid var(--gold);border-radius:15px;font-size:12px;font-weight:1000;text-align:center}
+.center{position:absolute;z-index:10;left:5%;top:72px;width:66%;display:grid;place-items:center}.timerRing{--p:1;width:min(100%,610px);padding:8px;border-radius:30px;background:conic-gradient(var(--gold) calc(var(--p)*1turn),#334155 0);box-shadow:0 0 24px #fbbf2433}.timerRing.danger{background:conic-gradient(var(--red) calc(var(--p)*1turn),#334155 0);box-shadow:0 0 28px #ef444455}
+.question{min-height:185px;background:#f8fafc;color:#111827;border-radius:23px;padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.qmeta{font-size:12px;font-weight:1000;color:#7f1d1d;letter-spacing:.08em;margin-bottom:11px}.qtext{font-size:clamp(19px,3vw,28px);line-height:1.25;font-weight:900}.seconds{margin-top:14px;font-size:13px;font-weight:1000;color:#64748b}.seconds strong{font-size:20px;color:#111827}
+.answers{width:min(100%,610px);display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:17px}.answer{min-height:67px;border:2px solid #475569;border-radius:15px;background:#172033;color:#fff;padding:12px;font:inherit;font-size:15px;font-weight:850;cursor:pointer;box-shadow:0 5px 0 #0b1020}.answer:hover{border-color:var(--gold)}.answer.correct{background:#14532d;border-color:#86efac}.answer.wrong{background:#7f1d1d;border-color:#fca5a5}.answer:disabled{cursor:default}
+.status{position:absolute;z-index:35;left:36%;top:51%;transform:translate(-50%,-50%);font-size:34px;font-weight:1000;text-align:center;text-shadow:0 4px 0 #000;pointer-events:none;opacity:0}.spark{position:absolute;z-index:30;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 10px 5px var(--gold);animation:spark .5s forwards}@keyframes spark{to{transform:translate(var(--dx),var(--dy)) scale(.05);opacity:0}}.shake{animation:shake .3s}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-11px)}50%{transform:translateX(10px)}75%{transform:translateX(-7px)}}
+.overlay{position:absolute;z-index:60;inset:0;background:#080d18f5;display:grid;place-items:center;text-align:center;padding:28px}.overlay.hidden{display:none}.panel{max-width:570px}.kicker{color:var(--gold);font-size:14px;font-weight:1000;letter-spacing:.14em}.big{font-size:clamp(38px,8vw,66px);font-weight:1000;margin:8px 0}.red{color:var(--red)}.controls{margin:20px auto;padding:15px 19px;background:#111827;border:1px solid #334155;border-radius:15px;width:min(100%,390px);font-size:13px;line-height:1.7}.good{color:var(--green)}.bad{color:#fca5a5}
+button.start{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:1000;cursor:pointer;background:var(--gold);color:#111827;margin:6px}.secondary{background:#334155!important;color:#fff!important}
+@media(max-width:760px){#game{min-height:690px}.center{left:4%;top:72px;width:92%}.boss{right:2%;top:430px;transform:scale(.8);transform-origin:top right}.bossbubble{right:4%;top:545px;width:165px}.status{left:50%;top:43%}.answers{grid-template-columns:1fr}.question{min-height:165px;padding:24px 20px}.answer{min-height:54px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><a href="index.html">← Till träningen</a><div class="title">⏱️ FRÅGEFIGHTEN</div></div>
+<div id="game">
+<div class="floor"></div>
+<div class="hud"><div class="hearts" id="hearts">❤️❤️❤️</div><div class="round" id="round">FRÅGA 1</div><div class="bosslife" id="bosslife">BOSSLIV: 10/10</div></div>
+<div class="center"><div class="timerRing" id="ring"><div class="question"><div class="qmeta">ETIKBOSSENS FRÅGA</div><div class="qtext" id="qtext">...</div><div class="seconds">TID KVAR: <strong id="secs">14</strong></div></div></div><div class="answers" id="answers"></div></div>
+<div class="boss" id="boss"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="zig">?!</div></div>
+<div class="bossbubble" id="bossbubble">TÄNK SNABBT.</div><div class="status" id="status"></div>
+<div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>FRÅGEFIGHTEN låses upp när alla träningsbanor är klara.</p><a href="index.html"><button class="start">Till träningen</button></a></div></div>
+<div class="overlay" id="intro"><div class="panel"><div class="kicker">⏱️ SLUTBOSS · v1.0</div><div class="big">FRÅGEFIGHTEN</div><p><b>ETIKBOSSEN har bytt taktik.</b><br>Nu skjuter han frågor i stället för blixtar.</p><div class="controls">Fyra svar. Ett är bäst.<br><span class="good">RÄTT SVAR → BOSSTRÄFF</span><br><span class="bad">FEL SVAR → −1 ENERGI</span><br><span class="bad">TIDEN UTE → −1 ENERGI</span><br><b>10 rätta träffar sänker bossen.</b></div><button class="start" id="start">STARTA FRÅGEFIGHTEN</button></div></div>
+<div class="overlay hidden" id="lose"><div class="panel"><div class="kicker">RONDEN ÄR ÖVER</div><div class="big red">DU ÅKTE PÅ STRYK!</div><p>Tre missar och ETIKBOSSEN tog ronden.</p><button class="start" id="retry">REVANSCH!</button><a href="index.html"><button class="start secondary">Till träningen</button></a></div></div>
+<div class="overlay hidden" id="win"><div class="panel"><div class="kicker">FRÅGEFIGHTEN VUNNEN</div><div class="big">ETIKBOSSEN<br><span class="red">ÄR DÖD.</span></div><p>10 rätta svar under tidspress.</p><a href="index.html"><button class="start">Tillbaka till banorna</button></a></div></div>
+</div></div>
+<script>
+const K="etikMoralLevels_v2",NEED={a:4,b:4,c:4,d:4,e:1};
+function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
+function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(function(kv){const id=kv[0],n=kv[1];return Array.from({length:n},function(_,i){return !!(d[id]||[])[i]}).every(Boolean)})}
+const lock=document.getElementById("lock"),intro=document.getElementById("intro");if(unlocked())lock.classList.add("hidden");else intro.classList.add("hidden");
+const BANK=[
+{q:"Vilket begrepp passar bäst? En person väljer nästan alltid det som gynnar hen själv.",a:"Egoism",o:["Solidaritet","Tillit","Respekt"]},
+{q:"Vilket begrepp passar bäst? Du tar hand om något du lovat att sköta.",a:"Ansvar",o:["Frihet","Egoism","Jämlikhet"]},
+{q:"Vilket begrepp handlar om att få bestämma över sitt eget liv och sina egna val?",a:"Frihet",o:["Lojalitet","Moral","Solidaritet"]},
+{q:"Vilket begrepp passar bäst? Någon får extra stöd för att få en rimlig chans att lyckas.",a:"Rättvisa",o:["Jämställdhet","Egoism","Tillit"]},
+{q:"Vilket begrepp passar bäst? Du hjälper någon som blir illa behandlad, trots att det inte gynnar dig.",a:"Solidaritet",o:["Egoism","Frihet","Värdering"]},
+{q:"Vilket begrepp betyder att alla människor har samma värde och grundläggande rättigheter?",a:"Jämlikhet",o:["Jämställdhet","Lojalitet","Ansvar"]},
+{q:"Vilket begrepp handlar om att kön inte ska avgöra människors möjligheter och rättigheter?",a:"Jämställdhet",o:["Jämlikhet","Tillit","Etik"]},
+{q:"Vilket begrepp passar bäst? Du vågar berätta något viktigt för en person eftersom du tror att personen inte sviker dig.",a:"Tillit",o:["Lojalitet","Respekt","Frihet"]},
+{q:"Vilket begrepp passar bäst? Du står kvar på en väns sida och sviker inte när det blir svårt.",a:"Lojalitet",o:["Empati","Rättvisa","Egoism"]},
+{q:"Vilket begrepp passar bäst? Du lyssnar färdigt även när du tycker att den andra personen har fel.",a:"Respekt",o:["Frihet","Solidaritet","Kränkning"]},
+{q:"Vilket begrepp betyder att försöka förstå hur en annan människa känner?",a:"Empati",o:["Egoism","Ansvar","Moral"]},
+{q:"Vilket begrepp passar bäst när någon behandlas på ett sätt som sårar eller förnedrar?",a:"Kränkning",o:["Tillit","Frihet","Jämlikhet"]},
+{q:"Vad är etik?",a:"Tankar och idéer om vad som är rätt och fel",o:["Hur vi faktiskt handlar","En lag som alla måste följa","Att alltid hjälpa sina vänner"]},
+{q:"Vad är moral?",a:"Hur vi faktiskt handlar när något kan vara rätt eller fel",o:["Tankar om rätt och fel","Samma sak som en lag","En känsla av rädsla"]},
+{q:"Vad är ett etiskt dilemma?",a:"En svår valsituation där inget alternativ är helt problemfritt",o:["En situation där ett svar är självklart rätt","Ett brott mot en skolregel","En konflikt som alltid kan lösas snabbt"]},
+{q:"Vilket svar visar bäst ett utvecklat etiskt resonemang?",a:"Jag tar ställning, ger ett skäl och visar också vad som talar emot",o:["Jag skriver bara vad jag tycker","Jag räknar upp många begrepp","Jag svarar så kort som möjligt"]},
+{q:"Vilket ord hjälper bäst när du vill ge ett skäl till din åsikt?",a:"Eftersom",o:["Men","Kanske","Sedan"]},
+{q:"Vilket ord hjälper bäst när du vill visa ett motargument eller ett annat perspektiv?",a:"Men",o:["Eftersom","Därför att","Först"]},
+{q:"Vilket är bäst exempel på ansvar?",a:"Att berätta att du gjort sönder något och försöka rätta till det",o:["Att gömma det så ingen märker","Att skylla på någon annan","Att låtsas att det inte spelar någon roll"]},
+{q:"Vilket är bäst exempel på respekt?",a:"Att säga emot utan att förolämpa den andra",o:["Att alltid hålla med","Att avbryta när någon har fel","Att vägra lyssna"]},
+{q:"Vilken situation visar tydligast solidaritet?",a:"Du hjälper en elev som står ensam fast du inte känner personen så väl",o:["Du väljer alltid det som ger dig själv mest","Du lovar att aldrig ändra åsikt","Du undviker alla svåra situationer"]},
+{q:"Vilken situation visar tydligast tillit?",a:"Du lämnar något viktigt till en person eftersom du tror att hen tar hand om det",o:["Du kontrollerar personen hela tiden","Du vägrar låta någon hjälpa dig","Du gör bara sådant som gynnar dig själv"]},
+{q:"Vad är en värdering?",a:"En uppfattning om vad som är viktigt, bra eller dåligt",o:["En regel som alltid står i lagen","En känsla som bara handlar om rädsla","Ett bevis för att något är sant"]},
+{q:"Vilket svar visar två perspektiv?",a:"Det kan hjälpa en person, men samtidigt bli orättvist mot andra",o:["Det är fel, punkt","Alla tycker samma sak","Jag vet inte"]},
+{q:"Vad bör du först leta efter i en etisk berättelse för att kunna resonera?",a:"Vilka värden eller intressen som krockar",o:["Det längsta ordet","Vem som är äldst","Hur många meningar texten har"]},
+{q:"Vilken kombination passar bäst i ett etiskt resonemang?",a:"Tyck – eftersom – men – så",o:["Vem – var – när – hur","Först – sedan – till sist – slut","Rubrik – bild – fotnot – källa"]},
+{q:"Vilket är bäst exempel på lojalitet?",a:"Att inte överge en vän bara för att andra börjar prata illa om personen",o:["Att alltid göra exakt som vännen säger","Att ge alla samma stöd oavsett behov","Att aldrig byta åsikt"]},
+{q:"Vilket är bäst exempel på jämlikhet?",a:"Alla människor ska ha samma människovärde oavsett bakgrund",o:["Alla måste få exakt samma sak i varje situation","Bara vuxna får uttrycka åsikter","Kön ska styra vilka yrken man kan ha"]},
+{q:"Vilket är bäst exempel på jämställdhet?",a:"Flickor och pojkar ska ha samma möjligheter och rättigheter",o:["Alla elever ska få exakt samma hjälp","Man ska alltid vara lojal mot en vän","Alla ska tycka likadant"]},
+{q:"Varför kan ett etiskt dilemma vara svårt?",a:"För att olika viktiga värden kan krocka och alla val kan få konsekvenser",o:["För att det alltid saknas fakta","För att lagen aldrig gäller","För att det bara finns ett möjligt val"]}
+];
+const game=document.getElementById("game"),boss=document.getElementById("boss"),bubble=document.getElementById("bossbubble"),ring=document.getElementById("ring"),qtext=document.getElementById("qtext"),answers=document.getElementById("answers"),secs=document.getElementById("secs"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),round=document.getElementById("round"),status=document.getElementById("status");
+let energy=3,hp=10,active=false,deck=[],current=null,startTime=0,raf=0,questionNo=0,audio=null,lastTick=99;const LIMIT=14000;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function audioCtx(){if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();return audio}
+function beep(kind){const a=audioCtx(),o=a.createOscillator(),g=a.createGain(),t=a.currentTime;o.connect(g);g.connect(a.destination);if(kind==="tick"){o.frequency.value=520;g.gain.value=.035}else if(kind==="good"){o.frequency.setValueAtTime(300,t);o.frequency.exponentialRampToValueAtTime(900,t+.22);g.gain.value=.15}else if(kind==="bad"){o.type="sawtooth";o.frequency.setValueAtTime(170,t);o.frequency.exponentialRampToValueAtTime(70,t+.28);g.gain.value=.13}else{o.type="square";o.frequency.setValueAtTime(420,t);o.frequency.exponentialRampToValueAtTime(45,t+1.2);g.gain.value=.16}g.gain.exponentialRampToValueAtTime(.001,t+(kind==="death"?1.3:.3));o.start(t);o.stop(t+(kind==="death"?1.35:.32))}
+function hud(){hearts.textContent="❤️".repeat(Math.max(0,energy))+"🖤".repeat(Math.max(0,3-energy));bosslife.textContent="BOSSLIV: "+hp+"/10";round.textContent="FRÅGA "+questionNo}
+function flash(txt,color,ms){status.textContent=txt;status.style.color=color||"#fff";status.style.opacity=1;setTimeout(function(){status.style.opacity=0},ms||650)}
+function sparks(){for(let i=0;i<16;i++){const s=document.createElement("i");s.className="spark";s.style.left="82%";s.style.top="34%";s.style.setProperty("--dx",(Math.random()*180-90)+"px");s.style.setProperty("--dy",(Math.random()*150-75)+"px");game.appendChild(s);setTimeout(function(){s.remove()},520)}}
+function freshDeck(){deck=shuffle(BANK)}
+function nextQuestion(){if(!active)return;if(!deck.length)freshDeck();current=deck.pop();questionNo++;hud();qtext.textContent=current.q;bubble.textContent=["SVARA DÅ.","KLOCKAN GÅR.","DU HINNER INTE.","VÅGAR DU?","VÄLJ. NU."][Math.floor(Math.random()*5)];let opts=shuffle([current.a].concat(current.o));answers.innerHTML="";opts.forEach(function(txt){let b=document.createElement("button");b.className="answer";b.textContent=txt;b.onclick=function(){choose(b,txt)};answers.appendChild(b)});startTime=performance.now();ring.style.setProperty("--p",1);ring.classList.remove("danger");secs.textContent="14";lastTick=99;cancelAnimationFrame(raf);raf=requestAnimationFrame(timer)}
+function timer(now){if(!active)return;let left=Math.max(0,LIMIT-(now-startTime)),p=left/LIMIT,s=Math.ceil(left/1000);ring.style.setProperty("--p",p);secs.textContent=s;ring.classList.toggle("danger",p<.28);if(s<=4&&s!==lastTick){beep("tick");lastTick=s}if(left<=0){timeout();return}raf=requestAnimationFrame(timer)}
+function freeze(){cancelAnimationFrame(raf);Array.from(answers.children).forEach(function(b){b.disabled=true})}
+function choose(btn,txt){if(!active||!current)return;freeze();if(txt===current.a){btn.classList.add("correct");good()}else{btn.classList.add("wrong");Array.from(answers.children).forEach(function(b){if(b.textContent===current.a)b.classList.add("correct")});bad("FEL SVAR!")}}
+function good(){beep("good");hp--;hud();boss.classList.remove("hit");void boss.offsetWidth;boss.classList.add("hit");sparks();flash("KRITISK TRÄFF!","#86efac",700);bubble.textContent="AJ!";if(hp<=0){killBoss();return}setTimeout(nextQuestion,850)}
+function bad(label){beep("bad");energy--;hud();game.classList.add("shake");setTimeout(function(){game.classList.remove("shake")},310);flash(label+"  −1 ENERGI","#fca5a5",750);bubble.textContent="HAHA!";if(energy<=0){setTimeout(lose,550);return}setTimeout(nextQuestion,900)}
+function timeout(){freeze();Array.from(answers.children).forEach(function(b){if(b.textContent===current.a)b.classList.add("correct")});bad("TIDEN ÄR UTE!")}
+function lose(){active=false;cancelAnimationFrame(raf);document.getElementById("lose").classList.remove("hidden")}
+function killBoss(){active=false;cancelAnimationFrame(raf);beep("death");flash("SLUTSLAG!","#ef4444",1200);boss.classList.add("dead");sparks();bubble.textContent="NEEEEEJ!";setTimeout(function(){let s=readSave();s.quizboss=true;localStorage.setItem(K,JSON.stringify(s));document.getElementById("win").classList.remove("hidden")},1500)}
+function reset(){energy=3;hp=10;questionNo=0;freshDeck();active=true;boss.classList.remove("dead");boss.style.opacity=1;document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();nextQuestion()}
+document.getElementById("start").onclick=function(){intro.classList.add("hidden");audioCtx().resume();reset()};document.getElementById("retry").onclick=function(){audioCtx().resume();reset()};hud();
+</script>
+</body>
+</html>
