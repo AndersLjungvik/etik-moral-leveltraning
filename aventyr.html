@@ -3,18 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VÄRDEKROCKEN – Dilemmaäventyret</title>
+<title>VÄRDEKROCKEN – Moraläventyret</title>
 <style>
 :root{--bg:#050811;--panel:#111827;--card:#172033;--line:#334155;--gold:#fbbf24;--red:#ef4444;--green:#86efac;--blue:#7dd3fc;--ink:#f8fafc;--muted:#94a3b8}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}body{min-height:100vh;padding:14px}.wrap{width:min(100%,980px);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.top a{color:#cbd5e1;text-decoration:none;font-weight:800}.title{font-weight:1000;color:var(--gold);letter-spacing:.06em}
-#game{position:relative;min-height:620px;border:3px solid var(--line);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 82% 24%,#26334d,#111827 36%,#080d18 78%);box-shadow:0 18px 60px #0009}.mist{position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 0 35%,#ffffff08 45%,transparent 57%);animation:drift 8s linear infinite}@keyframes drift{from{transform:translateX(-30%)}to{transform:translateX(30%)}}
-.hud{position:absolute;z-index:25;left:16px;right:16px;top:13px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:1000}.chapter{color:#cbd5e1}.bosslife{color:#fde68a}.bag{color:var(--blue)}
-.main{position:relative;z-index:10;display:grid;grid-template-columns:minmax(0,1fr) 265px;gap:18px;padding:62px 20px 28px;min-height:620px}.story{min-width:0}.side{min-width:0}
-.scene{background:#f8fafc;color:#111827;border:4px solid var(--gold);border-radius:22px;padding:26px;box-shadow:0 12px 36px #0008}.scene .where{font-size:12px;color:#7f1d1d;font-weight:1000;letter-spacing:.12em;margin-bottom:8px}.scene h2{margin:0 0 14px;font-size:clamp(24px,4vw,35px);line-height:1.05}.scene p{font-size:17px;line-height:1.55;margin:10px 0}.prompt{margin-top:20px;padding-top:18px;border-top:2px solid #e5e7eb;font-weight:900;font-size:18px}.choices{display:grid;gap:10px;margin-top:14px}.choice{border:2px solid #475569;border-radius:14px;background:#172033;color:#fff;padding:14px;font:inherit;font-weight:850;text-align:left;cursor:pointer;min-height:52px}.choice:hover{border-color:var(--gold)}.choice.selected{border-color:var(--gold);background:#3b2f0b}.choice.correct{border-color:var(--green);background:#14532d}.choice.wrong{border-color:#fca5a5;background:#7f1d1d}.choice:disabled{cursor:default}.next{margin-top:15px;border:0;border-radius:13px;padding:12px 18px;font:inherit;font-weight:1000;background:var(--gold);color:#111827;cursor:pointer}.next:disabled{opacity:.4;cursor:not-allowed}
-.card{background:#111827dd;border:1px solid #334155;border-radius:17px;padding:15px;margin-bottom:12px}.card h3{margin:0 0 10px;font-size:14px;color:#fde68a}.facts{display:grid;gap:8px;font-size:12px;line-height:1.4;color:#cbd5e1}.fact{padding:8px 9px;border-radius:10px;background:#0b1020;border:1px solid #263244}.stance{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;font-weight:900;padding:6px 8px;border-radius:999px;background:#263244;color:#cbd5e1}.chip.on{background:#854d0e;color:#fff7d6}
-.boss{position:relative;height:170px;margin-top:10px}.bot{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:118px;height:138px;filter:drop-shadow(0 6px 8px #000a)}.head{position:absolute;left:20px;top:0;width:78px;height:50px;border-radius:17px;background:#374151;border:4px solid var(--red)}.eye{position:absolute;top:17px;width:13px;height:13px;border-radius:50%;background:#fee2e2;box-shadow:inset 0 0 0 4px var(--red)}.e1{left:19px}.e2{right:19px}.body{position:absolute;left:7px;top:46px;width:104px;height:82px;border-radius:20px;background:#1f2937;border:3px solid #64748b}.mark{position:absolute;left:37px;top:75px;color:var(--red);font-size:30px;font-weight:1000}.shieldrow{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:5px}.shieldbit{height:26px;border-radius:7px;border:2px solid #64748b;background:#263244;display:grid;place-items:center;font-size:9px;font-weight:1000;color:#cbd5e1}.shieldbit.broken{background:#14532d;border-color:var(--green);color:#dcfce7;text-decoration:line-through}.bot.dead{animation:die 1.3s forwards}@keyframes die{0%{transform:translateX(-50%) rotate(0) scale(1)}60%{transform:translateX(-50%) rotate(560deg) scale(.45);opacity:1}100%{transform:translateX(-50%) rotate(930deg) scale(.05);opacity:0}}
-.overlay{position:absolute;z-index:70;inset:0;background:#080d18f6;display:grid;place-items:center;text-align:center;padding:28px}.overlay.hidden{display:none}.panel{max-width:580px}.kicker{color:var(--gold);font-size:14px;font-weight:1000;letter-spacing:.14em}.big{font-size:clamp(39px,8vw,68px);font-weight:1000;margin:8px 0}.controls{margin:20px auto;padding:15px 19px;background:#111827;border:1px solid #334155;border-radius:15px;max-width:430px;font-size:13px;line-height:1.7}.start{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:1000;cursor:pointer;background:var(--gold);color:#111827;margin:6px}.finalbox{background:#0b1020;border:2px solid #334155;border-radius:16px;padding:16px;margin-top:14px}.build{display:grid;gap:12px}.build label{font-size:12px;font-weight:1000;color:#fde68a}.build select{width:100%;margin-top:5px;border:2px solid #475569;border-radius:11px;padding:11px;background:#111827;color:#fff;font:inherit;font-size:14px}.model{margin-top:16px;padding:14px;border-radius:13px;background:#ecfccb;color:#1a2e05;font-size:15px;line-height:1.55}.hidden{display:none!important}.feedback{margin-top:12px;font-size:13px;font-weight:850}.good{color:#166534}.bad{color:#991b1b}
-@media(max-width:780px){#game{min-height:760px}.main{grid-template-columns:1fr;padding-top:62px}.side{display:grid;grid-template-columns:1fr 1fr;gap:10px}.side .card{margin-bottom:0}.boss{height:150px}.scene{padding:20px}.scene p{font-size:16px}}@media(max-width:520px){.side{grid-template-columns:1fr}.hud{font-size:11px}.scene h2{font-size:25px}}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+body{min-height:100vh;padding:14px}.wrap{width:min(100%,1000px);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.top a{color:#cbd5e1;text-decoration:none;font-weight:800}.title{font-weight:1000;color:var(--gold);letter-spacing:.06em}
+#game{position:relative;min-height:650px;border:3px solid var(--line);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 82% 24%,#26334d,#111827 36%,#080d18 78%);box-shadow:0 18px 60px #0009}
+.mist{position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 0 35%,#ffffff08 45%,transparent 57%);animation:drift 8s linear infinite}@keyframes drift{from{transform:translateX(-30%)}to{transform:translateX(30%)}}
+.hud{position:absolute;z-index:25;left:16px;right:16px;top:13px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:1000}.chapter{color:#cbd5e1}.energy{color:#fde68a}.route{color:var(--blue)}
+.main{position:relative;z-index:10;display:grid;grid-template-columns:minmax(0,1fr) 275px;gap:18px;padding:62px 20px 28px;min-height:650px}.story{min-width:0}.side{min-width:0}
+.scene{background:#f8fafc;color:#111827;border:4px solid var(--gold);border-radius:22px;padding:26px;box-shadow:0 12px 36px #0008}.where{font-size:12px;color:#7f1d1d;font-weight:1000;letter-spacing:.12em;margin-bottom:8px}.scene h2{margin:0 0 14px;font-size:clamp(24px,4vw,35px);line-height:1.05}.scene p{font-size:17px;line-height:1.55;margin:10px 0}.prompt{margin-top:20px;padding-top:18px;border-top:2px solid #e5e7eb;font-weight:900;font-size:18px}
+.choices{display:grid;gap:10px;margin-top:14px}.choice{border:2px solid #475569;border-radius:14px;background:#172033;color:#fff;padding:14px;font:inherit;font-weight:850;text-align:left;cursor:pointer;min-height:54px}.choice:hover{border-color:var(--gold)}.choice:focus{outline:3px solid #93c5fd;outline-offset:2px}.choice:disabled{cursor:default;opacity:.75}.choice.chosen{border-color:var(--gold);background:#3b2f0b}
+.result{margin-top:13px;padding:12px 14px;border-radius:12px;background:#fef3c7;border:1px solid #f59e0b;font-size:14px;line-height:1.5}.next{margin-top:15px;border:0;border-radius:13px;padding:12px 18px;font:inherit;font-weight:1000;background:var(--gold);color:#111827;cursor:pointer}
+.card{background:#111827dd;border:1px solid #334155;border-radius:17px;padding:15px;margin-bottom:12px}.card h3{margin:0 0 10px;font-size:14px;color:#fde68a}.trail{display:grid;gap:8px;font-size:12px;line-height:1.35;color:#cbd5e1}.trailitem{padding:8px 9px;border-radius:10px;background:#0b1020;border:1px solid #263244}.values{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;font-weight:900;padding:6px 8px;border-radius:999px;background:#263244;color:#cbd5e1}.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.cell{height:34px;border-radius:9px;border:2px solid #475569;background:#0b1020;display:grid;place-items:center;color:#64748b;font-weight:1000}.cell.on{background:#854d0e;border-color:var(--gold);color:#fff7d6;box-shadow:0 0 12px #fbbf2455}
+.boss{position:relative;height:180px}.bot{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:120px;height:142px;filter:drop-shadow(0 6px 8px #000a)}.head{position:absolute;left:20px;top:0;width:80px;height:51px;border-radius:17px;background:#374151;border:4px solid var(--red)}.eye{position:absolute;top:17px;width:13px;height:13px;border-radius:50%;background:#fee2e2;box-shadow:inset 0 0 0 4px var(--red)}.e1{left:19px}.e2{right:19px}.body{position:absolute;left:7px;top:47px;width:106px;height:83px;border-radius:20px;background:#1f2937;border:3px solid #64748b}.mark{position:absolute;left:37px;top:76px;color:var(--red);font-size:30px;font-weight:1000}.bot.dead{animation:die 1.35s forwards}@keyframes die{0%{transform:translateX(-50%) rotate(0) scale(1)}60%{transform:translateX(-50%) rotate(560deg) scale(.45);opacity:1}100%{transform:translateX(-50%) rotate(930deg) scale(.05);opacity:0}}
+.shields{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.shield{height:28px;border-radius:7px;border:2px solid #64748b;background:#263244;display:grid;place-items:center;font-size:9px;font-weight:1000;color:#cbd5e1}.shield.cracked{background:#14532d;border-color:var(--green);color:#dcfce7;text-decoration:line-through}
+.finalbox{margin-top:14px;padding:15px;border-radius:14px;background:#0b1020;border:2px solid #334155}.build{display:grid;gap:12px}.build label{font-size:12px;font-weight:1000;color:#fde68a}.build select{width:100%;margin-top:5px;border:2px solid #475569;border-radius:11px;padding:11px;background:#111827;color:#fff;font:inherit;font-size:14px}.attack{width:100%;margin-top:14px;border:0;border-radius:13px;padding:13px 18px;background:var(--red);color:#fff;font:inherit;font-weight:1000;cursor:pointer}.attack:disabled{opacity:.35;cursor:not-allowed}
+.overlay{position:absolute;z-index:70;inset:0;background:#080d18f6;display:grid;place-items:center;text-align:center;padding:28px}.overlay.hidden{display:none}.panel{max-width:590px}.kicker{color:var(--gold);font-size:14px;font-weight:1000;letter-spacing:.14em}.big{font-size:clamp(39px,8vw,68px);font-weight:1000;margin:8px 0}.controls{margin:20px auto;padding:15px 19px;background:#111827;border:1px solid #334155;border-radius:15px;max-width:455px;font-size:13px;line-height:1.7}.start{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:1000;cursor:pointer;background:var(--gold);color:#111827;margin:6px}.ending{margin:18px auto;padding:16px;border-radius:14px;background:#111827;border:1px solid #334155;text-align:left;line-height:1.55}.hidden{display:none!important}
+@media(max-width:800px){#game{min-height:800px}.main{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:10px}.side .card{margin-bottom:0}.scene{padding:20px}}@media(max-width:540px){.side{grid-template-columns:1fr}.hud{font-size:11px}.scene p{font-size:16px}.scene h2{font-size:25px}}
+@media(prefers-reduced-motion:reduce){.mist,.bot.dead{animation:none}}
 </style>
 </head>
 <body>
@@ -22,18 +29,20 @@
 <div class="top"><a href="index.html">← Till träningen</a><div class="title">🗝️ VÄRDEKROCKEN</div></div>
 <div id="game">
 <div class="mist"></div>
-<div class="hud"><div class="chapter" id="chapter">KAPITEL 1/6</div><div class="bag" id="bag">FAKTA: 0</div><div class="bosslife">DILEMMABOSSEN</div></div>
+<div class="hud"><div class="chapter" id="chapter">RUTA 1</div><div class="energy" id="energy">ETISK ENERGI 0/4</div><div class="route" id="route">VÄG: EJ VALD</div></div>
 <div class="main">
 <section class="story"><div class="scene" id="scene"></div></section>
 <aside class="side">
-<div class="card"><h3>🎒 FAKTARYGGSÄCK</h3><div class="facts" id="facts"><div class="fact">Nya fakta hamnar här.</div></div></div>
-<div class="card"><h3>🧭 DIN STÅNDPUNKT</h3><div class="stance" id="stance"><span class="chip">RÄTT</span><span class="chip">FEL</span><span class="chip">OSÄKER</span></div></div>
-<div class="card"><h3>👾 DILEMMABOSSEN</h3><div class="boss"><div class="bot" id="bot"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="mark">⚖</div></div></div><div class="shieldrow"><div class="shieldbit" id="s0">TYCK</div><div class="shieldbit" id="s1">EFTERSOM</div><div class="shieldbit" id="s2">MEN</div><div class="shieldbit" id="s3">SÅ</div></div></div>
+<div class="card"><h3>⚡ ETISK ENERGI</h3><div class="meter"><div class="cell" id="e0">⚡</div><div class="cell" id="e1">⚡</div><div class="cell" id="e2">⚡</div><div class="cell" id="e3">⚡</div></div><p style="font-size:11px;color:#94a3b8;margin-bottom:0">Varje moraliskt val laddar en cell. Inget val ger mer poäng än något annat.</p></div>
+<div class="card"><h3>🧭 DIN VÄG</h3><div class="trail" id="trail"><div class="trailitem">Dina val kommer synas här.</div></div></div>
+<div class="card"><h3>💠 VÄRDEN DU RÖRT VID</h3><div class="values" id="values"><span class="chip">–</span></div></div>
+<div class="card"><h3>👾 ETIKBOSSEN</h3><div class="boss"><div class="bot" id="bot"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="mark">⚖</div></div></div><div class="shields"><div class="shield" id="s0">TYCK</div><div class="shield" id="s1">EFTERSOM</div><div class="shield" id="s2">MEN</div><div class="shield" id="s3">SÅ</div></div></div>
 </aside>
 </div>
-<div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 ÄVENTYRSBOSS</div><div class="big">LÅST</div><p>VÄRDEKROCKEN låses upp när alla träningsbanor är klara.</p><a href="index.html"><button class="start">Till träningen</button></a></div></div>
-<div class="overlay" id="intro"><div class="panel"><div class="kicker">🗝️ DILEMMAÄVENTYR · v1.0</div><div class="big">VÄRDEKROCKEN</div><p>Du ska inte hitta ett hemligt facit. Du ska <b>ta ställning, upptäcka krocken och kunna ändra dig när nya fakta kommer.</b></p><div class="controls">Samla fakta genom berättelsen.<br>Ta ställning flera gånger.<br>Hitta vilka värden som krockar.<br><br><b>Finalen:</b> slå sönder Dilemmabossens fyra sköldar med<br><b>TYCK → EFTERSOM → MEN → SÅ</b>.</div><button class="start" id="start">GÅ IN I ÄVENTYRET</button></div></div>
-<div class="overlay hidden" id="win"><div class="panel"><div class="kicker">VÄRDEKROCKEN KLARAD</div><div class="big">DILEMMABOSSEN<br><span style="color:#ef4444">ÄR BESEGRAD.</span></div><p>Du tog ställning, såg ett motperspektiv och drog en slutsats.</p><a href="index.html"><button class="start">Tillbaka till banorna</button></a></div></div>
+
+<div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 MORALÄVENTYR</div><div class="big">LÅST</div><p>VÄRDEKROCKEN låses upp när alla träningsbanor är klara.</p><a href="index.html"><button class="start">Till träningen</button></a></div></div>
+<div class="overlay" id="intro"><div class="panel"><div class="kicker">🗝️ MORALÄVENTYR · v2.0</div><div class="big">VÄRDEKROCKEN</div><p>Den här gången finns ingen enda väg genom berättelsen.</p><div class="controls">Du gör <b>fyra moraliska val</b>.<br>Varje val öppnar en ny väg och laddar <b>etisk energi</b>.<br>Det finns inga hemliga rätta val och ingen poängjakt.<br><br>I sista rutan använder du energin till att förgöra <b>ETIKBOSSEN</b> med ett resonemang: <b>TYCK → EFTERSOM → MEN → SÅ</b>.</div><button class="start" id="start">BÖRJA ÄVENTYRET</button></div></div>
+<div class="overlay hidden" id="win"><div class="panel"><div class="kicker">ETIKBOSSEN ÄR BESEGRAD</div><div class="big" id="endtitle">DIN VÄG HAR ETT SLUT</div><div class="ending" id="ending"></div><p>Spela igen och välj en annan moralisk väg om du vill se ett annat slut.</p><button class="start" id="again">SPELA EN ANNAN VÄG</button><a href="index.html"><button class="start" style="background:#334155;color:#fff">Till banorna</button></a></div></div>
 </div></div>
 <script>
 const K="etikMoralLevels_v2",NEED={a:4,b:4,c:4,d:4,e:1};
@@ -41,47 +50,139 @@ function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}'
 function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(function(kv){const id=kv[0],n=kv[1];return Array.from({length:n},function(_,i){return !!(d[id]||[])[i]}).every(Boolean)})}
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");if(unlocked())lock.classList.add("hidden");else intro.classList.add("hidden");
 
-const scenes=[
-{where:"SKOLAN",title:"Insamlingen",text:["Tildes klass samlar in varma kläder till ett ungdomsboende. Tilde vill gärna hjälpa, men hon har ingen egen jacka att skänka.","Hemma hänger hennes storebror Vilgots nästan nya vinterjacka. Han använder den sällan. Tilde frågar om hon får skänka den, men Vilgot säger nej. Han har köpt jackan för egna pengar och tänker sälja den."],fact:"Vilgot har sagt nej och jackan är hans.",kind:"stance",prompt:"Tilde funderar på att ta jackan utan lov och skänka den. Hur tänker du just nu?"},
-{where:"HEMMA",title:"Beslutet",text:["Nästa morgon tar Tilde jackan ur garderoben utan att säga något. Hon lämnar den i skolans insamling.","På eftermiddagen körs kläderna till ungdomsboendet."],fact:"Tilde tog jackan utan lov.",kind:"clash",prompt:"Vilken värdekrock är tydligast i situationen?"},
-{where:"UNGDOMSBOENDET",title:"Den första nya faktan",text:["En lärare får senare ett tackmeddelande. Jackan har gått till en trettonåring som kom till boendet utan någon varm vinterjacka.","Tilde känner sig lättad. Hennes handling gjorde faktiskt stor skillnad för någon annan."],fact:"Jackan hjälpte en ungdom som verkligen behövde den.",kind:"stance",prompt:"Gör den nya faktan att du tänker annorlunda om Tildes handling?"},
-{where:"HEMMA",title:"Den andra nya faktan",text:["När Vilgot upptäcker att jackan är borta blir han arg. Då berättar han något Tilde inte visste: han hade lovat jackan till sin kusin Sam, vars familj inte har råd att köpa en ny vinterjacka.","Tilde inser att hennes försök att hjälpa en person samtidigt kan ha gjort det svårare för en annan."],fact:"Vilgot hade lovat jackan till en kusin som också behövde den.",kind:"stance",prompt:"Nu då? Hur bedömer du Tildes handling?"},
-{where:"KONSEKVENSKAMMAREN",title:"Vad väger tyngst?",text:["Jackan går inte längre att få tillbaka. Tilde berättar sanningen för Vilgot och säger att hon vill försöka ersätta honom.","Det goda resultatet finns kvar, men också att hon tog något utan lov, den skadade tilliten och den andra personen som skulle få jackan."],fact:"Tilde erkänner och försöker ta ansvar efteråt.",kind:"weight",prompt:"Vad behöver ett starkt etiskt svar göra här?"},
-{where:"SLUTPORTEN",title:"Dilemmabossen",text:["Dilemmabossen vägrar släppa dig förbi om du bara skriver vad du tycker.","Du måste visa att du kan ta ställning OCH förstå vad som talar åt andra hållet."],kind:"final",prompt:"Bygg ditt slutliga svar. Det finns flera möjliga ståndpunkter – bossen bedömer strukturen, inte vilken sida du väljer."}
-];
+const nodes={
+start:{where:"SKOLAN · INSAMLINGEN",title:"Jackan i hallen",text:["Tildes klass samlar in varma kläder till ett ungdomsboende. En ungdom där behöver en vinterjacka ganska snabbt.","Tilde har ingen egen jacka att skänka. Hennes storebror Vilgot har däremot en nästan ny jacka som han sällan använder. Tilde frågar om hon får skänka den. Vilgot säger nej. Jackan är hans och han tänker sälja den."],prompt:"Vad gör Tilde?",choices:[
+{t:"Ta jackan i smyg och skänka den. Behovet är viktigare än Vilgots nej.",next:"take1",route:"Den hemliga vägen",value:"solidaritet",note:"Du lät behovet av hjälp väga tyngst."},
+{t:"Stanna kvar och fråga Vilgot varför han absolut inte vill skänka den.",next:"talk1",route:"Samtalets väg",value:"respekt",note:"Du försökte förstå innan du handlade."},
+{t:"Acceptera Vilgots nej och leta efter en helt annan lösning.",next:"alt1",route:"Den tredje vägen",value:"ansvar",note:"Du valde att hjälpa utan att använda hans jacka."}
+]},
+take1:{where:"UNGDOMSBOENDET",title:"Jackan kommer fram",text:["Tilde tar jackan utan lov och lämnar den i insamlingen.","På kvällen får klassen veta att jackan gick direkt till en trettonåring som saknade en varm jacka. Hjälpen gjorde verklig skillnad."],prompt:"Vilgot upptäcker att jackan är borta. Vad gör Tilde nu?",choices:[
+{t:"Berätta sanningen direkt och säga varför hon gjorde det.",next:"take2",value:"ansvar",note:"Du tog ansvar för handlingen efteråt."},
+{t:"Vara tyst. Jackan gör större nytta där den är nu.",next:"take2",value:"solidaritet",note:"Du lät konsekvensen för mottagaren väga tyngre än sanningen just nu."},
+{t:"Säga att hon tog den, men försvara valet: någon behövde den mer.",next:"take2",value:"rättvisa",note:"Du försvarade handlingen med ett behovsargument."}
+]},
+take2:{where:"KÖKSBORDET",title:"Det du inte visste",text:["Vilgot blir arg, men berättar också något Tilde inte visste. Han hade lovat jackan till kusinen Sam, vars familj har ont om pengar och som också behöver en vinterjacka.","Nu har en person blivit hjälpt, men en annan kan ha förlorat något den räknade med."],prompt:"Hur försöker Tilde gå vidare?",choices:[
+{t:"Erbjuda sig att spara ihop pengar till en annan jacka åt Sam.",next:"take3",value:"ansvar",note:"Du försökte reparera följden av det första valet."},
+{t:"Säga att ungdomsboendets behov ändå var störst och stå fast vid beslutet.",next:"take3",value:"solidaritet",note:"Du stod fast vid att störst behov bör väga tyngst."},
+{t:"Be Vilgot och Sam vara med och bestämma hur situationen kan lösas nu.",next:"take3",value:"respekt",note:"Du öppnade beslutet för dem som också påverkades."}
+]},
+take3:{where:"EFTERÅT",title:"Priset för hjälpen",text:["Jackan går inte att få tillbaka. Ungdomen på boendet har den kvar. Sam behöver fortfarande hjälp, och Vilgots tillit till Tilde har fått en smäll.","Det finns både en tydlig god konsekvens och tydliga problem i samma berättelse."],prompt:"Vilken ståndpunkt tar du inför slutstriden?",choices:[
+{t:"Tilde gjorde i grunden fel, även om resultatet blev gott.",next:"boss",value:"ansvar",stance:"fel",note:"Du skiljde mellan ett gott mål och ett problematiskt sätt."},
+{t:"Tilde gjorde i grunden rätt eftersom behovet var så stort.",next:"boss",value:"solidaritet",stance:"rätt",note:"Du lät det akuta behovet väga tyngst."},
+{t:"Jag kan inte kalla handlingen bara rätt eller bara fel.",next:"boss",value:"perspektiv",stance:"blandat",note:"Du valde att hålla två sidor öppna samtidigt."}
+]},
 
-let i=0,state={stance:null,facts:[],changed:false};
-const scene=document.getElementById("scene"),facts=document.getElementById("facts"),chapter=document.getElementById("chapter"),bag=document.getElementById("bag"),stance=document.getElementById("stance"),bot=document.getElementById("bot");
-function updateSide(){chapter.textContent="KAPITEL "+(i+1)+"/6";bag.textContent="FAKTA: "+state.facts.length;facts.innerHTML=state.facts.length?state.facts.map(function(f){return '<div class="fact">• '+f+'</div>'}).join(""):'<div class="fact">Nya fakta hamnar här.</div>';Array.from(stance.children).forEach(function(c){c.classList.toggle("on",state.stance&&c.textContent===state.stance)})}
-function chooseStance(v,button){let previous=state.stance;if(previous&&previous!==v)state.changed=true;state.stance=v;Array.from(scene.querySelectorAll(".choice")).forEach(function(b){b.classList.remove("selected")});button.classList.add("selected");scene.querySelector(".next").disabled=false;updateSide()}
-function nextScene(){const f=scenes[i].fact;if(f&&!state.facts.includes(f))state.facts.push(f);i=Math.min(scenes.length-1,i+1);render()}
-function basic(s){scene.innerHTML='<div class="where">'+s.where+'</div><h2>'+s.title+'</h2>'+s.text.map(function(p){return '<p>'+p+'</p>'}).join("")+'<div class="prompt">'+s.prompt+'</div>'}
+talk1:{where:"HALLEN",title:"Varför nej?",text:["Vilgot berättar att han tänker sälja jackan för att få pengar till ett nytt cykeldäck. Han har sparat länge och tycker inte att Tilde kan bestämma över hans saker.","Samtidigt vet Tilde att ungdomsboendet behöver en jacka snabbt."],prompt:"Vad gör Tilde efter samtalet?",choices:[
+{t:"Erbjuda Vilgot att betala för jackan lite i taget.",next:"talk2",value:"ansvar",note:"Du försökte respektera ägandet och ändå hjälpa."},
+{t:"Fråga om Vilgot kan tänka sig att låna ut jackan tills en annan hittas.",next:"talk2",value:"kompromiss",note:"Du sökte en tillfällig lösning mellan två behov."},
+{t:"Acceptera hans nej och be klassen ordna en snabb gemensam insamling.",next:"talk2",value:"solidaritet",note:"Du flyttade ansvaret från en person till gruppen."}
+]},
+talk2:{where:"KLASSRUMMET",title:"Två behov",text:["När klassen börjar leta efter en lösning dyker en ny uppgift upp: Vilgots kusin Sam saknar också en bra vinterjacka. Vilgot hade funderat på att låta Sam få hans jacka om den inte blev såld.","Nu finns två personer med verkliga behov och bara en jacka."],prompt:"Hur bör Tilde försöka lösa det?",choices:[
+{t:"Låta Vilgot själv avgöra vem som får hans jacka.",next:"talk3",value:"frihet",note:"Du gav ägaren störst rätt att bestämma."},
+{t:"Försöka samla in pengar så att båda kan få hjälp.",next:"talk3",value:"solidaritet",note:"Du försökte skapa en lösning där inte en måste förlora."},
+{t:"Argumentera för att den som har störst behov bör få jackan.",next:"talk3",value:"rättvisa",note:"Du prioriterade behov framför lika behandling."}
+]},
+talk3:{where:"SKOLGÅRDEN",title:"Samtalet fortsätter",text:["Klassen får ihop en del pengar, men inte till två helt nya jackor. Vilgot går med på att hjälpa till om han får vara med och bestämma.","Ingen har fått exakt vad den först ville, men fler har fått inflytande."],prompt:"Vilken ståndpunkt tar du inför slutstriden?",choices:[
+{t:"Det var viktigast att ingen bestämde över någon annans saker.",next:"boss",value:"respekt",stance:"respekt",note:"Du lät respekt och ansvar styra vägen."},
+{t:"Det viktigaste var att försöka hjälpa båda, även om lösningen blev ofullständig.",next:"boss",value:"solidaritet",stance:"hjälpa",note:"Du värderade den gemensamma hjälpen högst."},
+{t:"Det finns ingen perfekt lösning när flera rimliga behov krockar.",next:"boss",value:"perspektiv",stance:"blandat",note:"Du accepterade att dilemmat kan finnas kvar trots samtal."}
+]},
+
+alt1:{where:"SKOLAN",title:"Den tredje vägen",text:["Tilde låter Vilgots jacka vara. I stället frågar hon klassen om någon kan hjälpa till på annat sätt.","De får ihop lite pengar, men inte tillräckligt för en ny jacka innan kvällen."],prompt:"Vad gör Tilde nu?",choices:[
+{t:"Lägga in sina egna sparpengar för att få ihop resten.",next:"alt2",value:"solidaritet",note:"Du valde att själv bära en större del av kostnaden."},
+{t:"Ringa en lokal butik och fråga om den kan skänka en jacka.",next:"alt2",value:"initiativ",note:"Du sökte hjälp utanför den första konflikten."},
+{t:"Säga till boendet att klassen behöver mer tid och fortsätta samla.",next:"alt2",value:"ansvar",note:"Du lovade inte mer än gruppen faktiskt kunde hålla."}
+]},
+alt2:{where:"BUTIKEN",title:"Ett erbjudande med ett villkor",text:["En butik kan tänka sig att skänka en jacka, men vill fotografera mottagaren till sina sociala medier som tack för gåvan.","Ungdomsboendet säger att de helst inte vill att ungdomarna används i reklam."],prompt:"Vad bör Tilde och klassen göra?",choices:[
+{t:"Tacka ja. En varm jacka är viktigare än att fotot känns obekvämt.",next:"alt3",value:"solidaritet",note:"Du lät den konkreta hjälpen väga tyngst."},
+{t:"Tacka nej och fortsätta leta efter hjälp utan reklamvillkor.",next:"alt3",value:"respekt",note:"Du lät integritet och respekt sätta gränsen."},
+{t:"Förhandla: butiken får tackas offentligt, men ingen ungdom behöver fotograferas.",next:"alt3",value:"kompromiss",note:"Du försökte ändra villkoren i stället för att bara välja ja eller nej."}
+]},
+alt3:{where:"KVÄLLEN",title:"En annan sorts slut",text:["Klassen hittar till sist en lösning, men den tar längre tid och kräver att flera personer hjälper till. Vilgots jacka är fortfarande hans.","Den här vägen undvek den första konflikten, men skapade andra frågor om tid, ansvar, pengar och integritet."],prompt:"Vilken ståndpunkt tar du inför slutstriden?",choices:[
+{t:"Det var bättre att hitta en långsammare lösning än att ta någon annans sak.",next:"boss",value:"ansvar",stance:"ansvar",note:"Du prioriterade gränsen för vad man får göra för att hjälpa."},
+{t:"Om behovet hade varit ännu mer akut hade ett mer drastiskt val kunnat vara försvarbart.",next:"boss",value:"konsekvens",stance:"villkor",note:"Du lät omständigheterna påverka din moraliska bedömning."},
+{t:"Det viktiga är inte bara målet utan också hur man behandlar människor på vägen.",next:"boss",value:"respekt",stance:"respekt",note:"Du vägde sättet att hjälpa tillsammans med resultatet."}
+]}
+};
+
+let state={node:"start",energy:0,route:"Ej vald",trail:[],values:[],stance:""};
+const scene=document.getElementById("scene"),trail=document.getElementById("trail"),values=document.getElementById("values"),energy=document.getElementById("energy"),route=document.getElementById("route"),chapter=document.getElementById("chapter"),bot=document.getElementById("bot");
+
+function updateSide(){
+ energy.textContent="ETISK ENERGI "+state.energy+"/4";
+ route.textContent="VÄG: "+state.route.toUpperCase();
+ chapter.textContent=state.node==="boss"?"SISTA RUTAN":"RUTA "+(state.energy+1);
+ for(let n=0;n<4;n++)document.getElementById("e"+n).classList.toggle("on",n<state.energy);
+ trail.innerHTML=state.trail.length?state.trail.map(function(x){return '<div class="trailitem">'+x+'</div>'}).join(""):'<div class="trailitem">Dina val kommer synas här.</div>';
+ values.innerHTML=state.values.length?Array.from(new Set(state.values)).map(function(x){return '<span class="chip">'+x+'</span>'}).join(""):'<span class="chip">–</span>';
+}
+function choose(choice){
+ if(choice.route)state.route=choice.route;
+ state.energy=Math.min(4,state.energy+1);
+ state.trail.push(choice.note);
+ if(choice.value)state.values.push(choice.value);
+ if(choice.stance)state.stance=choice.stance;
+ state.node=choice.next;
+ render();
+}
 function render(){
- updateSide();const s=scenes[i];basic(s);
- if(s.kind==="stance"){
-   const box=document.createElement("div");box.className="choices";
-   ["RÄTT","FEL","OSÄKER"].forEach(function(v){const b=document.createElement("button");b.className="choice"+(state.stance===v?" selected":"");b.textContent=v==="RÄTT"?"Jag tycker att Tilde gjorde rätt.":v==="FEL"?"Jag tycker att Tilde gjorde fel.":"Jag är osäker – jag behöver väga saker mot varandra.";b.addEventListener("click",function(){chooseStance(v,b)});box.appendChild(b)});
-   scene.appendChild(box);const n=document.createElement("button");n.className="next";n.textContent="Fortsätt äventyret →";n.disabled=!state.stance;n.addEventListener("click",nextScene);scene.appendChild(n)
- }else if(s.kind==="clash"){
-   const opts=[["Solidaritet ↔ ansvar och respekt","ok"],["Frihet ↔ jämställdhet","no"],["Tillit ↔ jämlikhet","no"],["Egoism ↔ empati","no"]],box=document.createElement("div");box.className="choices";
-   opts.forEach(function(x){const b=document.createElement("button");b.className="choice";b.textContent=x[0];b.addEventListener("click",function(){Array.from(box.children).forEach(function(z){z.disabled=true});if(x[1]==="ok"){b.classList.add("correct");fb.textContent="Precis. Tilde vill hjälpa någon – men använder något som inte är hennes.";fb.className="feedback good";n.disabled=false}else{b.classList.add("wrong");fb.textContent="Inte riktigt. Leta efter krocken mellan att hjälpa och att ta ansvar för andras saker.";fb.className="feedback bad";setTimeout(function(){Array.from(box.children).forEach(function(z){z.disabled=false});b.classList.remove("wrong")},900)}});box.appendChild(b)});
-   scene.appendChild(box);const fb=document.createElement("div");fb.className="feedback";scene.appendChild(fb);const n=document.createElement("button");n.className="next";n.textContent="Fortsätt →";n.disabled=true;n.addEventListener("click",nextScene);scene.appendChild(n)
- }else if(s.kind==="weight"){
-   const box=document.createElement("div");box.className="choices";
-   [["Bara bestämma om Tilde är snäll eller elak","no"],["Bara beskriva vad som hände","no"],["Ta ställning, ge skäl, visa vad som talar emot och dra en slutsats","ok"],["Räkna upp så många etikbegrepp som möjligt","no"]].forEach(function(x){const b=document.createElement("button");b.className="choice";b.textContent=x[0];b.addEventListener("click",function(){Array.from(box.children).forEach(function(z){z.disabled=true});if(x[1]==="ok"){b.classList.add("correct");fb.textContent="Ja. Det är precis den svarsrörelsen som slutbossen kräver.";fb.className="feedback good";n.disabled=false}else{b.classList.add("wrong");fb.textContent="Det räcker inte för ett utvecklat etiskt resonemang. Försök igen.";fb.className="feedback bad";setTimeout(function(){Array.from(box.children).forEach(function(z){z.disabled=false});b.classList.remove("wrong")},850)}});box.appendChild(b)});
-   scene.appendChild(box);const fb=document.createElement("div");fb.className="feedback";scene.appendChild(fb);const n=document.createElement("button");n.className="next";n.textContent="Till slutbossen →";n.disabled=true;n.addEventListener("click",nextScene);scene.appendChild(n)
- }else if(s.kind==="final"){renderFinal()}
- updateSide()
-}
-function renderFinal(){
- const box=document.createElement("div");box.className="finalbox";box.innerHTML='<div class="build"><label>1. TYCK<select id="f0"><option value="">Välj...</option><option>Jag tycker att Tilde gjorde fel</option><option>Jag tycker att Tilde gjorde rätt</option><option>Jag tycker att Tildes handling både hade en god och en dålig sida</option></select></label><label>2. EFTERSOM<select id="f1"><option value="">Välj ett skäl...</option><option>eftersom hon tog något som inte var hennes och gick emot Vilgots tydliga nej</option><option>eftersom jackan faktiskt hjälpte en ungdom som behövde den</option><option>eftersom hennes mål var att hjälpa någon som hade det svårt</option></select></label><label>3. MEN<select id="f2"><option value="">Välj det som talar åt andra hållet...</option><option>men hennes handling hjälpte samtidigt en ungdom som saknade en varm jacka</option><option>men hon tog jackan utan lov och skadade Vilgots tillit</option><option>men hon visste inte att Vilgot hade lovat jackan till sin kusin</option></select></label><label>4. SÅ<select id="f3"><option value="">Dra en slutsats...</option><option>så ett gott mål gör inte automatiskt sättet man handlar på rätt</option><option>så man måste väga både handlingen, avsikten och konsekvenserna innan man dömer</option><option>så jag står kvar vid min åsikt, men jag kan förstå varför någon skulle tänka annorlunda</option></select></label></div><button class="next" id="strike" disabled>SLÅ MOT DILEMMABOSSEN ⚔️</button><div id="model"></div>';
+ updateSide();
+ if(state.node==="boss"){renderBoss();return}
+ const n=nodes[state.node];
+ scene.innerHTML='<div class="where">'+n.where+'</div><h2>'+n.title+'</h2>'+n.text.map(function(p){return '<p>'+p+'</p>'}).join("")+'<div class="prompt">'+n.prompt+'</div>';
+ const box=document.createElement("div");box.className="choices";
+ n.choices.forEach(function(c){const b=document.createElement("button");b.type="button";b.className="choice";b.textContent=c.t;b.addEventListener("click",function(){Array.from(box.children).forEach(function(x){x.disabled=true});b.classList.add("chosen");const r=document.createElement("div");r.className="result";r.innerHTML='<b>⚡ Etisk energi +1</b><br>'+c.note;scene.appendChild(r);const nx=document.createElement("button");nx.type="button";nx.className="next";nx.textContent="Fortsätt längs den här vägen →";nx.addEventListener("click",function(){choose(c)});scene.appendChild(nx)});box.appendChild(b)});
  scene.appendChild(box);
- const sels=[0,1,2,3].map(function(n){return document.getElementById("f"+n)}),strike=document.getElementById("strike");
- function check(){sels.forEach(function(s,n){document.getElementById("s"+n).classList.toggle("broken",!!s.value)});strike.disabled=!sels.every(function(s){return !!s.value})}
- sels.forEach(function(s){s.addEventListener("change",check)});
- strike.addEventListener("click",function(){strike.disabled=true;bot.classList.add("dead");const text=sels.map(function(s){return s.value}).join(" ")+'.';const m=document.getElementById("model");m.className="model";m.innerHTML='<b>Ditt färdiga resonemang:</b><br>'+text+'<br><br><b>Det som besegrade bossen var strukturen:</b> du tog ställning, gav ett skäl, visade ett motperspektiv och drog en slutsats.';let save=readSave();save.adventureBoss=true;localStorage.setItem(K,JSON.stringify(save));setTimeout(function(){document.getElementById("win").classList.remove("hidden")},1700)})
 }
-document.getElementById("start").addEventListener("click",function(){intro.classList.add("hidden");render()});updateSide();
+function optionsFor(kind){
+ const vals=Array.from(new Set(state.values));
+ if(kind==="because"){
+   const pool=vals.concat(["ansvar","solidaritet","respekt","rättvisa","konsekvenser"]);
+   return Array.from(new Set(pool)).slice(0,5).map(function(v){return 'eftersom '+v+' blev viktigt i mina val'});
+ }
+ if(kind==="but"){
+   return ["men någon annan kan väga situationen på ett annat sätt","men ett gott mål kan krocka med ansvar och respekt","men konsekvenserna blev inte bara goda","men det fanns andra handlingsalternativ"];
+ }
+ return ["så jag står kvar vid min bedömning men ser också motargumentet","så man måste väga både avsikt, handling och konsekvenser","så samma dilemma kan bedömas olika beroende på vad man låter väga tyngst"];
+}
+function renderBoss(){
+ updateSide();
+ scene.innerHTML='<div class="where">SISTA RUTAN</div><h2>ETIKBOSSEN</h2><p>Du har kommit hit med <b>'+state.energy+' laddade energiceller</b>. Bossen bryr sig inte om vilken väg du tog. Den skyddar sig mot svar som bara säger vad man tycker.</p><p>Bygg ett resonemang av din egen väg. Varje del spräcker en sköld.</p><div class="finalbox"><div class="build"><label>1. TYCK<select id="f0"><option value="">Välj...</option><option>Jag tycker att Tildes val var försvarbart</option><option>Jag tycker att Tildes val hade tydliga problem</option><option>Jag tycker att situationen inte kan kallas bara rätt eller fel</option></select></label><label>2. EFTERSOM<select id="f1"><option value="">Välj ett skäl...</option></select></label><label>3. MEN<select id="f2"><option value="">Visa vad som talar åt andra hållet...</option></select></label><label>4. SÅ<select id="f3"><option value="">Dra en slutsats...</option></select></label></div><button class="attack" id="attack" disabled>FÖRGÖR ETIKBOSSEN ⚡</button></div>';
+ const f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3");
+ optionsFor("because").forEach(function(x){const o=document.createElement("option");o.textContent=x;f1.appendChild(o)});
+ optionsFor("but").forEach(function(x){const o=document.createElement("option");o.textContent=x;f2.appendChild(o)});
+ optionsFor("so").forEach(function(x){const o=document.createElement("option");o.textContent=x;f3.appendChild(o)});
+ const sels=[document.getElementById("f0"),f1,f2,f3],attack=document.getElementById("attack");
+ function check(){sels.forEach(function(s,n){document.getElementById("s"+n).classList.toggle("cracked",!!s.value)});attack.disabled=!(state.energy===4&&sels.every(function(s){return !!s.value}))}
+ sels.forEach(function(s){s.addEventListener("change",check)});
+ attack.addEventListener("click",function(){attack.disabled=true;bot.classList.add("dead");setTimeout(showEnding,1450)});
+}
+function showEnding(){
+ let title="",body="";
+ if(state.route==="Den hemliga vägen"){
+   title="SLUT: PRISET FÖR HJÄLPEN";
+   body="Ungdomen på boendet fick en varm jacka. Samtidigt förändrades relationen mellan Tilde och Vilgot. Din väg visar att en god konsekvens inte automatiskt gör själva handlingen enkel att bedöma.";
+ }else if(state.route==="Samtalets väg"){
+   title="SLUT: SAMTALETS OMVÄG";
+   body="Ingen fick bestämma helt själv och ingen lösning blev perfekt. Fler personer fick däremot komma till tals. Din väg visar att ett dilemma ibland blir bättre av samtal utan att helt försvinna.";
+ }else{
+   title="SLUT: DEN TREDJE VÄGEN";
+   body="Vilgots jacka förblev hans, men hjälpen tog längre tid och nya problem dök upp. Din väg visar att ett alternativ kan undvika en konflikt men samtidigt skapa andra moraliska frågor.";
+ }
+ document.getElementById("endtitle").textContent=title;
+ document.getElementById("ending").innerHTML='<b>Din väg:</b> '+state.route+'<br><br>'+body;
+ let save=readSave();save.adventureBoss=true;localStorage.setItem(K,JSON.stringify(save));
+ document.getElementById("win").classList.remove("hidden");
+}
+function restart(){
+ state={node:"start",energy:0,route:"Ej vald",trail:[],values:[],stance:""};
+ bot.classList.remove("dead");
+ document.getElementById("win").classList.add("hidden");
+ render();
+}
+document.getElementById("start").addEventListener("click",function(){intro.classList.add("hidden");render()});
+document.getElementById("again").addEventListener("click",restart);
+updateSide();
 </script>
 </body>
 </html>
