@@ -58,11 +58,11 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 
     <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när alla banor i träningen är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
 
-    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS · v0.7.4</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
+    <div class="overlay" id="intro"><div class="panel"><div class="kicker" id="introKicker">⚡ SLUTBOSS · v0.8.0</div><div class="big">BLIXTFIGHTEN</div><p id="introDesc"><b>ETIKBOSSEN ANFALLER.</b></p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
 
     <div class="overlay hidden" id="lose"><div class="panel"><div class="kicker">RONDEN ÄR ÖVER</div><div class="big red">DU ÅKTE PÅ STRYK!</div><p>ETIKBOSSEN vann den här ronden.</p><button id="retry">REVANSCH!</button><a href="index.html"><button class="secondary">Till träningen</button></a></div></div>
 
-    <div class="overlay hidden" id="win"><div class="panel"><div class="kicker">BLIXTFIGHTEN VUNNEN</div><div class="big">ETIKBOSSEN<br><span class="red">ÄR DÖD.</span></div><p>Tio returträffar. Alla tio begrepp.</p><a href="index.html"><button>Tillbaka till banorna</button></a></div></div>
+    <div class="overlay hidden" id="win"><div class="panel"><div class="kicker">BLIXTFIGHTEN VUNNEN</div><div class="big" id="winTitle">ETIKBOSSEN<br><span class="red">ÄR DÖD.</span></div><p id="winProgress"></p><button id="nextForm">NÄSTA BOSSFORM</button><a href="index.html"><button class="secondary">Tillbaka till banorna</button></a></div></div>
   </div>
 </div>
 <script>
@@ -73,21 +73,50 @@ function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");
 if(unlocked()){lock.classList.add("hidden")}else{intro.classList.add("hidden")}
 
-const Q=[
- {a:"EGOISM",q:"En person väljer nästan alltid det som gynnar hen själv, även när andra förlorar."},
- {a:"ANSVAR",q:"Du hittar en mobil på golvet och lämnar den till en vuxen."},
- {a:"FRIHET",q:"Du får bestämma mycket över ditt eget liv och göra egna val."},
- {a:"RÄTTVISA",q:"En elev får extra stöd för att få en rimlig chans att lyckas."},
- {a:"SOLIDARITET",q:"Någon blir retad. Du går fram och hjälper."},
- {a:"JÄMLIKHET",q:"Alla människor ska ha samma värde och samma grundläggande rättigheter."},
- {a:"JÄMSTÄLLDHET",q:"Kön ska inte avgöra vilka möjligheter eller rättigheter en person får."},
- {a:"TILLIT",q:"En vän berättar något privat för dig eftersom hen litar på dig."},
- {a:"LOJALITET",q:"Du står kvar på en väns sida och sviker inte när det blir svårt."},
- {a:"RESPEKT",q:"Ni tycker olika, men du låter den andra personen prata färdigt."}
+const FORMS=[
+ {name:"ETIKBOSSEN",desc:"Grundformen: de centrala begreppen.",q:[
+  {a:"EGOISM",q:"En person väljer nästan alltid det som gynnar hen själv, även när andra förlorar."},
+  {a:"ANSVAR",q:"Du hittar en mobil på golvet och lämnar den till en vuxen."},
+  {a:"FRIHET",q:"Du får bestämma mycket över ditt eget liv och göra egna val."},
+  {a:"RÄTTVISA",q:"En elev får extra stöd för att få en rimlig chans att lyckas."},
+  {a:"SOLIDARITET",q:"Någon blir retad. Du går fram och hjälper."},
+  {a:"JÄMLIKHET",q:"Alla människor ska ha samma värde och samma grundläggande rättigheter."},
+  {a:"JÄMSTÄLLDHET",q:"Kön ska inte avgöra vilka möjligheter eller rättigheter en person får."},
+  {a:"TILLIT",q:"En vän berättar något privat för dig eftersom hen litar på dig."},
+  {a:"LOJALITET",q:"Du står kvar på en väns sida och sviker inte när det blir svårt."},
+  {a:"RESPEKT",q:"Ni tycker olika, men du låter den andra personen prata färdigt."}
+ ]},
+ {name:"ETIKBOSS MK II",desc:"Förväxlingsformen: begrepp som lätt blandas ihop.",q:[
+  {a:"ETIK",q:"Tankar och idéer om vad som är rätt och fel."},
+  {a:"MORAL",q:"Hur en person faktiskt handlar när något kan vara rätt eller fel."},
+  {a:"JÄMLIKHET",q:"Alla människor har samma människovärde och grundläggande rättigheter."},
+  {a:"JÄMSTÄLLDHET",q:"Kön ska inte avgöra människors möjligheter och rättigheter."},
+  {a:"TILLIT",q:"Du vågar anförtro något viktigt åt någon eftersom du tror att personen går att lita på."},
+  {a:"LOJALITET",q:"Du står kvar på en väns sida även när det blir obekvämt."},
+  {a:"EMPATI",q:"Du försöker förstå hur en annan människa känner."},
+  {a:"SOLIDARITET",q:"Du hjälper och ställer upp för andra, även när du själv inte tjänar på det."},
+  {a:"FRIHET",q:"Du har möjlighet att göra egna val i ditt liv."},
+  {a:"ANSVAR",q:"Du tar konsekvenserna av dina val och försöker rätta till det som blev fel."}
+ ]},
+ {name:"ETIKBOSS Ω",desc:"Slutformen: fler begrepp och mer tillämpning.",q:[
+  {a:"ETIK",q:"Du funderar över om en handling är rätt eller fel innan du bestämmer dig."},
+  {a:"MORAL",q:"Du väljer att faktiskt lämna tillbaka pengarna du hittade."},
+  {a:"EMPATI",q:"Du märker att en klasskamrat är ledsen och försöker förstå hur det känns för hen."},
+  {a:"KRÄNKNING",q:"Någon förnedras eller behandlas på ett sätt som sårar personens värdighet."},
+  {a:"VÄRDERING",q:"En uppfattning om vad som är viktigt, bra, dåligt, rätt eller fel."},
+  {a:"ETISKT DILEMMA",q:"Två viktiga värden krockar och inget val blir helt problemfritt."},
+  {a:"RÄTTVISA",q:"Två personer får olika mycket stöd därför att deras behov är olika."},
+  {a:"JÄMLIKHET",q:"Bakgrund eller pengar ska inte avgöra en människas värde."},
+  {a:"JÄMSTÄLLDHET",q:"Flickor och pojkar ska ha samma möjligheter."},
+  {a:"RESPEKT",q:"Du säger emot någon utan att förlöjliga eller förolämpa personen."}
+ ]}
 ];
-const WORDS=Q.map(x=>x.a).concat(["EMPATI","KRÄNKNING"]);
+let currentForm=1,currentQ=FORMS[0].q,WORDS=[];
+function beatenForms(){const s=readSave();if(Array.isArray(s.blixForms))return s.blixForms;return s.boss?[1]:[]}
+function selectNextForm(){const beaten=beatenForms();currentForm=Math.min(3,beaten.length+1);currentQ=FORMS[currentForm-1].q;WORDS=Array.from(new Set(FORMS.flatMap(function(f){return f.q.map(function(x){return x.a})})));updateIntro()}
+function updateIntro(){const f=FORMS[currentForm-1],beaten=beatenForms();document.getElementById("introKicker").textContent="⚡ BOSSFORM "+currentForm+"/3 · v0.8.0";document.getElementById("introDesc").innerHTML="<b>"+f.name+"</b><br>"+f.desc+"<br><span style=\"color:#94a3b8\">Besegrade bossformer: "+beaten.length+"/3</span>";document.getElementById("start").textContent="STARTA BOSSFORM "+currentForm}
 const game=document.getElementById("game"),player=document.getElementById("player"),shield=document.getElementById("shield"),boss=document.getElementById("boss");
-const speech=document.querySelector("#speech .q"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),status=document.getElementById("status");
+const speech=document.querySelector("#speech .q"),bossLabel=document.querySelector("#speech small"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),status=document.getElementById("status");
 let active=false,energy=3,hp=10,qi=0,bossNear=0,keys={up:false,down:false,space:false},projectile=null,last=0,nextShot=0,volley=[],audio=null,roundQ=[];
 
 function audioCtx(){if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();return audio}
@@ -102,11 +131,11 @@ function beep(type){
  else if(type==="death"){o.type="sawtooth";o.frequency.setValueAtTime(460,t);o.frequency.exponentialRampToValueAtTime(45,t+1.2)}
  g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.001,t+(type==="death"?1.3:.35));o.start(t);o.stop(t+(type==="death"?1.35:.38));
 }
-function hud(){hearts.textContent="❤️".repeat(Math.max(0,energy))+"🖤".repeat(Math.max(0,3-energy));bosslife.textContent="BOSSLIV: "+hp+"/10"}
+function hud(){hearts.textContent="❤️".repeat(Math.max(0,energy))+"🖤".repeat(Math.max(0,3-energy));bosslife.textContent="FORM "+currentForm+" · BOSSLIV: "+hp+"/10";bossLabel.textContent=FORMS[currentForm-1].name}
 function flash(txt,color="#fff",ms=650){status.textContent=txt;status.style.color=color;status.style.opacity=1;setTimeout(()=>status.style.opacity=0,ms)}
 function sparks(x,y,n=10){for(let i=0;i<n;i++){const s=document.createElement("i");s.className="spark";s.style.left=x+"px";s.style.top=y+"px";s.style.setProperty("--dx",(Math.random()*150-75)+"px");s.style.setProperty("--dy",(Math.random()*120-60)+"px");game.appendChild(s);setTimeout(()=>s.remove(),480)}}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function newQuestionOrder(){roundQ=shuffle(Q)}
+function newQuestionOrder(){roundQ=shuffle(currentQ)}
 function makeVolley(){
  const correct=roundQ[qi].a;
  let wrong=shuffle(WORDS.filter(w=>w!==correct)).slice(0,4+Math.floor(Math.random()*2));
@@ -157,10 +186,10 @@ function loseRound(){
 }
 function killBoss(){
  active=false;removeBolt();beep("death");flash("SLUTSLAG!","#ef4444",1100);boss.classList.add("dead");sparks(game.clientWidth*.79,game.clientHeight*.62,24);
- setTimeout(()=>{let s=readSave();s.boss=true;localStorage.setItem(K,JSON.stringify(s));document.getElementById("win").classList.remove("hidden")},1450)
+ setTimeout(()=>{let s=readSave();if(!Array.isArray(s.blixForms))s.blixForms=s.boss?[1]:[];if(!s.blixForms.includes(currentForm))s.blixForms.push(currentForm);s.blixForms.sort();s.boss=true;localStorage.setItem(K,JSON.stringify(s));const n=s.blixForms.length;document.getElementById("winTitle").innerHTML=FORMS[currentForm-1].name+'<br><span class="red">BESEGRAD.</span>';document.getElementById("winProgress").innerHTML='<b>BOSSFORMER: '+n+'/3</b><br>'+(n<3?'En ny bossform har låsts upp.':'Alla tre bossformer är besegrade.');const nb=document.getElementById("nextForm");nb.textContent=n<3?"NÄSTA BOSSFORM":"SPELA OM SLUTFORMEN";document.getElementById("win").classList.remove("hidden")},1450)
 }
 function reset(){
- energy=3;hp=10;qi=0;bossNear=0;newQuestionOrder();keys={up:false,down:false,space:false};boss.classList.remove("dead");boss.style.opacity=1;boss.style.right="7%";boss.style.transform="scale(1)";document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();playerState();question();active=true;last=performance.now();requestAnimationFrame(loop)
+ currentQ=FORMS[currentForm-1].q;energy=3;hp=10;qi=0;bossNear=0;newQuestionOrder();keys={up:false,down:false,space:false};boss.classList.remove("dead");boss.style.opacity=1;boss.style.right="7%";boss.style.transform="scale(1)";document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();playerState();question();active=true;last=performance.now();requestAnimationFrame(loop)
 }
 function loop(now){
  if(!active)return;
@@ -196,7 +225,8 @@ addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown"," "].includes(e.key)){e
 addEventListener("keyup",e=>{if(["ArrowUp","ArrowDown"," "].includes(e.key)){e.preventDefault();key(e.key,false)}});
 document.getElementById("start").onclick=()=>{intro.classList.add("hidden");audioCtx().resume();reset()};
 document.getElementById("retry").onclick=()=>{audioCtx().resume();reset()};
-hud();
+document.getElementById("nextForm").onclick=()=>{document.getElementById("win").classList.add("hidden");boss.classList.remove("dead");selectNextForm();reset()};
+selectNextForm();hud();
 </script>
 </body>
 </html>
