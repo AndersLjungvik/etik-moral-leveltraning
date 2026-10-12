@@ -56,7 +56,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
     <div class="boss" id="boss"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="zig">⚡⚡</div></div>
     <div class="status" id="status"></div>
 
-    <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 BOSS 1</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när Bana 1 och Bana 2 är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
+    <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 BOSS 1</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när Bana 2 – Begrepp är klar.</p><a href="index.html"><button>Till träningen</button></a></div></div>
 
     <div class="overlay" id="intro"><div class="panel"><div class="kicker" id="introKicker">⚡ SLUTBOSS · v0.8.0</div><div class="big">BLIXTFIGHTEN</div><p id="introDesc"><b>ETIKBOSSEN ANFALLER.</b></p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
 
@@ -67,7 +67,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 </div>
 <script>
 const K="etikMoralLevels_v2";
-const NEED={a:4,b:4};
+const NEED={b:4};
 function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
 function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(([id,n])=>Array.from({length:n},(_,i)=>!!(d[id]||[])[i]).every(Boolean))}
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");
