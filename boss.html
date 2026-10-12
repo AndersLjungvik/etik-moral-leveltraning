@@ -68,8 +68,10 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 <script>
 const K="etikMoralLevels_v2";
 const NEED={b:4};
+const FULL={a:4,b:4,c:4,d:4,e:1};
 function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
 function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(([id,n])=>Array.from({length:n},(_,i)=>!!(d[id]||[])[i]).every(Boolean))}
+function allTrainingComplete(){const x=readSave(),d=x.done||{};return Object.entries(FULL).every(([id,n])=>Array.from({length:n},(_,i)=>!!(d[id]||[])[i]).every(Boolean))}
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");
 if(unlocked()){lock.classList.add("hidden")}else{intro.classList.add("hidden")}
 
@@ -113,8 +115,8 @@ const FORMS=[
 ];
 let currentForm=1,currentQ=FORMS[0].q,WORDS=[];
 function beatenForms(){const s=readSave();if(Array.isArray(s.blixForms))return s.blixForms;return s.boss?[1]:[]}
-function selectNextForm(){const beaten=beatenForms();currentForm=Math.min(3,beaten.length+1);currentQ=FORMS[currentForm-1].q;WORDS=Array.from(new Set(FORMS.flatMap(function(f){return f.q.map(function(x){return x.a})})));updateIntro()}
-function updateIntro(){const f=FORMS[currentForm-1],beaten=beatenForms();document.getElementById("introKicker").textContent="⚡ BOSS 1 · FORM "+currentForm+"/3 · v0.8.0";document.getElementById("introDesc").innerHTML="<b>"+f.name+"</b><br>"+f.desc+"<br><span style=\"color:#94a3b8\">Besegrade bossformer: "+beaten.length+"/3</span>";document.getElementById("start").textContent="STARTA BOSSFORM "+currentForm}
+function selectNextForm(){const beaten=beatenForms();if(beaten.length===0)currentForm=1;else if(!allTrainingComplete())currentForm=1;else currentForm=Math.min(3,beaten.length+1);currentQ=FORMS[currentForm-1].q;WORDS=Array.from(new Set(FORMS.flatMap(function(f){return f.q.map(function(x){return x.a})})));updateIntro()}
+function updateIntro(){const f=FORMS[currentForm-1],beaten=beatenForms(),full=allTrainingComplete();document.getElementById("introKicker").textContent=(currentForm===1?"⚡ BOSS 1":"👑 FINALBOSS")+" · FORM "+currentForm+"/3 · v0.8.1";let extra="";if(beaten.includes(1)&&!full)extra="<br><span style=\"color:#fbbf24\">🔒 ETIKBOSS MK II låses upp när alla fem banor är klara.</span>";document.getElementById("introDesc").innerHTML="<b>"+f.name+"</b><br>"+f.desc+extra+"<br><span style=\"color:#94a3b8\">Besegrade bossformer: "+beaten.length+"/3</span>";document.getElementById("start").textContent=currentForm===1&&beaten.includes(1)&&!full?"SPELA BOSS 1 IGEN":"STARTA BOSSFORM "+currentForm}
 const game=document.getElementById("game"),player=document.getElementById("player"),shield=document.getElementById("shield"),boss=document.getElementById("boss");
 const speech=document.querySelector("#speech .q"),bossLabel=document.querySelector("#speech small"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),status=document.getElementById("status");
 let active=false,energy=3,hp=10,qi=0,bossNear=0,keys={up:false,down:false,space:false},projectile=null,last=0,nextShot=0,volley=[],audio=null,roundQ=[];
@@ -186,7 +188,7 @@ function loseRound(){
 }
 function killBoss(){
  active=false;removeBolt();beep("death");flash("SLUTSLAG!","#ef4444",1100);boss.classList.add("dead");sparks(game.clientWidth*.79,game.clientHeight*.62,24);
- setTimeout(()=>{let s=readSave();if(!Array.isArray(s.blixForms))s.blixForms=s.boss?[1]:[];if(!s.blixForms.includes(currentForm))s.blixForms.push(currentForm);s.blixForms.sort();s.boss=true;localStorage.setItem(K,JSON.stringify(s));const n=s.blixForms.length;document.getElementById("winTitle").innerHTML=FORMS[currentForm-1].name+'<br><span class="red">BESEGRAD.</span>';document.getElementById("winProgress").innerHTML='<b>BOSSFORMER: '+n+'/3</b><br>'+(n<3?'En ny bossform har låsts upp.':'Alla tre bossformer är besegrade.');const nb=document.getElementById("nextForm");nb.textContent=n<3?"NÄSTA BOSSFORM":"SPELA OM SLUTFORMEN";document.getElementById("win").classList.remove("hidden")},1450)
+ setTimeout(()=>{let s=readSave();if(!Array.isArray(s.blixForms))s.blixForms=s.boss?[1]:[];if(!s.blixForms.includes(currentForm))s.blixForms.push(currentForm);s.blixForms.sort();s.boss=true;localStorage.setItem(K,JSON.stringify(s));const n=s.blixForms.length,full=allTrainingComplete();document.getElementById("winTitle").innerHTML=FORMS[currentForm-1].name+'<br><span class="red">BESEGRAD.</span>';let msg='';if(currentForm===1&&!full)msg='<b>BOSS 1 KLAR.</b><br>🔒 ETIKBOSS MK II öppnas först när alla fem banor, inklusive provläget, är klara.';else if(n<3)msg='<b>BOSSFORMER: '+n+'/3</b><br>Nästa finalbossform är upplåst.';else msg='<b>BOSSFORMER: 3/3</b><br>Alla tre bossformer är besegrade.';document.getElementById("winProgress").innerHTML=msg;const nb=document.getElementById("nextForm");nb.textContent=currentForm===1&&!full?"SPELA BOSS 1 IGEN":n<3?"NÄSTA BOSSFORM":"SPELA OM SLUTFORMEN";document.getElementById("win").classList.remove("hidden")},1450)
 }
 function reset(){
  currentQ=FORMS[currentForm-1].q;energy=3;hp=10;qi=0;bossNear=0;newQuestionOrder();keys={up:false,down:false,space:false};boss.classList.remove("dead");boss.style.opacity=1;boss.style.right="7%";boss.style.transform="scale(1)";document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();playerState();question();active=true;last=performance.now();requestAnimationFrame(loop)
