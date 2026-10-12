@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLIXTFIGHTEN – Final Boss</title>
+<style>
+:root{--bg:#080d18;--panel:#111827;--line:#334155;--gold:#fbbf24;--red:#ef4444;--blue:#38bdf8;--ink:#f8fafc;--muted:#94a3b8;--green:#86efac}
+*{box-sizing:border-box}html,body{margin:0;background:#050811;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow-x:hidden}
+body{min-height:100vh;display:grid;place-items:center;padding:14px}
+.wrap{width:min(100%,980px)}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}
+.top a{color:#cbd5e1;text-decoration:none;font-weight:700}.title{font-weight:1000;letter-spacing:.08em;color:var(--gold)}
+#game{position:relative;width:100%;aspect-ratio:16/9;min-height:420px;max-height:620px;background:linear-gradient(135deg,#111827,#1e293b);border:3px solid #334155;border-radius:20px;overflow:hidden;box-shadow:0 16px 60px #0008}
+.floor{position:absolute;left:0;right:0;bottom:0;height:22%;background:#0b1020;border-top:3px solid #475569}
+.hud{position:absolute;z-index:20;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;font-size:14px;font-weight:900;text-shadow:0 2px 3px #000}
+.hearts{letter-spacing:3px}.bosslife{color:#fde68a}.status{position:absolute;z-index:30;left:50%;top:49%;transform:translate(-50%,-50%);font-size:34px;font-weight:1000;text-align:center;text-shadow:0 4px 0 #000;pointer-events:none;opacity:0;transition:opacity .12s}
+.speech{position:absolute;z-index:9;right:3.2%;top:8%;width:47%;min-height:128px;background:#f8fafc;color:#111827;border:4px solid var(--gold);border-radius:22px;padding:18px 18px 16px;text-align:center;font-weight:850;box-shadow:0 8px 30px #0005}
+.speech:after{content:"";position:absolute;right:20%;bottom:-28px;border:15px solid transparent;border-top-color:var(--gold)}
+.speech:before{content:"";position:absolute;right:20.8%;bottom:-20px;border:12px solid transparent;border-top-color:#f8fafc;z-index:2}
+.speech small{display:block;color:#7f1d1d;font-size:11px;margin-bottom:7px;letter-spacing:.04em}.speech .q{font-size:clamp(14px,2vw,19px);line-height:1.25}.speech b{display:block;color:#7f1d1d;margin-top:7px;font-size:14px}
+.player{position:absolute;z-index:7;left:8%;bottom:19%;width:72px;height:104px;transition:bottom .11s,height .09s;filter:drop-shadow(0 5px 5px #0008)}
+.player .head{position:absolute;left:18px;top:0;width:38px;height:38px;border-radius:50%;background:#efc29d;border:3px solid #593c28}
+.player .body{position:absolute;left:10px;top:36px;width:54px;height:58px;background:#2563eb;border-radius:14px 14px 8px 8px}
+.player .arm{position:absolute;left:53px;top:48px;width:37px;height:8px;background:#8b5e3c;transform:rotate(-18deg);transform-origin:left center}
+.player .wand{position:absolute;left:84px;top:34px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.player.jump{bottom:52%}.player.duck{height:58px}.player.duck .head{top:18px}.player.duck .body{top:43px;height:33px}.player.duck .arm{top:49px}
+.shield{position:absolute;z-index:8;left:14.8%;bottom:19%;width:70px;height:118px;border:7px solid #7dd3fc;border-radius:50%;background:#0ea5e933;box-shadow:0 0 22px #38bdf8, inset 0 0 22px #38bdf8;opacity:0;transition:opacity .05s;pointer-events:none}.shield.on{opacity:1}
+.boss{position:absolute;z-index:6;right:7%;bottom:18%;width:112px;height:135px;transition:right .18s,transform .16s,opacity .2s;filter:drop-shadow(0 6px 7px #0009)}
+.boss .head{position:absolute;left:18px;top:0;width:78px;height:48px;border-radius:17px;background:#374151;border:4px solid var(--red)}
+.boss .eye{position:absolute;top:17px;width:13px;height:13px;border-radius:50%;background:#fee2e2;box-shadow:inset 0 0 0 4px var(--red)}.boss .e1{left:19px}.boss .e2{right:19px}
+.boss .body{position:absolute;left:6px;top:44px;width:102px;height:78px;border-radius:20px;background:#1f2937;border:3px solid #64748b}
+.boss .zig{position:absolute;left:28px;top:76px;color:var(--red);font-size:28px;font-weight:1000}.boss.dead{animation:die 1.35s forwards}
+@keyframes die{0%{transform:rotate(0) scale(1);opacity:1}25%{transform:rotate(150deg) scale(.9)}55%{transform:rotate(430deg) scale(.65)}80%{transform:rotate(760deg) scale(.25);opacity:1}100%{transform:rotate(1000deg) scale(.04);opacity:0}}
+.bolt{position:absolute;z-index:5;width:190px;height:66px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:1000;font-size:15px;text-shadow:0 2px 2px #000;filter:drop-shadow(0 0 8px #38bdf8);pointer-events:none}
+.bolt:before{content:"";position:absolute;inset:5px 0;background:#38bdf8;clip-path:polygon(100% 46%,82% 17%,85% 42%,68% 7%,72% 43%,54% 20%,59% 48%,40% 28%,46% 55%,26% 39%,33% 65%,0 55%,25% 78%,20% 95%,50% 70%,46% 91%,72% 63%,68% 88%,91% 55%,87% 78%);box-shadow:0 0 14px #fff}
+.bolt:after{content:"";position:absolute;width:112px;height:34px;background:#111827;border:3px solid var(--gold);transform:skew(-12deg);z-index:1}
+.bolt span{z-index:2}.bolt.returning:before{background:#fbbf24;filter:drop-shadow(0 0 9px #fff)}.bolt.returning:after{border-color:#fff}
+.spark{position:absolute;z-index:16;width:12px;height:12px;background:#fff;border-radius:50%;box-shadow:0 0 11px 5px #fbbf24;pointer-events:none;animation:spark .45s forwards}
+@keyframes spark{to{transform:translate(var(--dx),var(--dy)) scale(.1);opacity:0}}
+.overlay{position:absolute;z-index:50;inset:0;background:#080d18f3;display:grid;place-items:center;text-align:center;padding:28px}.overlay.hidden{display:none}.panel{max-width:560px}
+.kicker{color:var(--gold);font-size:14px;font-weight:1000;letter-spacing:.14em}.big{font-size:clamp(38px,8vw,68px);font-weight:1000;margin:8px 0}.red{color:var(--red)}.controls{margin:22px auto;padding:16px 22px;background:#111827;border:1px solid #334155;border-radius:15px;width:min(100%,360px);font-size:13px;line-height:1.75}.controls b{color:#fff}.good{color:var(--green)}.bad{color:#fca5a5}
+button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:900;cursor:pointer;background:var(--gold);color:#111827;margin:6px}.secondary{background:#334155;color:#fff}
+.shake{animation:shake .28s}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-12px)}50%{transform:translateX(10px)}75%{transform:translateX(-7px)}}
+@media(max-width:650px){#game{min-height:390px}.speech{width:55%;right:2%;min-height:115px;padding:12px}.player{left:4%;transform:scale(.82);transform-origin:bottom left}.shield{left:11%}.boss{right:2%;transform:scale(.83);transform-origin:bottom right}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">← Till träningen</a><div class="title">⚡ BLIXTFIGHTEN</div></div>
+  <div id="game">
+    <div class="floor"></div>
+    <div class="hud"><div class="hearts" id="hearts">❤️❤️❤️</div><div class="bosslife" id="bosslife">BOSSLIV: 10/10</div></div>
+    <div class="speech" id="speech"><small>ETIKBOSSEN</small><div class="q">...</div><b>VILKET BEGREPP?</b></div>
+    <div class="player" id="player"><div class="head"></div><div class="body"></div><div class="arm"></div><div class="wand"></div></div>
+    <div class="shield" id="shield"></div>
+    <div class="boss" id="boss"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="zig">⚡⚡</div></div>
+    <div class="status" id="status"></div>
+
+    <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när alla banor i träningen är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
+
+    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
+
+    <div class="overlay hidden" id="lose"><div class="panel"><div class="kicker">RONDEN ÄR ÖVER</div><div class="big red">DU ÅKTE PÅ STRYK!</div><p>ETIKBOSSEN vann den här ronden.</p><button id="retry">REVANSCH!</button><a href="index.html"><button class="secondary">Till träningen</button></a></div></div>
+
+    <div class="overlay hidden" id="win"><div class="panel"><div class="kicker">BLIXTFIGHTEN VUNNEN</div><div class="big">ETIKBOSSEN<br><span class="red">ÄR DÖD.</span></div><p>Tio returträffar. Alla tio begrepp.</p><a href="index.html"><button>Tillbaka till banorna</button></a></div></div>
+  </div>
+</div>
+<script>
+const K="etikMoralLevels_v2";
+const NEED={a:4,b:4,c:4,d:4,e:1};
+function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
+function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(([id,n])=>Array.from({length:n},(_,i)=>!!(d[id]||[])[i]).every(Boolean))}
+const lock=document.getElementById("lock"),intro=document.getElementById("intro");
+if(unlocked()){lock.classList.add("hidden")}else{intro.classList.add("hidden")}
+
+const Q=[
+ {a:"EGOISM",q:"En person väljer nästan alltid det som gynnar hen själv, även när andra förlorar."},
+ {a:"ANSVAR",q:"Du hittar en mobil på golvet och lämnar den till en vuxen."},
+ {a:"FRIHET",q:"Du får bestämma mycket över ditt eget liv och göra egna val."},
+ {a:"RÄTTVISA",q:"En elev får extra stöd för att få en rimlig chans att lyckas."},
+ {a:"SOLIDARITET",q:"Någon blir retad. Du går fram och hjälper."},
+ {a:"JÄMLIKHET",q:"Alla människor ska ha samma värde och samma grundläggande rättigheter."},
+ {a:"JÄMSTÄLLDHET",q:"Kön ska inte avgöra vilka möjligheter eller rättigheter en person får."},
+ {a:"TILLIT",q:"En vän berättar något privat för dig eftersom hen litar på dig."},
+ {a:"LOJALITET",q:"Du står kvar på en väns sida och sviker inte när det blir svårt."},
+ {a:"RESPEKT",q:"Ni tycker olika, men du låter den andra personen prata färdigt."}
+];
+const WORDS=Q.map(x=>x.a).concat(["EMPATI","KRÄNKNING"]);
+const game=document.getElementById("game"),player=document.getElementById("player"),shield=document.getElementById("shield"),boss=document.getElementById("boss");
+const speech=document.querySelector("#speech .q"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),status=document.getElementById("status");
+let active=false,energy=3,hp=10,qi=0,bossNear=0,keys={up:false,down:false,space:false},projectile=null,last=0,nextShot=0,volley=[],audio=null;
+
+function audioCtx(){if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();return audio}
+function beep(type){
+ const a=audioCtx(),o=a.createOscillator(),g=a.createGain(),t=a.currentTime;
+ o.connect(g);g.connect(a.destination);
+ if(type==="jump"){o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(1000,t+.22)}
+ else if(type==="duck"){o.frequency.setValueAtTime(600,t);o.frequency.exponentialRampToValueAtTime(150,t+.18)}
+ else if(type==="block"){o.type="square";o.frequency.setValueAtTime(820,t);o.frequency.exponentialRampToValueAtTime(420,t+.18)}
+ else if(type==="hit"){o.type="square";o.frequency.setValueAtTime(250,t);o.frequency.exponentialRampToValueAtTime(80,t+.3)}
+ else if(type==="hurt"){o.type="sawtooth";o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(65,t+.35)}
+ else if(type==="death"){o.type="sawtooth";o.frequency.setValueAtTime(460,t);o.frequency.exponentialRampToValueAtTime(45,t+1.2)}
+ g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.001,t+(type==="death"?1.3:.35));o.start(t);o.stop(t+(type==="death"?1.35:.38));
+}
+function hud(){hearts.textContent="❤️".repeat(Math.max(0,energy))+"🖤".repeat(Math.max(0,3-energy));bosslife.textContent="BOSSLIV: "+hp+"/10"}
+function flash(txt,color="#fff",ms=650){status.textContent=txt;status.style.color=color;status.style.opacity=1;setTimeout(()=>status.style.opacity=0,ms)}
+function sparks(x,y,n=10){for(let i=0;i<n;i++){const s=document.createElement("i");s.className="spark";s.style.left=x+"px";s.style.top=y+"px";s.style.setProperty("--dx",(Math.random()*150-75)+"px");s.style.setProperty("--dy",(Math.random()*120-60)+"px");game.appendChild(s);setTimeout(()=>s.remove(),480)}}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function makeVolley(){
+ const correct=Q[qi].a;
+ let wrong=shuffle(WORDS.filter(w=>w!==correct)).slice(0,4+Math.floor(Math.random()*2));
+ volley=shuffle(wrong.concat([correct]));
+}
+function question(){speech.textContent=Q[qi].q;makeVolley();nextShot=performance.now()+850}
+function bossAdvance(px){bossNear=Math.min(260,bossNear+px);boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";if(bossNear>=235)loseRound()}
+function bossBack(){bossNear=Math.max(0,bossNear-30);boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")"}
+function playerState(){
+ player.classList.toggle("jump",keys.up&&!keys.down);player.classList.toggle("duck",keys.down&&!keys.up);
+ shield.classList.toggle("on",keys.space);
+}
+function createBolt(word){
+ const e=document.createElement("div");e.className="bolt";e.innerHTML="<span>"+word+"</span>";
+ const high=Math.random()<.5;
+ e.dataset.word=word;e.dataset.correct=String(word===Q[qi].a);e.dataset.returning="0";
+ e.style.top=high?"48%":"68%";e.style.left="78%";game.appendChild(e);
+ projectile={el:e,x:78,v:-.36,high,correct:word===Q[qi].a,returning:false};
+}
+function pbox(){const r=player.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
+function ebox(el){const r=el.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
+function overlap(a,b){return a.l<b.r&&a.r>b.l&&a.t<b.b&&a.b>b.t}
+function hitPlayer(){
+ if(!projectile)return false;
+ const a=pbox(),b=ebox(projectile.el);
+ return overlap(a,b);
+}
+function removeBolt(){if(projectile){projectile.el.remove();projectile=null}}
+function wrongBlock(){
+ energy-=2;beep("hurt");flash("FEL BLOCK!  −2 ENERGI","#fca5a5",850);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),300);bossAdvance(52);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+420
+}
+function directHit(){
+ energy-=1;beep("hurt");flash("TRÄFF!  −1 ENERGI","#fca5a5",650);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),260);bossAdvance(28);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+420
+}
+function parry(){
+ projectile.returning=true;projectile.el.classList.add("returning");projectile.v=.72;beep("block");flash("RETURATTACK!","#fde68a",500);sparks(game.clientWidth*.19,game.clientHeight*.62,6)
+}
+function bossHit(){
+ hp--;beep("hit");sparks(game.clientWidth*.78,game.clientHeight*.65,14);bossBack();removeBolt();hud();flash("BOSSTRÄFF!  "+hp+" LIV KVAR","#86efac",650);
+ if(hp<=0){killBoss();return}
+ qi++;question()
+}
+function missedCorrect(){flash("MISSAD RETUR!","#fbbf24",550);bossAdvance(18);removeBolt();makeVolley();nextShot=performance.now()+420}
+function safePass(){removeBolt();nextShot=performance.now()+260}
+function loseRound(){
+ if(!active)return;active=false;removeBolt();document.getElementById("lose").classList.remove("hidden")
+}
+function killBoss(){
+ active=false;removeBolt();beep("death");flash("SLUTSLAG!","#ef4444",1100);boss.classList.add("dead");sparks(game.clientWidth*.79,game.clientHeight*.62,24);
+ setTimeout(()=>{let s=readSave();s.boss=true;localStorage.setItem(K,JSON.stringify(s));document.getElementById("win").classList.remove("hidden")},1450)
+}
+function reset(){
+ energy=3;hp=10;qi=0;bossNear=0;keys={up:false,down:false,space:false};boss.classList.remove("dead");boss.style.opacity=1;boss.style.right="7%";boss.style.transform="scale(1)";document.getElementById("lose").classList.add("hidden");document.getElementById("win").classList.add("hidden");hud();playerState();question();active=true;last=performance.now();requestAnimationFrame(loop)
+}
+function loop(now){
+ if(!active)return;
+ const dt=Math.min(32,now-last);last=now;
+ bossNear+=dt*.0035;boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";
+ if(bossNear>=235){loseRound();return}
+ if(!projectile && now>=nextShot){
+   if(!volley.length)makeVolley();
+   createBolt(volley.shift())
+ }
+ if(projectile){
+   projectile.x+=projectile.v*dt;
+   projectile.el.style.left=projectile.x+"%";
+   if(projectile.returning){
+     if(projectile.x>=72){bossHit()}
+   }else if(hitPlayer()){
+     if(keys.space){projectile.correct?parry():wrongBlock()}else{directHit()}
+   }else if(projectile.x<-27){
+     projectile.correct?missedCorrect():safePass()
+   }
+ }
+ requestAnimationFrame(loop)
+}
+function key(k,on){
+ if(k==="ArrowUp"){if(on&&!keys.up)beep("jump");keys.up=on}
+ if(k==="ArrowDown"){if(on&&!keys.down)beep("duck");keys.down=on}
+ if(k===" "){if(on&&!keys.space)beep("block");keys.space=on}
+ playerState()
+}
+addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown"," "].includes(e.key)){e.preventDefault();key(e.key,true)}});
+addEventListener("keyup",e=>{if(["ArrowUp","ArrowDown"," "].includes(e.key)){e.preventDefault();key(e.key,false)}});
+document.getElementById("start").onclick=()=>{intro.classList.add("hidden");audioCtx().resume();reset()};
+document.getElementById("retry").onclick=()=>{audioCtx().resume();reset()};
+hud();
+</script>
+</body>
+</html>
