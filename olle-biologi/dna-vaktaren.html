@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#091627">
+<title>DNA-väktaren – Olles BIO-LAB</title>
+<style>
+:root{--bg:#091627;--panel:#122b43;--line:#345a71;--ink:#eff9ff;--muted:#bfd4e1;--mint:#77efc3;--gold:#ffd77c;--red:#ff9197}
+*{box-sizing:border-box}html{color-scheme:dark}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 70% -10%,#174b58,transparent 60%),var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1100px;margin:auto;padding:18px 15px 45px}a{color:var(--mint)}button{font:inherit;cursor:pointer;font-weight:850;border:0;border-radius:12px;padding:12px 18px;background:var(--mint);color:#072721}button:disabled{opacity:.5;cursor:not-allowed}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}button.secondary{background:#294c62;color:white}button.ghost{background:#294052;color:#e7f4ff}button.danger{background:#70373d;color:white}
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}.brand{font-size:.9rem;font-weight:950;letter-spacing:.08em;color:var(--mint)}h1{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.1;margin:10px 0}h2{font-size:1.2rem;margin:0 0 10px}.sub{color:var(--muted);margin:0 0 20px}.tag{font-size:.72rem;letter-spacing:.16em;color:var(--gold);font-weight:950}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:clamp(14px,3vw,24px);box-shadow:0 12px 36px #0004}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.hud{display:flex;gap:15px;flex-wrap:wrap;font-size:.95rem;font-weight:900}.hud span{white-space:nowrap}.hud .hp{color:#ffb2b4}.hud .boss{color:var(--gold)}.hud .count{color:var(--mint)}.question{margin:16px 0 12px;padding:17px 19px;border:1px solid #476b82;border-radius:15px;background:#1d3a50}.question strong{display:block;font-size:clamp(1.04rem,2.3vw,1.4rem);line-height:1.35;margin:5px 0}.question small{color:#c8dbe7}.canvas-wrap{position:relative;border:2px solid #47677e;border-radius:15px;overflow:hidden;background:#0a182c}.canvas-wrap canvas{width:100%;height:auto;aspect-ratio:960/430;display:block;touch-action:none}.overlay{position:absolute;inset:0;background:#07172be8;display:flex;align-items:center;justify-content:center;padding:15px;text-align:center}.overlay.hidden{display:none}.overlay-inner{max-width:540px}.overlay h2{font-size:clamp(1.3rem,3.4vw,2rem);margin-bottom:10px}.overlay p{color:#e0edf5}.overlay button{margin:8px}.overlay .note{font-size:.82rem;color:#bdd5e1}.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}.pad{display:flex;gap:10px;align-items:center}.pad button{width:76px;height:58px;font-size:1.5rem;touch-action:none;user-select:none}.pad .jump{width:auto;min-width:110px;font-size:.9rem;background:var(--gold)}.instructions{color:var(--muted);font-size:.88rem}.feedback{margin-top:13px;border:1px solid #456c80;border-left:5px solid var(--mint);background:#1b394c;padding:14px 17px;border-radius:12px;min-height:60px}.feedback strong{color:var(--mint)}.feedback.bad{border-left-color:var(--red)}.feedback.bad strong{color:#ffb6bb}.footer{color:#8eaec0;font-size:.78rem;margin-top:18px}.help{color:var(--muted);font-size:.87rem;margin:12px 0 0}
+@media(max-width:650px){.pad{width:100%;justify-content:space-between}.pad button{width:25%;min-width:0}.pad .jump{width:40%;min-width:0}.instructions{width:100%}.hud{gap:8px;font-size:.82rem}.controls{gap:8px}.question{padding:12px 14px}.canvas-wrap canvas{min-height:260px;object-fit:fill}.overlay{padding:10px}.overlay h2{font-size:1.2rem}.overlay p{font-size:.86rem;margin:8px 0}.overlay button{margin:4px;padding:10px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<header class="header"><div class="brand">🧬 OLLES BIO-LAB <span style="color:#fff">/ BOSS 1</span></div><a href="./index.html">← Till träningsbanorna</a></header>
+<div class="tag">BOSSFIGHT • RÖR DIG TILL SVARET</div>
+<h1>🤖 DNA-väktaren</h1>
+<p class="sub">Spring till rätt svar, hoppa in i dess portal och ducka för väktarens fallande DNA-strängar. Varje rätt svar skickar en energistråle mot bossen.</p>
+<section class="card">
+<div class="top"><div class="hud"><span id="hearts" class="hp">❤️❤️❤️❤️</span><span id="bossHealth" class="boss">⚡⚡⚡⚡⚡</span><span id="hits" class="count">0 träffar</span></div><button id="pauseBtn" class="ghost" type="button">Pausa ⏸</button></div>
+<div class="question" aria-live="polite"><div class="tag" id="roundLabel">ATTACK 1</div><strong id="questionText"></strong><small>Välj rätt portal genom att hoppa upp i den. Frågorna har ingen tidsgräns.</small></div>
+<div class="canvas-wrap">
+<canvas id="stage" width="960" height="430" aria-label="Spelplan med tre svarsportaler, en spelare och fallande DNA-attacker"></canvas>
+<div class="overlay" id="overlay"><div class="overlay-inner"><h2 id="overlayTitle">Redo för DNA-väktaren?</h2><p id="overlayText">Läs frågan i lugn och ro. När du är redo startar attackerna. Styr med ← → eller A/D och hoppa med mellanslag eller ↑. På mobilen finns knappar under spelet.</p><button id="overlayAction" type="button">Starta attacken ⚡</button><div class="note" id="overlayNote">Ingen tidsgräns. Pausa när du vill.</div></div></div>
+</div>
+<div class="controls">
+<div class="pad"><button class="secondary" id="left" type="button" aria-label="Spring vänster">◀</button><button class="secondary" id="right" type="button" aria-label="Spring höger">▶</button><button class="jump" id="jump" type="button">HOPPA ↑</button></div>
+<div class="instructions">Dator: <b>← → / A D</b> för att springa • <b>↑ / mellanslag</b> för att hoppa • <b>P</b> för paus</div>
+</div>
+<div id="feedback" class="feedback" aria-live="polite"><strong>Uppdrag:</strong> Hitta rätt svar och hoppa in i portalen. Undvik DNA-strängarna!</div>
+<p class="help">Tips: Du kan läsa färdigt frågan innan du startar. Ett fel svar kostar ett hjärta, men du får alltid en förklaring. Attacker ger ett kort skydd efter träff.</p>
+</section>
+<div class="footer">Frågor från Olles genetikavsnitt • Framsteg sparas i samma webbläsare som BIO-LAB • Övningsläge är tillgängligt även före upplåsning.</div>
+</main>
+<script>
+'use strict';
+(function(){
+const W=960,H=430,GROUND=375,PORTAL_Y=242,PORTAL_H=68,PORTAL_W=235,PORTAL_X=[185,480,775],KEY='olles-biolab-v1';
+const pool=[
+{q:'Hur många kromosomer har en vanlig mänsklig kroppscell normalt?',a:['23','46','92'],right:'46',e:'En vanlig mänsklig kroppscell har normalt 46 kromosomer, ordnade i 23 par.'},
+{q:'Vad är en gen?',a:['En del av DNA','En hel cell','En aminosyra'],right:'En del av DNA',e:'En gen är ett avsnitt av DNA som innehåller genetisk information.'},
+{q:'Vilken process bildar könsceller med halva kromosomantalet?',a:['Mitos','Meios','Fotosyntes'],right:'Meios',e:'Meios är en celldelning där kromosomantalet halveras.'},
+{q:'Vilka kvävebaser parar med varandra i DNA?',a:['A–T och C–G','A–C och T–G','A–G och T–C'],right:'A–T och C–G',e:'I DNA parar A med T och C med G.'},
+{q:'Vad gör ribosomerna?',a:['Bygger proteiner','Bildar kromosompar','Tillverkar cellkärnor'],right:'Bygger proteiner',e:'Ribosomerna sätter ihop aminosyror till proteiner.'},
+{q:'Vilken celldelning ger normalt två genetiskt lika dotterceller?',a:['Meios','Mitos','Befruktning'],right:'Mitos',e:'Mitos ger normalt två dotterceller med samma kromosomantal och genetiska information.'},
+{q:'Hur många kromosomer har en spermie normalt hos människan?',a:['23','46','92'],right:'23',e:'Könsceller har normalt 23 kromosomer, hälften så många som kroppsceller.'},
+{q:'Vad händer med DNA innan mitos?',a:['Det kopieras','Det försvinner','Det halveras permanent'],right:'Det kopieras',e:'DNA kopieras före celldelningen så att dottercellerna kan få var sin uppsättning.'},
+{q:'Vad är ett kromosompar?',a:['Två motsvarande kromosomer','Två hela celler','Två olika organ'],right:'Två motsvarande kromosomer',e:'Människan har normalt 23 kromosompar i kroppscellerna, en kromosom i varje par från vardera föräldern.'},
+{q:'Vad händer vid befruktning?',a:['23 + 23 kromosomer förenas','46 + 46 kromosomer förenas','Alla kromosomer försvinner'],right:'23 + 23 kromosomer förenas',e:'En äggcell och en spermie bidrar normalt med 23 kromosomer var.'},
+{q:'Vilken del av cellen innehåller normalt kromosomerna?',a:['Cellkärnan','Cellmembranet','Cellväggen'],right:'Cellkärnan',e:'I mänskliga kroppsceller finns kromosomerna i cellkärnan.'},
+{q:'Vad är DNA?',a:['En molekyl som bär genetisk information','En sorts könscell','Ett färdigt protein'],right:'En molekyl som bär genetisk information',e:'DNA är molekylen som bär den genetiska informationen.'},
+{q:'Vad är en dottercell?',a:['En cell som bildats vid celldelning','En cell med alltid 23 kromosomer','En cell som saknar DNA'],right:'En cell som bildats vid celldelning',e:'Dotterceller uppstår när en modercell delar sig.'},
+{q:'Vad betyder kromosompar hos människan?',a:['23 par i vanliga kroppsceller','23 par i varje spermie','46 par i varje äggcell'],right:'23 par i vanliga kroppsceller',e:'Normalt finns 46 kromosomer i 23 par i en mänsklig kroppscell.'}
+];
+const canvas=document.getElementById('stage'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
+const rand=a=>{let b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+let shuffled=rand(pool),index=0,choices=[],hearts=4,boss=5,hits=0,phase='ready',prevPhase='playing',keys={left:false,right:false},player={x:480,y:GROUND,vy:0,shield:0},projectiles=[],telegraphs=[],spawnTimer=1.8,last=0,beam=0,beamFrom=480,wrongFlash=0,answered=false,frame=0;
+const trainingUnlocked=()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');return !!(s.levels&&s.levels.dna&&s.levels.dna[0]&&s.levels.dna[1]&&s.levels.cell&&s.levels.cell[0]&&s.levels.cell[1])}catch(e){return false}};
+function recordQuestion(q,correct){try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');s.wrong=s.wrong||{};const k='boss:'+q.q;if(correct)delete s.wrong[k];else s.wrong[k]={p:q.q,o:q.a,a:q.right,e:q.e};localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function recordWin(){if(!trainingUnlocked())return false;try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');s.bosses=s.bosses||{};s.bosses.b1=true;localStorage.setItem(KEY,JSON.stringify(s));return true}catch(e){return false}}
+function nextQuestion(){if(index>=shuffled.length){shuffled=rand(pool);index=0}const q=shuffled[index];choices=rand(q.a);$('roundLabel').textContent='ATTACK '+(hits+1)+' • DNA-KUNSKAP';$('questionText').textContent=q.q;answered=false;player={x:480,y:GROUND,vy:0,shield:0};projectiles=[];telegraphs=[];spawnTimer=2;beam=0;wrongFlash=0;phase='ready';keys.left=keys.right=false;updateHud();$('feedback').className='feedback';$('feedback').innerHTML='<strong>Uppdrag:</strong> Läs frågan och hitta rätt portal. Hoppa in i den när attacken startar.';showOverlay('Läs frågan först','Välj ditt svar innan du sätter igång. När du startar skjuter väktaren DNA-strängar – men du kan pausa när du vill.','Starta attacken ⚡',()=>{phase='playing';hideOverlay()},'Du kan alltid ta den tid du behöver.')}
+function updateHud(){$('hearts').textContent='❤️'.repeat(hearts)+'🖤'.repeat(4-hearts);$('bossHealth').textContent='BOSS: '+'⚡'.repeat(boss)+'·'.repeat(5-boss);$('hits').textContent=hits+' träffar'}
+function showOverlay(title,msg,label,fn,note){$('overlayTitle').textContent=title;$('overlayText').textContent=msg;$('overlayAction').textContent=label;$('overlayAction').onclick=fn;$('overlayNote').textContent=note||'';$('overlay').classList.remove('hidden')}
+function hideOverlay(){$('overlay').classList.add('hidden')}
+function answer(choiceIdx){if(phase!=='playing'||answered)return;answered=true;const q=shuffled[index],ok=choices[choiceIdx]===q.right;phase='feedback';keys.left=keys.right=false;projectiles=[];telegraphs=[];beam=ok?0.9:0;beamFrom=PORTAL_X[choiceIdx];wrongFlash=ok?0:0.8;if(ok){boss--;hits++;recordQuestion(q,true)}else{hearts--;recordQuestion(q,false)}updateHud();$('feedback').className='feedback'+(ok?'':' bad');$('feedback').innerHTML='<strong>'+(ok?'⚡ TRÄFF!':'↻ INTE RIKTIGT.')+'</strong> '+q.e;
+const won=boss===0,lost=hearts<=0;
+if(won){const saved=recordWin();showOverlay('🏆 DNA-väktaren besegrad!','Fem korrekta svar skickade energistrålar mot väktaren. '+(saved?'Boss 1 är nu avklarad i BIO-LAB!':'Det här var övningsläge. Klara först DNA- och celldelningsbanorna för att låsa upp bossframsteget.'),'Spela igen ↻',reset,'Du kan också gå tillbaka till BIO-LAB via länken överst.')}
+else if(lost){showOverlay('💥 DNA-väktaren vann','Du fick '+hits+' träffar innan hjärtana tog slut. Läs förklaringarna och försök igen – frågorna blandas.','Försök igen ↻',reset,'Inget tidspressat prov. Du kan spela så många gånger du vill.')}
+else{showOverlay(ok?'⚡ Fullträff!':'↻ Nästa försök',''+q.e,'Nästa fråga →',()=>{index++;nextQuestion()},'Bossens energi: '+boss+' av 5 kvar. Dina hjärtan: '+hearts+'.')}
+}
+function reset(){shuffled=rand(pool);index=0;hearts=4;boss=5;hits=0;nextQuestion()}
+function jump(){if(phase!=='playing')return;if(player.y>=GROUND-.5){player.vy=-520}}
+function pause(){if(phase==='playing'){prevPhase=phase;phase='paused';showOverlay('⏸ Paus','Läs frågan och planera din väg. DNA-strängarna står stilla.','Fortsätt →',()=>{phase='playing';hideOverlay()},'Tryck P för att fortsätta.')}else if(phase==='paused'){phase='playing';hideOverlay()}}
+$('pauseBtn').onclick=pause;
+function bindHold(id,dir){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();keys[dir]=true;try{b.setPointerCapture(e.pointerId)}catch(x){}});const stop=()=>{keys[dir]=false};b.addEventListener('pointerup',stop);b.addEventListener('pointercancel',stop);b.addEventListener('lostpointercapture',stop)}
+bindHold('left','left');bindHold('right','right');$('jump').addEventListener('pointerdown',e=>{e.preventDefault();jump()});
+document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp',' ','KeyA','KeyD','KeyP'].includes(e.code))e.preventDefault();if(e.repeat&&['Space','ArrowUp','KeyP'].includes(e.code))return;if(e.code==='ArrowLeft'||e.code==='KeyA')keys.left=true;if(e.code==='ArrowRight'||e.code==='KeyD')keys.right=true;if(e.code==='ArrowUp'||e.code==='Space')jump();if(e.code==='KeyP')pause()});
+document.addEventListener('keyup',e=>{if(e.code==='ArrowLeft'||e.code==='KeyA')keys.left=false;if(e.code==='ArrowRight'||e.code==='KeyD')keys.right=false});
+window.addEventListener('blur',()=>{keys.left=keys.right=false;if(phase==='playing')pause()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&phase==='playing')pause()});
+function update(dt){frame+=dt;if(phase!=='playing')return;player.shield=Math.max(0,player.shield-dt);const speed=270;player.x=Math.max(26,Math.min(W-26,player.x+((keys.right?1:0)-(keys.left?1:0))*speed*dt));player.vy+=1150*dt;player.y=Math.min(GROUND,player.y+player.vy*dt);if(player.y>=GROUND)player.vy=0;
+for(let i=0;i<3;i++){const px=PORTAL_X[i];if(Math.abs(player.x-px)<PORTAL_W/2-8&&player.y-43<PORTAL_Y+PORTAL_H&&player.y>PORTAL_Y&&player.vy<0){answer(i);return}}
+spawnTimer-=dt;if(spawnTimer<=0){const x=Math.max(30,Math.min(W-30,player.x+(Math.random()-.5)*180));telegraphs.push({x:x,t:.6});spawnTimer=1.45+Math.random()*.65}
+for(let i=telegraphs.length-1;i>=0;i--){const t=telegraphs[i];t.t-=dt;if(t.t<=0){projectiles.push({x:t.x,y:55,speed:160+Math.random()*30});telegraphs.splice(i,1)}}
+for(let i=projectiles.length-1;i>=0;i--){const p=projectiles[i];p.y+=p.speed*dt;if(p.y>H+90){projectiles.splice(i,1);continue}if(player.shield<=0&&Math.abs(p.x-player.x)<25&&p.y+33>player.y-40&&p.y-33<player.y){projectiles.splice(i,1);hearts--;player.shield=1.8;wrongFlash=.55;updateHud();$('feedback').className='feedback bad';$('feedback').innerHTML='<strong>💥 DNA-träff!</strong> Ett hjärta försvann. Du har kort skydd så att du kan flytta dig.';if(hearts<=0){phase='lost';showOverlay('💥 Slut på hjärtan','Du lyckades träffa väktaren '+hits+' gånger. Försök igen och lär dig mönstret i DNA-attackerna.','Försök igen ↻',reset,'Tips: Vänta i lugn och ro innan du startar nästa fråga.')}break}}
+wrongFlash=Math.max(0,wrongFlash-dt);beam=Math.max(0,beam-dt)}
+function roundedRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
+function textWrap(s,x,y,maxW,lineH,maxLines){const words=s.split(' ');let line='',lines=[];for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);lines.slice(0,maxLines).forEach((line,i)=>ctx.fillText(line,x,y+i*lineH));}
+function drawHelix(x,y){ctx.save();ctx.translate(x,y);ctx.lineWidth=4;for(let side=0;side<2;side++){ctx.beginPath();for(let k=-36;k<=36;k+=3){const a=k*.115+frame*4;const px=Math.sin(a+side*Math.PI)*12;if(k===-36)ctx.moveTo(px,k);else ctx.lineTo(px,k)}ctx.strokeStyle=side===0?'#ff9bba':'#ffdc85';ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=10;ctx.stroke()}ctx.lineWidth=2;ctx.strokeStyle='#e7f7ff';for(let k=-31;k<=31;k+=11){const xx=Math.sin(k*.115+frame*4)*12;ctx.beginPath();ctx.moveTo(xx,k);ctx.lineTo(-xx,k);ctx.stroke()}ctx.restore()}
+function draw(){
+ctx.clearRect(0,0,W,H);
+const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#162c49');sky.addColorStop(.7,'#0c1b31');sky.addColorStop(1,'#102a34');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#4a708422';ctx.lineWidth=1;for(let x=0;x<W;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+for(let i=0;i<17;i++){const x=(i*83+24)%W,y=(i*51+17)%190;ctx.fillStyle='#9ddfff33';ctx.beginPath();ctx.arc(x,y,1.7,0,Math.PI*2);ctx.fill()}
+ctx.save();ctx.translate(480,76);ctx.fillStyle='#2d425e';roundedRect(-51,-42,102,78,19);ctx.fill();ctx.strokeStyle='#7adad8';ctx.lineWidth=4;ctx.stroke();ctx.fillStyle='#8df1d4';ctx.beginPath();ctx.arc(-19,-9,9,0,7);ctx.arc(19,-9,9,0,7);ctx.fill();ctx.strokeStyle='#e9a4b9';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-15,17);ctx.lineTo(15,17);ctx.stroke();ctx.fillStyle='#d2f8f5';ctx.fillRect(-24,-53,48,10);ctx.fillStyle='#72c8d2';ctx.fillRect(-3,-65,6,14);ctx.restore();
+ctx.fillStyle='#122e3d';ctx.fillRect(0,GROUND+4,W,H-GROUND);ctx.strokeStyle='#5ea99a';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,GROUND+4);ctx.lineTo(W,GROUND+4);ctx.stroke();
+choices.forEach((label,i)=>{const x=PORTAL_X[i]-PORTAL_W/2;ctx.fillStyle='#1a3950';roundedRect(x,170,PORTAL_W,PORTAL_H+75,14);ctx.fill();ctx.strokeStyle=['#83ddc5','#ffe39c','#92c5ff'][i];ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#f3fcff';ctx.font='bold 17px system-ui';ctx.textAlign='center';textWrap(label,PORTAL_X[i],198,PORTAL_W-25,21,3);ctx.fillStyle='#173e50';roundedRect(x+10,PORTAL_Y,PORTAL_W-20,PORTAL_H,12);ctx.fill();ctx.strokeStyle='#80edcc';ctx.lineWidth=4;ctx.strokeRect(x+21,PORTAL_Y+9,PORTAL_W-42,PORTAL_H-18);ctx.fillStyle='#7bffd3';ctx.font='bold 14px system-ui';ctx.fillText('HOPPA HIT ↑',PORTAL_X[i],PORTAL_Y+41)});
+if(phase==='playing'){for(const t of telegraphs){ctx.strokeStyle='#ff8383';ctx.setLineDash([7,8]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(t.x,85);ctx.lineTo(t.x,GROUND);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ffb9b9';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('⚠',t.x,GROUND-10)}for(const p of projectiles)drawHelix(p.x,p.y)}
+if(beam>0){const progress=1-beam/.9;const y=PORTAL_Y+20-(PORTAL_Y+20-98)*progress;const x=beamFrom+(480-beamFrom)*progress;ctx.strokeStyle='#b4ffe6';ctx.lineWidth=10;ctx.shadowColor='#aaffd8';ctx.shadowBlur=25;ctx.beginPath();ctx.moveTo(beamFrom,PORTAL_Y+20);ctx.lineTo(x,y);ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,10,0,7);ctx.fill()}
+if(wrongFlash>0){ctx.fillStyle='rgba(255,70,85,'+(wrongFlash*.2)+')';ctx.fillRect(0,0,W,H)}
+ctx.save();ctx.translate(player.x,player.y);if(player.shield>0){ctx.globalAlpha=.6+.4*Math.sin(frame*20)**2;ctx.strokeStyle='#fbd77c';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,-21,34,0,Math.PI*2);ctx.stroke()}ctx.fillStyle='#d7f5ff';roundedRect(-15,-45,30,40,8);ctx.fill();ctx.fillStyle='#2a5d7a';roundedRect(-12,-38,24,16,6);ctx.fill();ctx.fillStyle='#8dffd4';ctx.fillRect(-9,-34,18,5);ctx.fillStyle='#ffd38e';ctx.fillRect(-12,-4,9,8);ctx.fillRect(4,-4,9,8);ctx.fillStyle='#b1c7da';ctx.fillRect(-23,-32,8,22);ctx.fillRect(15,-32,8,22);ctx.restore();
+ctx.fillStyle='#d3e6f4';ctx.font='bold 14px system-ui';ctx.textAlign='left';ctx.fillText('OLLE',player.x-19,Math.max(20,player.y-57));
+if(phase==='ready'){ctx.fillStyle='#a3cbd8';ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText('TÄNK FÖRST • STARTA NÄR DU ÄR REDO',W/2,420)}
+}
+function loop(t){const dt=Math.min((t-last)/1000||0,.035);last=t;update(dt);draw();requestAnimationFrame(loop)}
+nextQuestion();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
