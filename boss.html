@@ -123,7 +123,7 @@ function createBolt(word){
  const high=Math.random()<.5;
  e.dataset.word=word;e.dataset.correct=String(word===Q[qi].a);e.dataset.returning="0";
  e.style.top=high?"48%":"68%";e.style.left="78%";game.appendChild(e);
- projectile={el:e,x:78,v:-.36,high,correct:word===Q[qi].a,returning:false};
+ projectile={el:e,x:78,v:-.055,high,correct:word===Q[qi].a,returning:false};
 }
 function pbox(){const r=player.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
 function ebox(el){const r=el.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
@@ -135,13 +135,13 @@ function hitPlayer(){
 }
 function removeBolt(){if(projectile){projectile.el.remove();projectile=null}}
 function wrongBlock(){
- energy-=2;beep("hurt");flash("FEL BLOCK!  −2 ENERGI","#fca5a5",850);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),300);bossAdvance(52);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+420
+ energy-=2;beep("hurt");flash("FEL BLOCK!  −2 ENERGI","#fca5a5",850);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),300);bossAdvance(52);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+750
 }
 function directHit(){
  energy-=1;beep("hurt");flash("TRÄFF!  −1 ENERGI","#fca5a5",650);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),260);bossAdvance(28);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+420
 }
 function parry(){
- projectile.returning=true;projectile.el.classList.add("returning");projectile.v=.72;beep("block");flash("RETURATTACK!","#fde68a",500);sparks(game.clientWidth*.19,game.clientHeight*.62,6)
+ projectile.returning=true;projectile.el.classList.add("returning");projectile.v=.18;beep("block");flash("RETURATTACK!","#fde68a",500);sparks(game.clientWidth*.19,game.clientHeight*.62,6)
 }
 function bossHit(){
  hp--;beep("hit");sparks(game.clientWidth*.78,game.clientHeight*.65,14);bossBack();removeBolt();hud();flash("BOSSTRÄFF!  "+hp+" LIV KVAR","#86efac",650);
@@ -149,7 +149,7 @@ function bossHit(){
  qi++;question()
 }
 function missedCorrect(){flash("MISSAD RETUR!","#fbbf24",550);bossAdvance(18);removeBolt();makeVolley();nextShot=performance.now()+420}
-function safePass(){removeBolt();nextShot=performance.now()+260}
+function safePass(){removeBolt();nextShot=performance.now()+600}
 function loseRound(){
  if(!active)return;active=false;removeBolt();document.getElementById("lose").classList.remove("hidden")
 }
@@ -163,7 +163,7 @@ function reset(){
 function loop(now){
  if(!active)return;
  const dt=Math.min(32,now-last);last=now;
- bossNear+=dt*.0035;boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";
+ bossNear+=dt*.0024;boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";
  if(bossNear>=235){loseRound();return}
  if(!projectile && now>=nextShot){
    if(!volley.length)makeVolley();
