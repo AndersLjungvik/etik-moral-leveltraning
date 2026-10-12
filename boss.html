@@ -56,7 +56,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
     <div class="boss" id="boss"><div class="head"><i class="eye e1"></i><i class="eye e2"></i></div><div class="body"></div><div class="zig">⚡⚡</div></div>
     <div class="status" id="status"></div>
 
-    <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när alla banor i träningen är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
+    <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 BOSS 1</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när Bana 1 och Bana 2 är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
 
     <div class="overlay" id="intro"><div class="panel"><div class="kicker" id="introKicker">⚡ SLUTBOSS · v0.8.0</div><div class="big">BLIXTFIGHTEN</div><p id="introDesc"><b>ETIKBOSSEN ANFALLER.</b></p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka båda höjderna<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
 
@@ -67,7 +67,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 </div>
 <script>
 const K="etikMoralLevels_v2";
-const NEED={a:4,b:4,c:4,d:4,e:1};
+const NEED={a:4,b:4};
 function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
 function unlocked(){const x=readSave(),d=x.done||{};return Object.entries(NEED).every(([id,n])=>Array.from({length:n},(_,i)=>!!(d[id]||[])[i]).every(Boolean))}
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");
@@ -114,7 +114,7 @@ const FORMS=[
 let currentForm=1,currentQ=FORMS[0].q,WORDS=[];
 function beatenForms(){const s=readSave();if(Array.isArray(s.blixForms))return s.blixForms;return s.boss?[1]:[]}
 function selectNextForm(){const beaten=beatenForms();currentForm=Math.min(3,beaten.length+1);currentQ=FORMS[currentForm-1].q;WORDS=Array.from(new Set(FORMS.flatMap(function(f){return f.q.map(function(x){return x.a})})));updateIntro()}
-function updateIntro(){const f=FORMS[currentForm-1],beaten=beatenForms();document.getElementById("introKicker").textContent="⚡ BOSSFORM "+currentForm+"/3 · v0.8.0";document.getElementById("introDesc").innerHTML="<b>"+f.name+"</b><br>"+f.desc+"<br><span style=\"color:#94a3b8\">Besegrade bossformer: "+beaten.length+"/3</span>";document.getElementById("start").textContent="STARTA BOSSFORM "+currentForm}
+function updateIntro(){const f=FORMS[currentForm-1],beaten=beatenForms();document.getElementById("introKicker").textContent="⚡ BOSS 1 · FORM "+currentForm+"/3 · v0.8.0";document.getElementById("introDesc").innerHTML="<b>"+f.name+"</b><br>"+f.desc+"<br><span style=\"color:#94a3b8\">Besegrade bossformer: "+beaten.length+"/3</span>";document.getElementById("start").textContent="STARTA BOSSFORM "+currentForm}
 const game=document.getElementById("game"),player=document.getElementById("player"),shield=document.getElementById("shield"),boss=document.getElementById("boss");
 const speech=document.querySelector("#speech .q"),bossLabel=document.querySelector("#speech small"),hearts=document.getElementById("hearts"),bosslife=document.getElementById("bosslife"),status=document.getElementById("status");
 let active=false,energy=3,hp=10,qi=0,bossNear=0,keys={up:false,down:false,space:false},projectile=null,last=0,nextShot=0,volley=[],audio=null,roundQ=[];
