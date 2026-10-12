@@ -58,7 +58,7 @@ button{border:0;border-radius:13px;padding:13px 20px;font:inherit;font-weight:90
 
     <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 SLUTBOSS</div><div class="big">LÅST</div><p>BLIXTFIGHTEN låses upp när alla banor i träningen är klara.</p><a href="index.html"><button>Till träningen</button></a></div></div>
 
-    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
+    <div class="overlay" id="intro"><div class="panel"><div class="kicker">⚡ SLUTBOSS · v0.7.2</div><div class="big">BLIXTFIGHTEN</div><p><b>ETIKBOSSEN ANFALLER.</b> Tio begrepp. Tio returträffar.</p><div class="controls"><b>↑ håll</b> = flyg över<br><b>↓ håll</b> = ducka under<br><b>MELLANSLAG</b> = blocka<br><span class="good">Rätt block → RETURATTACK</span><br><span class="bad">Fel block → −2 ENERGI</span><br>Direktträff → −1 energi</div><button id="start">STARTA FIGHTEN</button></div></div>
 
     <div class="overlay hidden" id="lose"><div class="panel"><div class="kicker">RONDEN ÄR ÖVER</div><div class="big red">DU ÅKTE PÅ STRYK!</div><p>ETIKBOSSEN vann den här ronden.</p><button id="retry">REVANSCH!</button><a href="index.html"><button class="secondary">Till träningen</button></a></div></div>
 
@@ -111,7 +111,7 @@ function makeVolley(){
  let wrong=shuffle(WORDS.filter(w=>w!==correct)).slice(0,4+Math.floor(Math.random()*2));
  volley=shuffle(wrong.concat([correct]));
 }
-function question(){speech.textContent=Q[qi].q;makeVolley();nextShot=performance.now()+850}
+function question(){speech.textContent=Q[qi].q;makeVolley();nextShot=performance.now()+1100}
 function bossAdvance(px){bossNear=Math.min(260,bossNear+px);boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";if(bossNear>=235)loseRound()}
 function bossBack(){bossNear=Math.max(0,bossNear-30);boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")"}
 function playerState(){
@@ -123,7 +123,7 @@ function createBolt(word){
  const high=Math.random()<.5;
  e.dataset.word=word;e.dataset.correct=String(word===Q[qi].a);e.dataset.returning="0";
  e.style.top=high?"48%":"68%";e.style.left="78%";game.appendChild(e);
- projectile={el:e,x:78,v:-.055,high,correct:word===Q[qi].a,returning:false};
+ projectile={el:e,x:78,v:-.024,high,correct:word===Q[qi].a,returning:false};
 }
 function pbox(){const r=player.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
 function ebox(el){const r=el.getBoundingClientRect(),g=game.getBoundingClientRect();return {l:r.left-g.left,r:r.right-g.left,t:r.top-g.top,b:r.bottom-g.top}}
@@ -135,10 +135,10 @@ function hitPlayer(){
 }
 function removeBolt(){if(projectile){projectile.el.remove();projectile=null}}
 function wrongBlock(){
- energy-=2;beep("hurt");flash("FEL BLOCK!  −2 ENERGI","#fca5a5",850);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),300);bossAdvance(52);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+750
+ energy-=2;beep("hurt");flash("FEL BLOCK!  −2 ENERGI","#fca5a5",850);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),300);bossAdvance(52);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+950
 }
 function directHit(){
- energy-=1;beep("hurt");flash("TRÄFF!  −1 ENERGI","#fca5a5",650);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),260);bossAdvance(28);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+420
+ energy-=1;beep("hurt");flash("TRÄFF!  −1 ENERGI","#fca5a5",650);game.classList.add("shake");setTimeout(()=>game.classList.remove("shake"),260);bossAdvance(28);removeBolt();hud();if(energy<=0)loseRound();else nextShot=performance.now()+850
 }
 function parry(){
  projectile.returning=true;projectile.el.classList.add("returning");projectile.v=.18;beep("block");flash("RETURATTACK!","#fde68a",500);sparks(game.clientWidth*.19,game.clientHeight*.62,6)
@@ -148,8 +148,8 @@ function bossHit(){
  if(hp<=0){killBoss();return}
  qi++;question()
 }
-function missedCorrect(){flash("MISSAD RETUR!","#fbbf24",550);bossAdvance(18);removeBolt();makeVolley();nextShot=performance.now()+420}
-function safePass(){removeBolt();nextShot=performance.now()+600}
+function missedCorrect(){flash("MISSAD RETUR!","#fbbf24",550);bossAdvance(18);removeBolt();makeVolley();nextShot=performance.now()+850}
+function safePass(){removeBolt();nextShot=performance.now()+900}
 function loseRound(){
  if(!active)return;active=false;removeBolt();document.getElementById("lose").classList.remove("hidden")
 }
@@ -163,7 +163,7 @@ function reset(){
 function loop(now){
  if(!active)return;
  const dt=Math.min(32,now-last);last=now;
- bossNear+=dt*.0024;boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";
+ bossNear+=dt*.0014;boss.style.right=(7-bossNear/35)+"%";boss.style.transform="scale("+(1+bossNear/550)+")";
  if(bossNear>=235){loseRound();return}
  if(!projectile && now>=nextShot){
    if(!volley.length)makeVolley();
