@@ -22,29 +22,30 @@ body{min-height:100vh;padding:12px}.wrap{width:min(100%,1000px);margin:auto}.top
 <div class="wrap">
 <div class="top"><a href="index.html">← Till träningen</a><div class="title">🗝️ DEN SISTA BUSSEN</div></div>
 <div id="game">
-<div class="hud"><div id="place">GAMLA BRON</div><div class="energy"><div class="cell" id="e0">⚡</div><div class="cell" id="e1">⚡</div><div class="cell" id="e2">⚡</div></div><div id="endCount">SLUT 0/8</div></div>
+<div class="hud"><div id="place">GAMLA BRON</div><div class="energy"><div class="cell" id="e0">⚡</div><div class="cell" id="e1">⚡</div><div class="cell" id="e2">⚡</div></div><div>DIN VÄG</div></div>
 <div class="layout">
 <section><div class="visual" id="visual"></div><div class="story" id="story"></div></section>
 <aside class="side">
 <div class="card"><h3>⚡ ETISK ENERGI</h3><div class="small">Varje svårt val laddar en cell. Inget val ger mer energi än något annat.</div></div>
 <div class="card"><h3>🧭 DIN RESA</h3><div class="trail" id="trail"></div></div>
-<div class="card"><h3>🔐 SLUT DU HAR SETT</h3><div class="endgrid" id="endGrid"></div></div>
+<div class="card"><h3>👀 LÄS NOGA</h3><div class="small">Detaljer från början kan bli viktiga senare. Du behöver inte hitta ett “perfekt” val – du behöver förstå vad som händer.</div></div>
 </aside>
 </div>
 <div class="flash" id="flash">⚡ +1</div>
 
 <div class="overlay" id="lock"><div class="panel"><div class="kicker">🔒 BOSS 2</div><div class="big">LÅST</div><p>Den sista bussen låses upp när Bana 3 – Etiska dilemman är klar.</p><a href="index.html"><button class="btn">Till träningen</button></a></div></div>
-<div class="overlay" id="intro"><div class="panel"><div class="kicker">🗝️ BOSS 2 · BERÄTTELSEÄVENTYR · v3.0</div><div class="big">DEN SISTA BUSSEN</div><div class="box">Du och Noor hittar en ryggsäck på väg till stationen.<br><br>Här finns inga etikord att klicka på. Du måste <b>läsa, komma ihåg detaljer och välja vad du faktiskt gör.</b><br><br>Tre moraliska val leder till ett av <b>åtta olika slut</b>.</div><p id="introProgress"></p><button class="btn" id="start">BÖRJA ÄVENTYRET</button></div></div>
+<div class="overlay" id="intro"><div class="panel"><div class="kicker">🗝️ BOSS 2 · BERÄTTELSEÄVENTYR · v3.1</div><div class="big">DEN SISTA BUSSEN</div><div class="box">Du och Noor hittar en ryggsäck på väg till stationen.<br><br>Här finns inga etikord att klicka på. Du måste <b>läsa, komma ihåg detaljer och välja vad du faktiskt gör.</b><br><br>Du får <b>en resa och ett slut</b>. Efteråt får du undersöka vilket av dina egna val som betydde mest.</div><button class="btn" id="start">BÖRJA ÄVENTYRET</button></div></div>
 <div class="overlay hidden" id="bossOverlay"><div class="panel"><div class="kicker">SISTA RUTAN</div><div class="big">ETIKBOSSEN</div><p>Tre val. Tre laddningar. Nu får dina beslut stå för sig själva.</p><div class="boss" id="boss">👾</div><button class="btn attack" id="attack">ANVÄND DIN ETISKA ENERGI ⚡</button></div></div>
-<div class="overlay hidden" id="endingOverlay"><div class="panel"><div class="kicker">ETIKBOSSEN BESEGRAD</div><div class="big" id="endingTitle"></div><div class="box" id="endingText"></div><p id="endingProgress"></p><button class="btn" id="again">SPELA EN ANNAN VÄG</button><a href="index.html"><button class="btn secondary">Till banorna</button></a></div></div>
+<div class="overlay hidden" id="endingOverlay"><div class="panel"><div class="kicker">DIN BERÄTTELSE SLUTADE</div><div class="big" id="endingTitle"></div><div class="box" id="endingText"></div><p>Nu återstår Bossens viktigaste del: <b>förstå ditt eget val.</b></p><button class="btn" id="toReflect">MIN VÄG →</button></div></div>
+<div class="overlay hidden" id="reflectOverlay"><div class="panel"><div class="kicker">🧭 DIN VÄG</div><div class="big" style="font-size:clamp(30px,6vw,52px)">VILKET VAL BETYDDE MEST?</div><div class="box" style="text-align:left"><p>Här är valen du gjorde. Välj det som du tror förändrade berättelsen mest.</p><div id="decisionList" class="choices"></div><div id="reasonBox" class="hidden"><p><b>Resonera om just det valet:</b></p><textarea id="tyck" placeholder="Jag tycker att …"></textarea><textarea id="eftersom" placeholder="… eftersom …"></textarea><textarea id="men" placeholder="… men …"></textarea><textarea id="sa" placeholder="… så …"></textarea><p class="small">Det finns inte ett enda facit. Visa vad du tycker, varför, en annan sida och din slutsats.</p></div></div><button class="btn hidden" id="finishReflect">KLAR MED BOSS 2</button></div></div>
+<div class="overlay hidden" id="completeOverlay"><div class="panel"><div class="kicker">🗝️ BOSS 2 KLAR</div><div class="big">DIN VÄG ÄR DIN</div><div class="box">Du har fattat beslut, sett följderna och resonerat om ett av dina egna val.<br><br>Jämför gärna ditt slut med någon annans. <b>Var började era berättelser skilja sig?</b></div><a href="index.html"><button class="btn">TILL BANORNA</button></a><button class="btn secondary" id="bonusReplay">Utforska en annan möjlighet</button></div></div>
 </div></div>
 
 <script>
 const K="etikMoralLevels_v2",NEED={c:4};
 function readSave(){try{return JSON.parse(localStorage.getItem(K)||'{"done":{}}')}catch(e){return {done:{}}}}
 function unlocked(){const s=readSave(),d=s.done||{};return Object.entries(NEED).every(function(kv){return Array.from({length:kv[1]},function(_,i){return !!(d[kv[0]]||[])[i]}).every(Boolean)})}
-function seen(){const s=readSave();return Array.isArray(s.adventureStoryEndings)?s.adventureStoryEndings:[]}
-function saveEnd(id){const s=readSave();if(!Array.isArray(s.adventureStoryEndings))s.adventureStoryEndings=[];if(!s.adventureStoryEndings.includes(id))s.adventureStoryEndings.push(id);s.adventureBoss=true;localStorage.setItem(K,JSON.stringify(s))}
+function saveReflection(id,decision,answers){const s=readSave();if(!Array.isArray(s.adventureStoryEndings))s.adventureStoryEndings=[];if(!s.adventureStoryEndings.includes(id))s.adventureStoryEndings.push(id);s.adventureBoss=true;s.adventureLast={ending:id,decision:decision,answers:answers};localStorage.setItem(K,JSON.stringify(s))}
 const lock=document.getElementById("lock"),intro=document.getElementById("intro");if(unlocked())lock.classList.add("hidden");else intro.classList.add("hidden");
 
 const E={
@@ -127,7 +128,7 @@ back:{p:"GAMLA BRON",v:"rain",h:"Någon står vid väskan",t:["Ni vänder tillba
 ]}
 };
 
-let S={node:"start",energy:0,trail:["Gamla bron"],pending:null};
+let S={node:"start",energy:0,trail:["Gamla bron"],pending:null,decisions:[],chosenDecision:null};
 const story=document.getElementById("story"),visual=document.getElementById("visual"),boss=document.getElementById("boss");
 function art(v){
  const cls=v==="rain"?"visual rain":v==="night"?"visual night":"visual";
@@ -142,19 +143,46 @@ function refresh(){
  document.getElementById("endGrid").innerHTML=EO.map(function(id){return '<div class="end '+(a.includes(id)?"seen":"")+'">'+(a.includes(id)?E[id][0]:"???")+'</div>'}).join("");
 }
 function flash(){const f=document.getElementById("flash");f.classList.remove("show");void f.offsetWidth;f.classList.add("show")}
-function choose(x){S.energy++;S.trail.push(x[2]);flash();if(x[3]){S.pending=x[1];refresh();setTimeout(function(){document.getElementById("bossOverlay").classList.remove("hidden")},450)}else{S.node=x[1];refresh();setTimeout(render,140)}}
+function choose(x){S.energy++;S.trail.push(x[2]);S.decisions.push({choice:x[0],meaning:x[2]});flash();if(x[3]){S.pending=x[1];refresh();setTimeout(function(){document.getElementById("bossOverlay").classList.remove("hidden")},450)}else{S.node=x[1];refresh();setTimeout(render,140)}}
 function render(){
  const n=N[S.node];refresh();art(n.v);story.innerHTML='<div class="where">'+n.p+'</div><h2>'+n.h+'</h2>'+n.t.map(function(p){return '<p>'+p+'</p>'}).join("")+'<div class="prompt">'+n.q+'</div>';
  const box=document.createElement("div");box.className="choices";
  n.c.forEach(function(x){const b=document.createElement("button");b.className="choice";b.textContent=x[0];b.onclick=function(){Array.from(box.children).forEach(function(z){z.disabled=true});b.classList.add("chosen");const nx=document.createElement("button");nx.className="next";nx.textContent="Fortsätt →";nx.onclick=function(){choose(x)};story.appendChild(nx)};box.appendChild(b)});story.appendChild(box);
 }
 function showEnding(){
- const e=E[S.pending];saveEnd(S.pending);document.getElementById("endingTitle").textContent=e[0];document.getElementById("endingText").textContent=e[1];const n=seen().length;document.getElementById("endingProgress").innerHTML='<b>SLUT UPPTÄCKTA: '+n+'/8</b><br>'+(n<8?'Det finns fler vägar genom berättelsen.':'Du har sett alla åtta slut.');refresh();document.getElementById("endingOverlay").classList.remove("hidden");
+ const e=E[S.pending];document.getElementById("endingTitle").textContent=e[0];document.getElementById("endingText").textContent=e[1];refresh();document.getElementById("endingOverlay").classList.remove("hidden");
 }
-function restart(){S={node:"start",energy:0,trail:["Gamla bron"],pending:null};boss.classList.remove("dead");document.getElementById("endingOverlay").classList.add("hidden");document.getElementById("bossOverlay").classList.add("hidden");render()}
+function showReflection(){
+ document.getElementById("endingOverlay").classList.add("hidden");
+ const list=document.getElementById("decisionList");list.innerHTML="";
+ S.decisions.forEach(function(d,idx){
+   const b=document.createElement("button");b.className="choice";b.textContent=(idx+1)+". "+d.choice;
+   b.onclick=function(){
+     S.chosenDecision=idx;Array.from(list.children).forEach(function(x){x.classList.remove("chosen")});b.classList.add("chosen");
+     document.getElementById("reasonBox").classList.remove("hidden");document.getElementById("finishReflect").classList.remove("hidden");
+   };list.appendChild(b);
+ });
+ document.getElementById("reflectOverlay").classList.remove("hidden");
+}
+function completeReflection(){
+ if(S.chosenDecision===null)return;
+ const ids=["tyck","eftersom","men","sa"],answers=ids.map(function(id){return document.getElementById(id).value.trim()});
+ if(answers.some(function(x){return !x})){alert("Skriv något i alla fyra delarna: TYCK – EFTERSOM – MEN – SÅ.");return}
+ saveReflection(S.pending,S.decisions[S.chosenDecision],answers);
+ document.getElementById("reflectOverlay").classList.add("hidden");document.getElementById("completeOverlay").classList.remove("hidden");
+}
+function restart(){
+ S={node:"start",energy:0,trail:["Gamla bron"],pending:null,decisions:[],chosenDecision:null};
+ boss.classList.remove("dead");
+ ["endingOverlay","bossOverlay","reflectOverlay","completeOverlay"].forEach(function(id){document.getElementById(id).classList.add("hidden")});
+ ["tyck","eftersom","men","sa"].forEach(function(id){document.getElementById(id).value=""});
+ render();
+}
 document.getElementById("start").onclick=function(){intro.classList.add("hidden");render()};
 document.getElementById("attack").onclick=function(){this.disabled=true;boss.classList.add("dead");setTimeout(function(){document.getElementById("bossOverlay").classList.add("hidden");document.getElementById("attack").disabled=false;showEnding()},1100)};
-document.getElementById("again").onclick=restart;
+document.getElementById("toReflect").onclick=showReflection;
+document.getElementById("finishReflect").onclick=completeReflection;
+document.getElementById("bonusReplay").onclick=restart;
 refresh();
 </script>
 </body></html>
