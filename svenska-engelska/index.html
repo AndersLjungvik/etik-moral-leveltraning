@@ -29,7 +29,12 @@ button{font:inherit;min-height:46px;border-radius:12px;border:1px solid var(--li
 button:focus-visible,select:focus-visible{outline:3px solid #8ab7a3;outline-offset:2px}
 .tile{font-size:1.22rem;font-weight:850;background:var(--tile);min-width:58px}
 .tile[disabled]{opacity:.32;cursor:default}
+.tile.correct,.tile.correct[disabled]{opacity:1;background:#eaf7ee;border-color:#5ca675;color:#155c32}
+.tile.wrong,.tile.wrong[disabled]{opacity:1;background:#fff0f0;border-color:#c96868;color:#7f2424}
 .builtpiece{font-size:1.2rem;font-weight:850;padding:8px 11px;border-radius:10px;background:var(--accent2);border:1px solid #c8ded3}
+.builtpiece.correct{background:#eaf7ee;border-color:#5ca675;color:#155c32}
+.builtpiece.wrong{background:#fff0f0;border-color:#c96868;color:#7f2424}
+.sound{font-weight:800;background:#fff}
 .actions{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
 .primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:800}
 .primary[disabled]{opacity:.4}
@@ -71,6 +76,7 @@ footer{margin-top:20px;color:var(--muted);font-size:.82rem}
   <div class="toprow">
     <div id="badge" class="badge">Vecka 37 · nivå 1</div>
     <div class="score">Rätt: <span id="score">0</span> / <span id="tries">0</span></div>
+    <button id="hear" type="button" class="sound" aria-label="Hör det engelska ordet">🔊 Hör ordet</button>
   </div>
 
   <p class="kicker">Svensk ledtråd</p>
@@ -89,12 +95,12 @@ footer{margin-top:20px;color:var(--muted);font-size:.82rem}
     <button id="check" type="button" class="primary">Kontrollera</button>
     <button id="next" type="button" class="primary" disabled>Nästa ord</button>
   </div>
-  <div id="feedback" class="feedback" aria-live="polite">Säg gärna ordbitarna tyst eller högt medan du bygger.</div>
+  <div id="feedback" class="feedback" aria-live="polite">Tryck på 🔊 för att höra hela ordet. Säg sedan ordbitarna själv medan du bygger.</div>
 </section>
 
 <section class="card">
   <strong>Exempel på hur bitarna fungerar</strong>
-  <p class="note"><b>ch + air → chair</b>, <b>sh + ed → shed</b>, <b>win + dow → window</b>, <b>foot + print → footprint</b>. Engelska är oregelbundet, så spelet använder den uppdelning som är mest hjälpsam för ordet – inte alltid en ren stavelseindelning.</p>
+  <p class="note"><b>ch + air → chair</b>, <b>sh + ed → shed</b>, <b>win + dow → window</b>, <b>foot + print → footprint</b>. Engelska är oregelbundet, så spelet använder den uppdelning som är mest hjälpsam för ordet – inte alltid en ren stavelseindelning. Rätt svar blir grönt och fel svar rött, alltid tillsammans med textrespons. 🔊 använder en engelsk systemröst när en sådan finns på enheten.</p>
 </section>
 
 <footer>Språkdetektiven • svenska + engelska • v.37–42</footer>
@@ -149,7 +155,7 @@ const words=[
 
 const $=id=>document.getElementById(id);
 const week=$("week"),level=$("level"),tiles=$("tiles"),built=$("built"),feedback=$("feedback");
-let current=null,chosen=[],used=[],score=0,tries=0,attempts=0;
+let current=null,chosen=[],used=[],score=0,tries=0,attempts=0,mark=null;
 
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function pool(){return words.filter(x=>(week.value==="all"||String(x.week)===week.value)&&(level.value==="all"||String(x.l)===level.value))}
@@ -163,7 +169,7 @@ function chooseWord(){
   let available=p.filter(x=>!used.includes(x.w));
   if(!available.length){used=[];available=p}
   current=available[Math.floor(Math.random()*available.length)];
-  used.push(current.w); chosen=[]; attempts=0; render();
+  used.push(current.w); chosen=[]; attempts=0; mark=null; render();
 }
 function render(){
   $("badge").textContent="Vecka "+current.week+" · nivå "+current.l;
@@ -174,27 +180,77 @@ function render(){
   options.forEach((part,i)=>{
     const b=document.createElement("button");
     b.type="button";b.className="tile";b.textContent=part;b.dataset.id=i;
-    b.addEventListener("click",()=>{if(b.disabled)return;chosen.push({part,id:i});b.disabled=true;drawBuilt()});
+    b.addEventListener("click",()=>{if(b.disabled)return;mark=null;clearTileMarks();chosen.push({part,id:i});b.disabled=true;drawBuilt()});
     tiles.appendChild(b);
   });
   $("next").disabled=true;
   feedback.className="feedback";
-  feedback.textContent="Säg gärna ordbitarna tyst eller högt medan du bygger.";
+  feedback.textContent="Tryck på 🔊 för att höra hela ordet. Säg sedan ordbitarna själv medan du bygger.";
   drawBuilt();
 }
 function drawBuilt(){
   built.innerHTML="";
   if(!chosen.length){built.innerHTML='<span class="placeholder">Tryck på ordbitarna i rätt ordning.</span>';return}
-  chosen.forEach(x=>{const s=document.createElement("span");s.className="builtpiece";s.textContent=x.part;built.appendChild(s)});
+  chosen.forEach(x=>{
+    const s=document.createElement("span");
+    s.className="builtpiece"+(mark?" "+mark:"");
+    s.textContent=x.part;
+    built.appendChild(s);
+  });
+}
+function clearTileMarks(){
+  [...tiles.querySelectorAll("button")].forEach(b=>b.classList.remove("correct","wrong"));
+}
+function markTiles(kind){
+  clearTileMarks();
+  chosen.forEach(x=>{
+    const b=[...tiles.querySelectorAll("button")].find(n=>Number(n.dataset.id)===x.id);
+    if(b)b.classList.add(kind);
+  });
+}
+function getEnglishVoice(){
+  if(!("speechSynthesis" in window)) return null;
+  const voices=window.speechSynthesis.getVoices();
+  const english=voices.filter(v=>/^en[-_]/i.test(v.lang));
+  const preferredNames=["Daniel","Samantha","Serena","Ava","Karen","Moira","Alex","Google UK English Female","Google UK English Male","Google US English"];
+  for(const name of preferredNames){
+    const v=english.find(x=>x.name.toLowerCase().includes(name.toLowerCase()));
+    if(v)return v;
+  }
+  return english.find(v=>/^en-GB$/i.test(v.lang)&&v.localService)
+      || english.find(v=>/^en-US$/i.test(v.lang)&&v.localService)
+      || english.find(v=>v.localService)
+      || english[0]
+      || null;
+}
+function sayWord(){
+  if(!("speechSynthesis" in window)){
+    feedback.className="feedback bad";
+    feedback.textContent="Den här webbläsaren har ingen talsyntes.";
+    return;
+  }
+  const synth=window.speechSynthesis;
+  const voice=getEnglishVoice();
+  const u=new SpeechSynthesisUtterance(current.w);
+  if(voice){u.voice=voice;u.lang=voice.lang}else{u.lang="en-GB"}
+  u.rate=.72;u.pitch=1;u.volume=1;
+  synth.cancel();
+  synth.resume();
+  synth.speak(u);
+  if(!mark){
+    feedback.className="feedback";
+    feedback.textContent=voice?"Lyssna på ordet och bygg det.":"Ingen särskild engelsk röst hittades – webbläsaren använder sin engelska standardröst.";
+  }
 }
 function resetWord(){
-  chosen=[];
+  chosen=[]; mark=null; clearTileMarks();
   [...tiles.querySelectorAll("button")].forEach(b=>b.disabled=false);
   drawBuilt();
   feedback.className="feedback";
   feedback.textContent="Börja om och prova igen.";
 }
 $("undo").addEventListener("click",()=>{
+  mark=null; clearTileMarks();
   const x=chosen.pop();if(!x)return;
   const b=[...tiles.querySelectorAll("button")].find(n=>Number(n.dataset.id)===x.id);
   if(b)b.disabled=false;
@@ -206,15 +262,19 @@ $("check").addEventListener("click",()=>{
   attempts++; tries++; $("tries").textContent=tries;
   const answer=chosen.map(x=>x.part).join("");
   if(answer===current.w){
+    mark="correct"; markTiles("correct"); drawBuilt();
     score++;$("score").textContent=score;
     feedback.className="feedback good";
     feedback.innerHTML='<span class="wordreveal">Rätt: '+current.p.join(" + ")+" → "+current.w+'</span><br>Läs hela ordet en gång.';
     $("next").disabled=false;
   } else {
+    mark="wrong"; markTiles("wrong"); drawBuilt();
     feedback.className="feedback bad";
     feedback.innerHTML=attempts<2?"Inte riktigt. Ångra eller börja om och prova igen.":"Ledtråd: ordet börjar med <b>"+current.p[0]+"</b>.";
   }
 });
+$("hear").addEventListener("click",sayWord);
+if("speechSynthesis" in window){ window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices(); }
 $("next").addEventListener("click",chooseWord);
 week.addEventListener("change",()=>{used=[];chooseWord()});
 level.addEventListener("change",()=>{used=[];chooseWord()});
