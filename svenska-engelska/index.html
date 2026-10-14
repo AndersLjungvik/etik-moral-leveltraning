@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Svenska + Engelska – Word Builder</title>
+<style>
+:root{--bg:#f5f3ee;--card:#fff;--text:#1d2430;--muted:#667085;--line:#d8d5cc;--accent:#245c46;--accent2:#e6f0eb;--good:#237a44;--bad:#a34141;--tile:#f7f8fa}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+main{max-width:780px;margin:auto;padding:20px 14px 44px}
+header{margin-bottom:18px}
+h1{font-size:clamp(1.7rem,5vw,2.6rem);line-height:1.05;margin:0 0 8px}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+label{font-size:.86rem;font-weight:700}
+select{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+.toprow{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{font-size:.76rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.score{font-weight:800}
+.kicker{font-size:.8rem;color:var(--muted);margin:18px 0 3px}
+.clue{font-size:1.5rem;font-weight:850;margin:0}
+.context{font-size:1.02rem;margin:2px 0 0}
+.buildzone{min-height:70px;border:2px dashed var(--line);border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.placeholder{color:var(--muted);font-size:.9rem}
+.tiles{display:flex;flex-wrap:wrap;gap:9px}
+button{font:inherit;min-height:46px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);padding:10px 15px;cursor:pointer}
+button:focus-visible,select:focus-visible{outline:3px solid #8ab7a3;outline-offset:2px}
+.tile{font-size:1.22rem;font-weight:850;background:var(--tile);min-width:58px}
+.tile[disabled]{opacity:.32;cursor:default}
+.builtpiece{font-size:1.2rem;font-weight:850;padding:8px 11px;border-radius:10px;background:var(--accent2);border:1px solid #c8ded3}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:800}
+.primary[disabled]{opacity:.4}
+.feedback{border-radius:14px;padding:12px 14px;background:#fff;border:1px solid var(--line);min-height:50px}
+.feedback.good{border-color:#a8d3b5;background:#eff8f1;color:#155c32}
+.feedback.bad{border-color:#e0b2b2;background:#fff3f3;color:#843434}
+.wordreveal{font-size:1.35rem;font-weight:900}
+.note{font-size:.9rem;color:var(--muted)}
+footer{margin-top:20px;color:var(--muted);font-size:.82rem}
+@media(max-width:520px){.controls{grid-template-columns:1fr}.card{padding:15px}.tile{flex:1 1 28%;min-width:72px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Word Builder</h1>
+  <p class="sub">Svenska + Engelska • Bygg ord från Språkdetektiven v.37–42. Ordbitarna är handvalda för att träna engelska ljud- och stavningsmönster – inte slumpmässiga stavelser.</p>
+</header>
+
+<div class="controls">
+  <label>Vecka
+    <select id="week">
+      <option value="all">Alla veckor</option>
+      <option value="37">v.37</option><option value="38">v.38</option><option value="39">v.39</option>
+      <option value="40">v.40</option><option value="41">v.41</option><option value="42">v.42</option>
+    </select>
+  </label>
+  <label>Nivå
+    <select id="level">
+      <option value="all">Blandat</option>
+      <option value="1">1 · korta ord</option>
+      <option value="2">2 · större ordbitar</option>
+      <option value="3">3 · längre ord</option>
+    </select>
+  </label>
+</div>
+
+<section class="card">
+  <div class="toprow">
+    <div id="badge" class="badge">Vecka 37 · nivå 1</div>
+    <div class="score">Rätt: <span id="score">0</span> / <span id="tries">0</span></div>
+  </div>
+
+  <p class="kicker">Svensk ledtråd</p>
+  <p id="clue" class="clue"></p>
+
+  <p class="kicker">Meningen från berättelsen</p>
+  <p id="context" class="context"></p>
+
+  <p class="kicker">Bygg ordet</p>
+  <div id="built" class="buildzone" aria-live="polite"><span class="placeholder">Tryck på ordbitarna i rätt ordning.</span></div>
+  <div id="tiles" class="tiles"></div>
+
+  <div class="actions">
+    <button id="undo" type="button">Ångra</button>
+    <button id="reset" type="button">Börja om ordet</button>
+    <button id="check" type="button" class="primary">Kontrollera</button>
+    <button id="next" type="button" class="primary" disabled>Nästa ord</button>
+  </div>
+  <div id="feedback" class="feedback" aria-live="polite">Säg gärna ordbitarna tyst eller högt medan du bygger.</div>
+</section>
+
+<section class="card">
+  <strong>Exempel på hur bitarna fungerar</strong>
+  <p class="note"><b>ch + air → chair</b>, <b>sh + ed → shed</b>, <b>win + dow → window</b>, <b>foot + print → footprint</b>. Engelska är oregelbundet, så spelet använder den uppdelning som är mest hjälpsam för ordet – inte alltid en ren stavelseindelning.</p>
+</section>
+
+<footer>Språkdetektiven • svenska + engelska • v.37–42</footer>
+</main>
+
+<script>
+(() => {
+const words=[
+{w:"mist",p:["m","ist"],week:37,l:1,sv:"dimma",c:"A grey ____ hung between the trees."},
+{w:"damp",p:["d","amp"],week:37,l:1,sv:"fuktig",c:"The morning was cold and ____."},
+{w:"shed",p:["sh","ed"],week:37,l:1,sv:"skjul",c:"They reached the bicycle ____."},
+{w:"key",p:["k","ey"],week:37,l:1,sv:"nyckel",c:"They found a small brass ____."},
+{w:"brass",p:["br","ass"],week:37,l:1,sv:"mässing",c:"It was a small ____ key."},
+{w:"pocket",p:["pock","et"],week:37,l:2,sv:"ficka",c:"Maya put the key in her ____."},
+{w:"narrow",p:["nar","row"],week:37,l:2,sv:"smal",c:"They walked along a ____ path."},
+{w:"between",p:["be","tween"],week:37,l:2,sv:"mellan",c:"The mist hung ____ the trees."},
+{w:"whispered",p:["whis","pered"],week:37,l:3,sv:"viskade",c:"Someone inside ____."},
+
+{w:"room",p:["r","oo","m"],week:38,l:1,sv:"rum",c:"They stood outside Room 17."},
+{w:"door",p:["d","oor"],week:38,l:1,sv:"dörr",c:"The ____ opened slowly."},
+{w:"clue",p:["cl","ue"],week:38,l:1,sv:"ledtråd",c:"They found another ____."},
+{w:"locked",p:["lock","ed"],week:38,l:2,sv:"låst",c:"The door was ____."},
+{w:"inside",p:["in","side"],week:38,l:2,sv:"inuti / där inne",c:"Something moved ____."},
+
+{w:"note",p:["n","ote"],week:39,l:1,sv:"lapp",c:"She had a small blue ____."},
+{w:"face",p:["f","ace"],week:39,l:1,sv:"ansikte",c:"Leo saw the person's ____."},
+{w:"outside",p:["out","side"],week:39,l:2,sv:"utanför",c:"LOOK ____."},
+{w:"jacket",p:["jack","et"],week:39,l:2,sv:"jacka",c:"A person in a blue ____ stood by the shed."},
+{w:"window",p:["win","dow"],week:39,l:2,sv:"fönster",c:"Leo stood close to the ____."},
+{w:"headteacher",p:["head","teach","er"],week:39,l:3,sv:"rektor",c:"Eva called the ____."},
+
+{w:"wrong",p:["wr","ong"],week:40,l:1,sv:"fel",c:"You are looking in the ____ place."},
+{w:"place",p:["pl","ace"],week:40,l:1,sv:"plats / ställe",c:"You are looking in the wrong ____."},
+{w:"photo",p:["pho","to"],week:40,l:2,sv:"fotografi",c:"Inside the box was an old ____."},
+{w:"school",p:["sch","ool"],week:40,l:2,sv:"skola",c:"The ____ looked different in the old picture."},
+{w:"caretaker",p:["care","tak","er"],week:40,l:3,sv:"vaktmästare",c:"Jonas was the school ____."},
+
+{w:"wall",p:["w","all"],week:41,l:1,sv:"vägg",c:"The sound came from behind the ____."},
+{w:"chair",p:["ch","air"],week:41,l:1,sv:"stol",c:"It sounded like a ____ moving."},
+{w:"scrape",p:["scr","ape"],week:41,l:1,sv:"skrapa / skrapljud",c:"They heard a slow ____."},
+{w:"basement",p:["base","ment"],week:41,l:2,sv:"källare",c:"They went down to the ____."},
+{w:"corridor",p:["cor","ri","dor"],week:41,l:3,sv:"korridor",c:"The old ____ was dark."},
+
+{w:"hook",p:["h","oo","k"],week:42,l:1,sv:"krok",c:"The blue jacket hung on a ____."},
+{w:"fourth",p:["f","our","th"],week:42,l:2,sv:"fjärde",c:"A ____ person stood behind Leo."},
+{w:"passage",p:["pass","age"],week:42,l:2,sv:"gång / passage",c:"Behind the panel was a narrow ____."},
+{w:"footprint",p:["foot","print"],week:42,l:2,sv:"fotavtryck",c:"There was a new ____ in the dust."},
+{w:"shoulder",p:["shoul","der"],week:42,l:2,sv:"axel",c:"A hand was on Leo's ____."},
+{w:"camera",p:["cam","er","a"],week:42,l:3,sv:"kamera",c:"They heard a ____ click."},
+{w:"fingerprints",p:["fin","ger","prints"],week:42,l:3,sv:"fingeravtryck",c:"Grey ____ were on his shirt."}
+];
+
+const $=id=>document.getElementById(id);
+const week=$("week"),level=$("level"),tiles=$("tiles"),built=$("built"),feedback=$("feedback");
+let current=null,chosen=[],used=[],score=0,tries=0,attempts=0;
+
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pool(){return words.filter(x=>(week.value==="all"||String(x.week)===week.value)&&(level.value==="all"||String(x.l)===level.value))}
+function distractors(){
+  const candidates=[...new Set(words.flatMap(x=>x.p))].filter(x=>!current.p.includes(x));
+  return shuffle(candidates).slice(0,current.l===1?2:3);
+}
+function chooseWord(){
+  let p=pool();
+  if(!p.length){week.value="all";level.value="all";p=pool()}
+  let available=p.filter(x=>!used.includes(x.w));
+  if(!available.length){used=[];available=p}
+  current=available[Math.floor(Math.random()*available.length)];
+  used.push(current.w); chosen=[]; attempts=0; render();
+}
+function render(){
+  $("badge").textContent="Vecka "+current.week+" · nivå "+current.l;
+  $("clue").textContent=current.sv;
+  $("context").textContent=current.c;
+  tiles.innerHTML="";
+  const options=shuffle([...current.p,...distractors()]);
+  options.forEach((part,i)=>{
+    const b=document.createElement("button");
+    b.type="button";b.className="tile";b.textContent=part;b.dataset.id=i;
+    b.addEventListener("click",()=>{if(b.disabled)return;chosen.push({part,id:i});b.disabled=true;drawBuilt()});
+    tiles.appendChild(b);
+  });
+  $("next").disabled=true;
+  feedback.className="feedback";
+  feedback.textContent="Säg gärna ordbitarna tyst eller högt medan du bygger.";
+  drawBuilt();
+}
+function drawBuilt(){
+  built.innerHTML="";
+  if(!chosen.length){built.innerHTML='<span class="placeholder">Tryck på ordbitarna i rätt ordning.</span>';return}
+  chosen.forEach(x=>{const s=document.createElement("span");s.className="builtpiece";s.textContent=x.part;built.appendChild(s)});
+}
+function resetWord(){
+  chosen=[];
+  [...tiles.querySelectorAll("button")].forEach(b=>b.disabled=false);
+  drawBuilt();
+  feedback.className="feedback";
+  feedback.textContent="Börja om och prova igen.";
+}
+$("undo").addEventListener("click",()=>{
+  const x=chosen.pop();if(!x)return;
+  const b=[...tiles.querySelectorAll("button")].find(n=>Number(n.dataset.id)===x.id);
+  if(b)b.disabled=false;
+  drawBuilt();
+});
+$("reset").addEventListener("click",resetWord);
+$("check").addEventListener("click",()=>{
+  if(!chosen.length){feedback.textContent="Välj minst en ordbit först.";return}
+  attempts++; tries++; $("tries").textContent=tries;
+  const answer=chosen.map(x=>x.part).join("");
+  if(answer===current.w){
+    score++;$("score").textContent=score;
+    feedback.className="feedback good";
+    feedback.innerHTML='<span class="wordreveal">Rätt: '+current.p.join(" + ")+" → "+current.w+'</span><br>Läs hela ordet en gång.';
+    $("next").disabled=false;
+  } else {
+    feedback.className="feedback bad";
+    feedback.innerHTML=attempts<2?"Inte riktigt. Ångra eller börja om och prova igen.":"Ledtråd: ordet börjar med <b>"+current.p[0]+"</b>.";
+  }
+});
+$("next").addEventListener("click",chooseWord);
+week.addEventListener("change",()=>{used=[];chooseWord()});
+level.addEventListener("change",()=>{used=[];chooseWord()});
+chooseWord();
+})();
+</script>
+</body>
+</html>
