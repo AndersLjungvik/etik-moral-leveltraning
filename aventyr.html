@@ -147,7 +147,7 @@ function choose(x){S.energy++;S.trail.push(x[2]);S.decisions.push({choice:x[0],m
 function render(){
  const n=N[S.node];refresh();art(n.v);story.innerHTML='<div class="where">'+n.p+'</div><h2>'+n.h+'</h2>'+n.t.map(function(p){return '<p>'+p+'</p>'}).join("")+'<div class="prompt">'+n.q+'</div>';
  const box=document.createElement("div");box.className="choices";
- n.c.forEach(function(x){const b=document.createElement("button");b.className="choice";b.textContent=x[0];b.onclick=function(){Array.from(box.children).forEach(function(z){z.disabled=true});b.classList.add("chosen");const nx=document.createElement("button");nx.className="next";nx.textContent="Fortsätt →";nx.onclick=function(){choose(x)};story.appendChild(nx)};box.appendChild(b)});story.appendChild(box);
+ n.c.forEach(function(x){const b=document.createElement("button");b.className="choice";b.textContent=x[0];b.onclick=function(){Array.from(box.children).forEach(function(z){z.disabled=true});b.classList.add("chosen");const nx=document.createElement("button");nx.className="next";nx.textContent="Fortsätt →";nx.onclick=function(){choose(x)};story.appendChild(nx);setTimeout(function(){nx.focus()},0)};box.appendChild(b)});box.addEventListener("keydown",function(e){const xs=Array.from(box.children),n=xs.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowRight"){e.preventDefault();xs[(n+1+xs.length)%xs.length].focus()}if(e.key==="ArrowUp"||e.key==="ArrowLeft"){e.preventDefault();xs[(n-1+xs.length)%xs.length].focus()}});story.appendChild(box);setTimeout(function(){if(box.firstElementChild)box.firstElementChild.focus()},0);
 }
 function showEnding(){
  const e=E[S.pending];document.getElementById("endingTitle").textContent=e[0];document.getElementById("endingText").textContent=e[1];refresh();document.getElementById("endingOverlay").classList.remove("hidden");
@@ -160,8 +160,11 @@ function showReflection(){
    b.onclick=function(){
      S.chosenDecision=idx;Array.from(list.children).forEach(function(x){x.classList.remove("chosen")});b.classList.add("chosen");
      document.getElementById("reasonBox").classList.remove("hidden");document.getElementById("finishReflect").classList.remove("hidden");
+     setTimeout(function(){document.getElementById("tyck").focus()},0);
    };list.appendChild(b);
  });
+ list.addEventListener("keydown",function(e){const xs=Array.from(list.children),n=xs.indexOf(document.activeElement);if(e.key==="ArrowDown"||e.key==="ArrowRight"){e.preventDefault();xs[(n+1+xs.length)%xs.length].focus()}if(e.key==="ArrowUp"||e.key==="ArrowLeft"){e.preventDefault();xs[(n-1+xs.length)%xs.length].focus()}});
+ setTimeout(function(){if(list.firstElementChild)list.firstElementChild.focus()},0);
  document.getElementById("reflectOverlay").classList.remove("hidden");
 }
 function completeReflection(){
