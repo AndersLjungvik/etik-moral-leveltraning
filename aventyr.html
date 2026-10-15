@@ -139,8 +139,6 @@ function refresh(){
  document.getElementById("place").textContent=N[S.node]?N[S.node].p:"SISTA RUTAN";
  for(let i=0;i<3;i++)document.getElementById("e"+i).classList.toggle("on",i<S.energy);
  document.getElementById("trail").innerHTML=S.trail.map(function(x){return '<div class="step">'+x+'</div>'}).join("");
- const a=seen();document.getElementById("endCount").textContent="SLUT "+a.length+"/8";document.getElementById("introProgress").textContent="Slut upptäckta: "+a.length+"/8";
- document.getElementById("endGrid").innerHTML=EO.map(function(id){return '<div class="end '+(a.includes(id)?"seen":"")+'">'+(a.includes(id)?E[id][0]:"???")+'</div>'}).join("");
 }
 function flash(){const f=document.getElementById("flash");f.classList.remove("show");void f.offsetWidth;f.classList.add("show")}
 function choose(x){S.energy++;S.trail.push(x[2]);S.decisions.push({choice:x[0],meaning:x[2]});flash();if(x[3]){S.pending=x[1];refresh();setTimeout(function(){document.getElementById("bossOverlay").classList.remove("hidden")},450)}else{S.node=x[1];refresh();setTimeout(render,140)}}
